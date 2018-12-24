@@ -1,0 +1,16 @@
+{
+  "name": "catutils-ts",
+  "version": "0.1.0",
+  "description": "who cares",
+  "main": "index.js",
+  "author": "FMS-Cat",
+  "license": "MIT",
+  "scripts": {
+    "watch": "tsc -w src/index.ts --outDir dist",
+    "build": "tsc src/index.ts --outDir dist"
+  },
+  "devDependencies": {
+    "tslint": "^5.12.0",
+    "typescript": "^3.2.2"
+  }
+}
