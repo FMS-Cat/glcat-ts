@@ -6,6 +6,10 @@
   "license": "MIT",
   "main": "./dist/bundle.js",
   "types": "./dist/bundle.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "watch": "tsc -w src/index.ts --outDir dist",
     "build": "tsc",
