@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "es2015",
+    "module": "amd",
     "strict": true,
     "noImplicitThis": true,
     "moduleResolution": "node",
@@ -12,11 +12,10 @@
     "noUnusedLocals": true,
     "lib": [ "dom", "es2017" ],
     "rootDir": "./src",
-    "outDir": "./dist",
+    "outFile": "./dist/bundle.js",
     "declaration": true,
-    "declarationDir": "./types",
     "typeRoots": [ "node_modules/@types" ]
   },
   "include": [ "src" ],
-  "exclude": [ "node_modules" ]
+  "exclude": [ "node_modules", "**/test/**/*.ts" ]
 }

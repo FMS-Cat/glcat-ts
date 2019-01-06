@@ -1,3 +1,3 @@
-# catutils-ts
+# GLCat (TypeScript)
 
-who cares
+WebGL wrapper with plenty of hackability
