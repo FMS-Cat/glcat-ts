@@ -659,21 +659,3 @@ declare module "index" {
     export * from "GLCatRenderbuffer";
     export * from "GLCatTexture";
 }
-declare module "tests/shader/invalid.vert" {
-    const _default_1: "precision highp float;\n\nattribute vec2 wenis;\n\nvoid main() {\n  gl_Position = wenis;\n}\n";
-    export default _default_1;
-}
-declare module "tests/shader/pos.frag" {
-    const _default_2: "precision highp float;\n\nvarying vec3 vPos;\n\nvoid main() {\n  gl_FragColor = vec4( vPos, 1.0 );\n}";
-    export default _default_2;
-}
-declare module "tests/shader/quad.vert" {
-    const _default_3: "precision highp float;\n\nattribute vec2 p;\nvarying vec2 vUv;\n\nvoid main() {\n  vUv = 0.5 + 0.5 * p;\n  gl_Position = vec4( p, 0.0, 1.0 );\n}\n";
-    export default _default_3;
-}
-declare module "tests/shader/uv.frag" {
-    const _default_4: "precision highp float;\n\nvarying vec2 vUv;\n\nuniform float blue;\n\nvoid main() {\n  gl_FragColor = vec4( vUv, blue, 1.0 );\n}";
-    export default _default_4;
-}
-declare module "tests/GLCat.test" { }
-declare module "tests/GLCatProgram.test" { }
