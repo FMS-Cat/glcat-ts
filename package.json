@@ -1,5 +1,5 @@
 {
-  "name": "glcat-ts",
+  "name": "@fms-cat/glcat-ts",
   "version": "0.1.0",
   "description": "WebGL wrapper with plenty of hackability",
   "author": "FMS-Cat",
