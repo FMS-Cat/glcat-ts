@@ -1,4 +1,4 @@
-import EventEmitter from 'eventemitter3';
+import { EventEmitter } from 'eventemitter3';
 import { GLCatBuffer } from './GLCatBuffer';
 import { GLCatFramebuffer } from './GLCatFramebuffer';
 import { GLCatProgram } from './GLCatProgram';
