@@ -26,7 +26,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          - deps-{{ checksum "package.json" }}
+          keys:
+            - deps-{{ checksum "package.json" }}
       - run:
           name: Build
           command: yarn build
@@ -40,7 +41,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          - deps-{{ checksum "package.json" }}
+          keys:
+            - deps-{{ checksum "package.json" }}
       - run:
           name: Test
           command: yarn test
