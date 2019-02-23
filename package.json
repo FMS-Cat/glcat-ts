@@ -5,14 +5,17 @@
   "author": "FMS-Cat",
   "license": "MIT",
   "main": "./dist/bundle.js",
-  "types": "./dist/bundle.d.ts",
+  "types": "./types/index.d.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "types"
   ],
   "scripts": {
-    "watch": "tsc -w src/index.ts --outDir dist",
-    "build": "tsc",
+    "dev": "webpack-dev-server --mode development",
+    "build-types": "tsc --emitDeclarationOnly",
+    "build-dist": "webpack --mode production",
+    "build": "yarn build-dist && yarn build-types",
     "test": "jest"
   },
   "devDependencies": {
@@ -20,10 +23,15 @@
     "@types/jest": "^23.3.10",
     "@types/webgl-ext": "^0.0.30",
     "eventemitter3": "^3.1.0",
+    "fork-ts-checker-webpack-plugin": "^0.5.2",
     "gl": "^4.1.1",
     "jest": "^23.6.0",
     "ts-jest": "^23.10.5",
+    "ts-loader": "^5.3.3",
     "tslint": "^5.12.0",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.2",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.0"
   }
 }

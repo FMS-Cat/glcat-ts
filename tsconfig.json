@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "amd",
+    "module": "commonjs",
     "strict": true,
-    "noImplicitThis": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -12,9 +11,9 @@
     "noUnusedLocals": true,
     "lib": [ "dom", "es2017" ],
     "rootDir": "./src",
-    "outFile": "./dist/bundle.js",
+    "outDir": "./dist",
     "declaration": true,
-    "typeRoots": [ "node_modules/@types" ]
+    "declarationDir": "./types",
   },
   "include": [ "src" ],
   "exclude": [ "node_modules", "**/tests/**/*.ts" ]
