@@ -59,7 +59,7 @@ export class GLCat extends EventEmitter {
 
   /**
    * Retrieve an extension.
-   * If they is your precious one and you cannot live without them, turn on `throwIfNotFound`.
+   * If they is your precious one and you cannot live without him, turn on `throwIfNotFound`.
    */
   public getExtension( name: string, throwIfNotFound?: boolean ): WebGLExtension | null {
     const gl = this.gl;
