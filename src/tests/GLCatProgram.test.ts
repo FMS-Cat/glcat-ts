@@ -1,15 +1,29 @@
 import WebGL from 'gl';
 import { GLCat } from '../GLCat';
+import { GLCatProgram } from '../GLCatProgram';
 import quadVert from './shader/quad.vert';
 import uvFrag from './shader/uv.frag';
 
 describe( 'GLCatProgram', () => {
-  const gl = WebGL( 300, 150 ) as WebGLRenderingContext;
-  const glCat = new GLCat( gl );
-  const program = glCat.createProgram( quadVert, uvFrag );
-  if ( program === null ) {
-    throw new Error( 'wtf' );
-  }
+  let gl: WebGLRenderingContext;
+  let glCat: GLCat;
+  let program: GLCatProgram;
+
+  beforeAll( () => {
+    gl = WebGL( 300, 150 ) as WebGLRenderingContext;
+    glCat = new GLCat( gl );
+  } );
+
+  afterAll( () => {
+    const ext = gl.getExtension( 'STACKGL_destroy_context' );
+    ext.destroy();
+  } );
+
+  it( 'should be instantiated via glCat.createProgram', () => {
+    const tempProgram = glCat.createProgram( quadVert, uvFrag );
+    expect( tempProgram ).not.toBeNull();
+    program = tempProgram!;
+  } );
 
   describe( 'getProgram', () => {
     it ( 'should return its own WebGLProgram', () => {

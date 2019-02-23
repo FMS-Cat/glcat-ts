@@ -6,8 +6,17 @@ import quadVert from './shader/quad.vert';
 import uvFrag from './shader/uv.frag';
 
 describe( 'GLCat', () => {
-  const gl = WebGL( 300, 150 ) as WebGLRenderingContext;
+  let gl: WebGLRenderingContext;
   let glCat: GLCat;
+
+  beforeAll( () => {
+    gl = WebGL( 300, 150 );
+  } );
+
+  afterAll( () => {
+    const ext = gl.getExtension( 'STACKGL_destroy_context' );
+    ext.destroy();
+  } );
 
   it( 'should be instantiated', () => {
     glCat = new GLCat( gl );
