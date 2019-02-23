@@ -10,7 +10,7 @@ describe( 'GLCatProgram', () => {
   let program: GLCatProgram;
 
   beforeAll( () => {
-    gl = WebGL( 300, 150 ) as WebGLRenderingContext;
+    gl = WebGL( 300, 150 );
     glCat = new GLCat( gl );
   } );
 
