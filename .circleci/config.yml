@@ -1,24 +1,62 @@
 version: 2
+
 jobs:
-  build:
-    docker:
-      - image: circleci/node:7.10
-
-    working_directory: ~/repo
-
+  fetch:
+    docker: &docker
+      - image: circleci/node:11.10.0
+    working_directory: ~/workspace
     steps:
       - checkout
-
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-
-      - run: yarn install
-
+            - deps-{{ checksum "package.json" }}
+            - deps-
+      - run:
+          name: Node Version
+          command: node -v
+      - run:
+          name: Yarn version
+          command: yarn --version
+      - run:
+          name: Fetch deps
+          command: yarn
       - save_cache:
+          key: deps-{{ checksum "package.json" }}
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: yarn test
+  build:
+    docker: *docker
+    steps:
+      - checkout
+      - restore_cache:
+          - deps-{{ checksum "package.json" }}
+      - run:
+          name: Build
+          command: yarn build
+      - store_artifacts:
+          path: dist
+      - store_artifacts:
+          path: types
+
+  test:
+    docker: *docker
+    steps:
+      - checkout
+      - restore_cache:
+          - deps-{{ checksum "package.json" }}
+      - run:
+          name: Test
+          command: yarn test
+
+workflows:
+  version: 2
+  inspection:
+    jobs:
+      - fetch
+      - build:
+          requires:
+            - fetch
+      - test:
+          requires:
+            - fetch
