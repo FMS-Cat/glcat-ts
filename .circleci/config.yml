@@ -3,7 +3,7 @@ version: 2
 jobs:
   fetch:
     docker: &docker
-      - image: node:11.10.0
+      - image: circleci/node:11.10.0-browsers
     steps:
       - checkout
       - restore_cache:
