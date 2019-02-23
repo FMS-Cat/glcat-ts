@@ -3,7 +3,7 @@ version: 2
 jobs:
   fetch:
     docker: &docker
-      - image: fmscat/node-with-xvfb
+      - image: fmscat/glcat-ts-circleci
     steps:
       - checkout
       - restore_cache:
@@ -13,9 +13,6 @@ jobs:
       - run:
           name: Node version
           command: node -v
-      - run:
-          name: Yarn version
-          command: yarn --version
       - run:
           name: Fetch deps
           command: yarn

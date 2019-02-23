@@ -12,7 +12,7 @@ const run = ( command ) => {
 };
 
 run(
-  'docker build -t fmscat/node-with-xvfb .'
+  'docker build -t fmscat/glcat-ts-circleci .'
 ).then( run(
-  'docker push fmscat/node-with-xvfb'
+  'docker push fmscat/glcat-ts-circleci'
 ) );
