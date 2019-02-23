@@ -44,6 +44,9 @@ jobs:
           keys:
             - deps-{{ checksum "package.json" }}
       - run:
+          name: Start Xvfb
+          command: export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start
+      - run:
           name: Test
           command: yarn test
 
