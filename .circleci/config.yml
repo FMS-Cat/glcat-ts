@@ -3,8 +3,7 @@ version: 2
 jobs:
   fetch:
     docker: &docker
-      - image: circleci/node:11.10.0
-    working_directory: ~/workspace
+      - image: node:11.10.0
     steps:
       - checkout
       - restore_cache:
@@ -12,7 +11,7 @@ jobs:
             - deps-{{ checksum "package.json" }}
             - deps-
       - run:
-          name: Node Version
+          name: Node version
           command: node -v
       - run:
           name: Yarn version
