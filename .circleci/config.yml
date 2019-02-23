@@ -3,7 +3,7 @@ version: 2
 jobs:
   fetch:
     docker: &docker
-      - image: circleci/node:11.10.0-browsers
+      - image: fmscat/node-with-xvfb
     steps:
       - checkout
       - restore_cache:
