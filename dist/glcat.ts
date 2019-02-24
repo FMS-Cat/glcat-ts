@@ -429,6 +429,12 @@ var GLCatBuffer = /** @class */ (function () {
         this.buffer = buffer;
     }
     /**
+     * Dispose the buffer.
+     */
+    GLCatBuffer.prototype.dispose = function () {
+        this.glCat.getRenderingContext().deleteBuffer(this.buffer);
+    };
+    /**
      * Retrieve its own buffer.
      */
     GLCatBuffer.prototype.getBuffer = function () {
@@ -483,6 +489,12 @@ var GLCatFramebuffer = /** @class */ (function () {
         this.glCat = glCat;
         this.framebuffer = framebuffer;
     }
+    /**
+     * Dispose the framebuffer.
+     */
+    GLCatFramebuffer.prototype.dispose = function () {
+        this.glCat.getRenderingContext().deleteFramebuffer(this.framebuffer);
+    };
     /**
      * Return its own framebuffer.
      */
@@ -552,6 +564,12 @@ var GLCatProgram = /** @class */ (function () {
         this.glCat = glCat;
         this.program = program;
     }
+    /**
+     * Dispose the program.
+     */
+    GLCatProgram.prototype.dispose = function () {
+        this.glCat.getRenderingContext().deleteProgram(this.program);
+    };
     /**
      * Retrieve its own program.
      */
@@ -837,6 +855,12 @@ var GLCatRenderbuffer = /** @class */ (function () {
         this.renderbuffer = renderbuffer;
     }
     /**
+     * Dispose the renderbuffer.
+     */
+    GLCatRenderbuffer.prototype.dispose = function () {
+        this.glCat.getRenderingContext().deleteRenderbuffer(this.renderbuffer);
+    };
+    /**
      * Return its own renderbuffer.
      */
     GLCatRenderbuffer.prototype.getRenderbuffer = function () {
@@ -896,6 +920,12 @@ var GLCatTexture = /** @class */ (function () {
         this.glCat = glCat;
         this.texture = texture;
     }
+    /**
+     * Dispose the texture.
+     */
+    GLCatTexture.prototype.dispose = function () {
+        this.glCat.getRenderingContext().deleteTexture(this.texture);
+    };
     /**
      * Retrieve its own texture.
      */

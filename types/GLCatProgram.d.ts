@@ -13,6 +13,10 @@ export declare class GLCatProgram {
      */
     constructor(glCat: GLCat, program: WebGLProgram);
     /**
+     * Dispose the program.
+     */
+    dispose(): void;
+    /**
      * Retrieve its own program.
      */
     getProgram(): WebGLProgram;

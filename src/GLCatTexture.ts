@@ -19,6 +19,13 @@ export class GLCatTexture {
   }
 
   /**
+   * Dispose the texture.
+   */
+  public dispose() {
+    this.glCat.getRenderingContext().deleteTexture( this.texture );
+  }
+
+  /**
    * Retrieve its own texture.
    */
   public getTexture(): WebGLTexture {

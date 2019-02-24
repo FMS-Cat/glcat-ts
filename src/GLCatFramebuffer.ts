@@ -21,6 +21,13 @@ export class GLCatFramebuffer {
   }
 
   /**
+   * Dispose the framebuffer.
+   */
+  public dispose() {
+    this.glCat.getRenderingContext().deleteFramebuffer( this.framebuffer );
+  }
+
+  /**
    * Return its own framebuffer.
    */
   public getFramebuffer(): WebGLFramebuffer {

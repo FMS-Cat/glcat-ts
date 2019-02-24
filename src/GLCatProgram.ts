@@ -20,6 +20,13 @@ export class GLCatProgram {
   }
 
   /**
+   * Dispose the program.
+   */
+  public dispose() {
+    this.glCat.getRenderingContext().deleteProgram( this.program );
+  }
+
+  /**
    * Retrieve its own program.
    */
   public getProgram(): WebGLProgram {

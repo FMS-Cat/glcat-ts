@@ -19,6 +19,13 @@ export class GLCatRenderbuffer {
   }
 
   /**
+   * Dispose the renderbuffer.
+   */
+  public dispose() {
+    this.glCat.getRenderingContext().deleteRenderbuffer( this.renderbuffer );
+  }
+
+  /**
    * Return its own renderbuffer.
    */
   public getRenderbuffer(): WebGLRenderbuffer {

@@ -14,6 +14,10 @@ export declare class GLCatFramebuffer {
      */
     constructor(glCat: GLCat, framebuffer: WebGLFramebuffer);
     /**
+     * Dispose the framebuffer.
+     */
+    dispose(): void;
+    /**
      * Return its own framebuffer.
      */
     getFramebuffer(): WebGLFramebuffer;

@@ -12,6 +12,10 @@ export declare class GLCatTexture {
      */
     constructor(glCat: GLCat, texture: WebGLTexture);
     /**
+     * Dispose the texture.
+     */
+    dispose(): void;
+    /**
      * Retrieve its own texture.
      */
     getTexture(): WebGLTexture;

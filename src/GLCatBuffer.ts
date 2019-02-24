@@ -17,6 +17,13 @@ export class GLCatBuffer {
   }
 
   /**
+   * Dispose the buffer.
+   */
+  public dispose() {
+    this.glCat.getRenderingContext().deleteBuffer( this.buffer );
+  }
+
+  /**
    * Retrieve its own buffer.
    */
   public getBuffer(): WebGLBuffer {

@@ -12,6 +12,10 @@ export declare class GLCatRenderbuffer {
      */
     constructor(glCat: GLCat, renderbuffer: WebGLRenderbuffer);
     /**
+     * Dispose the renderbuffer.
+     */
+    dispose(): void;
+    /**
      * Return its own renderbuffer.
      */
     getRenderbuffer(): WebGLRenderbuffer;

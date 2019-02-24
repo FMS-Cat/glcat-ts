@@ -10,6 +10,10 @@ export declare class GLCatBuffer {
      */
     constructor(glCat: GLCat, buffer: WebGLBuffer);
     /**
+     * Dispose the buffer.
+     */
+    dispose(): void;
+    /**
      * Retrieve its own buffer.
      */
     getBuffer(): WebGLBuffer;
