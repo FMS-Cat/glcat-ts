@@ -978,7 +978,12 @@ exports.GLCatTexture = GLCatTexture;
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var constants_1 = __importDefault(__webpack_require__(0));
+exports.GL = constants_1.default;
 __export(__webpack_require__(7));
 __export(__webpack_require__(1));
 __export(__webpack_require__(2));
