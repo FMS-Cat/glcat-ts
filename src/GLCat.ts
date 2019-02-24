@@ -3,6 +3,7 @@ import { GLCatBuffer } from './GLCatBuffer';
 import { GLCatFramebuffer } from './GLCatFramebuffer';
 import { GLCatProgram } from './GLCatProgram';
 import { GLCatRenderbuffer } from './GLCatRenderbuffer';
+import { GLCatShader } from './GLCatShader';
 import { GLCatTexture } from './GLCatTexture';
 
 export type WebGLExtension = any;
@@ -90,7 +91,7 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new shader object.
    */
-  public createShader( type: number, code: string ): WebGLShader | null {
+  public createShader( type: number ): GLCatShader | null {
     const gl = this.gl;
 
     const shader = gl.createShader( type );
@@ -98,54 +99,85 @@ export class GLCat extends EventEmitter {
       this.spit( GLCat.unexpectedNullDetectedError );
       return null;
     }
-    gl.shaderSource( shader, code );
-    gl.compileShader( shader );
-    if ( !gl.getShaderParameter( shader, gl.COMPILE_STATUS ) ) {
-      gl.deleteShader( shader );
-      this.spit( gl.getShaderInfoLog( shader ) );
-      return null;
-    }
-    return shader;
+
+    return new GLCatShader( this, shader );
   }
 
   /**
    * Create a new GLCat program object.
    */
-  public createProgram( vert: string, frag: string ): GLCatProgram | null {
+  public createProgram(): GLCatProgram | null {
     const gl = this.gl;
-
-    const vertShader = this.createShader( gl.VERTEX_SHADER, vert );
-    if ( vertShader === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
-    }
-
-    const fragShader = this.createShader( gl.FRAGMENT_SHADER, frag );
-    if ( fragShader === null ) {
-      gl.deleteShader( vertShader );
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
-    }
 
     const program = gl.createProgram();
     if ( program === null ) {
-      gl.deleteShader( vertShader );
-      gl.deleteShader( fragShader );
       this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
-    }
-    gl.attachShader( program, vertShader );
-    gl.attachShader( program, fragShader );
-    gl.linkProgram( program );
-    if ( !gl.getProgramParameter( program, gl.LINK_STATUS ) ) {
-      gl.deleteShader( vertShader );
-      gl.deleteShader( fragShader );
-      gl.deleteProgram( program );
-      this.spit( gl.getProgramInfoLog( program ) );
       return null;
     }
 
     return new GLCatProgram( this, program );
+  }
+
+  /**
+   * Create a new GLCat program object, in lazier way.
+   */
+  public lazyProgram( vert: string, frag: string ): {
+    vertexShader: GLCatShader,
+    fragmentShader: GLCatShader,
+    program: GLCatProgram
+  } | null {
+    const gl = this.gl;
+
+    // == vert =====================================================================================
+    const vertexShader = this.createShader( gl.VERTEX_SHADER );
+    if ( vertexShader === null ) {
+      this.spit( GLCat.unexpectedNullDetectedError );
+      return null;
+    }
+
+    vertexShader.compile( vert );
+    if ( !vertexShader.isCompiled() ) {
+      vertexShader.dispose();
+      return null;
+    }
+
+    // == frag =====================================================================================
+    const fragmentShader = this.createShader( gl.FRAGMENT_SHADER );
+    if ( fragmentShader === null ) {
+      vertexShader.dispose();
+      this.spit( GLCat.unexpectedNullDetectedError );
+      return null;
+    }
+
+    fragmentShader.compile( frag );
+    if ( !fragmentShader.isCompiled() ) {
+      vertexShader.dispose();
+      fragmentShader.dispose();
+      return null;
+    }
+
+    // == program ==================================================================================
+    const program = this.createProgram();
+    if ( program === null ) {
+      vertexShader.dispose();
+      fragmentShader.dispose();
+      this.spit( GLCat.unexpectedNullDetectedError );
+      return null;
+    }
+
+    program.link( vertexShader, fragmentShader );
+    if ( !program.isLinked() ) {
+      vertexShader.dispose();
+      fragmentShader.dispose();
+      program.dispose();
+      return null;
+    }
+
+    return {
+      vertexShader,
+      fragmentShader,
+      program
+    };
   }
 
   /**
@@ -226,7 +258,11 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new framebufer, in lazier way.
    */
-  public lazyFramebuffer( width: number, height: number, isFloat: boolean = false ): GLCatFramebuffer | null {
+  public lazyFramebuffer( width: number, height: number, isFloat: boolean = false ): {
+    framebuffer: GLCatFramebuffer,
+    renderbuffer: GLCatRenderbuffer,
+    texture: GLCatTexture
+  } | null {
     const framebuffer = this.createFramebuffer();
     if ( framebuffer === null ) {
       this.spit( GLCat.unexpectedNullDetectedError );
@@ -235,16 +271,19 @@ export class GLCat extends EventEmitter {
 
     const renderbuffer = this.createRenderbuffer();
     if ( renderbuffer === null ) {
+      framebuffer.dispose();
       this.spit( GLCat.unexpectedNullDetectedError );
-      return framebuffer;
+      return null;
     }
     renderbuffer.init( width, height );
     framebuffer.attachRenderbuffer( renderbuffer );
 
     const texture = this.createTexture();
     if ( texture === null ) {
+      framebuffer.dispose();
+      renderbuffer.dispose();
       this.spit( GLCat.unexpectedNullDetectedError );
-      return framebuffer;
+      return null;
     }
     if ( isFloat ) {
       texture.setTextureFromFloatArray( width, height, null );
@@ -253,7 +292,11 @@ export class GLCat extends EventEmitter {
     }
     framebuffer.attachTexture( texture );
 
-    return framebuffer;
+    return {
+      framebuffer,
+      renderbuffer,
+      texture
+    };
   }
 
   /**

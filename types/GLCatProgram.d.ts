@@ -1,13 +1,16 @@
 import { GLCat } from './GLCat';
 import { GLCatBuffer } from './GLCatBuffer';
+import { GLCatShader } from './GLCatShader';
 /**
  * It's a WebGLProgram, but has cache of variable locations.
  */
 export declare class GLCatProgram {
     private glCat;
     private program;
+    private shaders;
     private attribLocationCache;
     private uniformLocationCache;
+    private linked;
     /**
      * Create a new GLCatProgram instance.
      */
@@ -17,9 +20,21 @@ export declare class GLCatProgram {
      */
     dispose(): void;
     /**
+     * Return whether the last link operation was successful or not.
+     */
+    isLinked(): boolean;
+    /**
      * Retrieve its own program.
      */
     getProgram(): WebGLProgram;
+    /**
+     * Retrieve its shaders.
+     */
+    getShaders(): GLCatShader[] | null;
+    /**
+     * Attach shaders and link this program.
+     */
+    link(...shaders: GLCatShader[]): void;
     /**
      * Attach an attribute variable.
      * @param name Name of the attribute variable

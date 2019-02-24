@@ -1,6 +1,7 @@
 import GL from './constants';
 import { GLCat } from './GLCat';
 import { GLCatBuffer } from './GLCatBuffer';
+import { GLCatShader } from './GLCatShader';
 
 /**
  * It's a WebGLProgram, but has cache of variable locations.
@@ -8,8 +9,10 @@ import { GLCatBuffer } from './GLCatBuffer';
 export class GLCatProgram {
   private glCat: GLCat;
   private program: WebGLProgram;
+  private shaders: GLCatShader[] | null = null;
   private attribLocationCache: { [ name: string ]: number } = {};
   private uniformLocationCache: { [ name: string ]: WebGLUniformLocation | null } = {};
+  private linked: boolean = false;
 
   /**
    * Create a new GLCatProgram instance.
@@ -27,10 +30,42 @@ export class GLCatProgram {
   }
 
   /**
+   * Return whether the last link operation was successful or not.
+   */
+  public isLinked() {
+    return this.linked;
+  }
+
+  /**
    * Retrieve its own program.
    */
   public getProgram(): WebGLProgram {
     return this.program;
+  }
+
+  /**
+   * Retrieve its shaders.
+   */
+  public getShaders(): GLCatShader[] | null {
+    return this.shaders ? this.shaders.concat() : null;
+  }
+
+  /**
+   * Attach shaders and link this program.
+   */
+  public link( ...shaders: GLCatShader[] ): void {
+    const gl = this.glCat.getRenderingContext();
+
+    shaders.forEach( ( shader ) => gl.attachShader( this.program, shader.getShader() ) );
+    gl.linkProgram( this.program );
+
+    this.linked = gl.getProgramParameter( this.program, gl.LINK_STATUS );
+    if ( !this.linked ) {
+      this.glCat.spit( gl.getProgramInfoLog( this.program ) );
+      return;
+    }
+
+    this.shaders = shaders.concat();
   }
 
   /**

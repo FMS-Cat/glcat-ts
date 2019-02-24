@@ -559,8 +559,10 @@ var GLCatProgram = /** @class */ (function () {
      * Create a new GLCatProgram instance.
      */
     function GLCatProgram(glCat, program) {
+        this.shaders = null;
         this.attribLocationCache = {};
         this.uniformLocationCache = {};
+        this.linked = false;
         this.glCat = glCat;
         this.program = program;
     }
@@ -571,10 +573,41 @@ var GLCatProgram = /** @class */ (function () {
         this.glCat.getRenderingContext().deleteProgram(this.program);
     };
     /**
+     * Return whether the last link operation was successful or not.
+     */
+    GLCatProgram.prototype.isLinked = function () {
+        return this.linked;
+    };
+    /**
      * Retrieve its own program.
      */
     GLCatProgram.prototype.getProgram = function () {
         return this.program;
+    };
+    /**
+     * Retrieve its shaders.
+     */
+    GLCatProgram.prototype.getShaders = function () {
+        return this.shaders ? this.shaders.concat() : null;
+    };
+    /**
+     * Attach shaders and link this program.
+     */
+    GLCatProgram.prototype.link = function () {
+        var _this = this;
+        var shaders = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            shaders[_i] = arguments[_i];
+        }
+        var gl = this.glCat.getRenderingContext();
+        shaders.forEach(function (shader) { return gl.attachShader(_this.program, shader.getShader()); });
+        gl.linkProgram(this.program);
+        this.linked = gl.getProgramParameter(this.program, gl.LINK_STATUS);
+        if (!this.linked) {
+            this.glCat.spit(gl.getProgramInfoLog(this.program));
+            return;
+        }
+        this.shaders = shaders.concat();
     };
     /**
      * Attach an attribute variable.
@@ -1086,6 +1119,7 @@ var GLCatBuffer_1 = __webpack_require__(1);
 var GLCatFramebuffer_1 = __webpack_require__(2);
 var GLCatProgram_1 = __webpack_require__(3);
 var GLCatRenderbuffer_1 = __webpack_require__(4);
+var GLCatShader_1 = __webpack_require__(9);
 var GLCatTexture_1 = __webpack_require__(5);
 /**
  * WebGL wrapper with plenty of hackability.
@@ -1164,56 +1198,76 @@ var GLCat = /** @class */ (function (_super) {
     /**
      * Create a new shader object.
      */
-    GLCat.prototype.createShader = function (type, code) {
+    GLCat.prototype.createShader = function (type) {
         var gl = this.gl;
         var shader = gl.createShader(type);
         if (shader === null) {
             this.spit(GLCat.unexpectedNullDetectedError);
             return null;
         }
-        gl.shaderSource(shader, code);
-        gl.compileShader(shader);
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            gl.deleteShader(shader);
-            this.spit(gl.getShaderInfoLog(shader));
-            return null;
-        }
-        return shader;
+        return new GLCatShader_1.GLCatShader(this, shader);
     };
     /**
      * Create a new GLCat program object.
      */
-    GLCat.prototype.createProgram = function (vert, frag) {
+    GLCat.prototype.createProgram = function () {
         var gl = this.gl;
-        var vertShader = this.createShader(gl.VERTEX_SHADER, vert);
-        if (vertShader === null) {
-            this.spit(GLCat.unexpectedNullDetectedError);
-            return null;
-        }
-        var fragShader = this.createShader(gl.FRAGMENT_SHADER, frag);
-        if (fragShader === null) {
-            gl.deleteShader(vertShader);
-            this.spit(GLCat.unexpectedNullDetectedError);
-            return null;
-        }
         var program = gl.createProgram();
         if (program === null) {
-            gl.deleteShader(vertShader);
-            gl.deleteShader(fragShader);
             this.spit(GLCat.unexpectedNullDetectedError);
-            return null;
-        }
-        gl.attachShader(program, vertShader);
-        gl.attachShader(program, fragShader);
-        gl.linkProgram(program);
-        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-            gl.deleteShader(vertShader);
-            gl.deleteShader(fragShader);
-            gl.deleteProgram(program);
-            this.spit(gl.getProgramInfoLog(program));
             return null;
         }
         return new GLCatProgram_1.GLCatProgram(this, program);
+    };
+    /**
+     * Create a new GLCat program object, in lazier way.
+     */
+    GLCat.prototype.lazyProgram = function (vert, frag) {
+        var gl = this.gl;
+        // == vert =====================================================================================
+        var vertexShader = this.createShader(gl.VERTEX_SHADER);
+        if (vertexShader === null) {
+            this.spit(GLCat.unexpectedNullDetectedError);
+            return null;
+        }
+        vertexShader.compile(vert);
+        if (!vertexShader.isCompiled()) {
+            vertexShader.dispose();
+            return null;
+        }
+        // == frag =====================================================================================
+        var fragmentShader = this.createShader(gl.FRAGMENT_SHADER);
+        if (fragmentShader === null) {
+            vertexShader.dispose();
+            this.spit(GLCat.unexpectedNullDetectedError);
+            return null;
+        }
+        fragmentShader.compile(frag);
+        if (!fragmentShader.isCompiled()) {
+            vertexShader.dispose();
+            fragmentShader.dispose();
+            return null;
+        }
+        // == program ==================================================================================
+        var program = this.createProgram();
+        if (program === null) {
+            vertexShader.dispose();
+            fragmentShader.dispose();
+            this.spit(GLCat.unexpectedNullDetectedError);
+            return null;
+        }
+        program.link(vertexShader, fragmentShader);
+        if (!program.isLinked()) {
+            vertexShader.dispose();
+            fragmentShader.dispose();
+            program.dispose();
+            return null;
+        }
+        return {
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            program: program
+        };
     };
     /**
      * Specify a program to use.
@@ -1287,15 +1341,18 @@ var GLCat = /** @class */ (function (_super) {
         }
         var renderbuffer = this.createRenderbuffer();
         if (renderbuffer === null) {
+            framebuffer.dispose();
             this.spit(GLCat.unexpectedNullDetectedError);
-            return framebuffer;
+            return null;
         }
         renderbuffer.init(width, height);
         framebuffer.attachRenderbuffer(renderbuffer);
         var texture = this.createTexture();
         if (texture === null) {
+            framebuffer.dispose();
+            renderbuffer.dispose();
             this.spit(GLCat.unexpectedNullDetectedError);
-            return framebuffer;
+            return null;
         }
         if (isFloat) {
             texture.setTextureFromFloatArray(width, height, null);
@@ -1304,7 +1361,11 @@ var GLCat = /** @class */ (function (_super) {
             texture.setTextureFromArray(width, height, null);
         }
         framebuffer.attachTexture(texture);
-        return framebuffer;
+        return {
+            framebuffer: framebuffer,
+            renderbuffer: renderbuffer,
+            texture: texture
+        };
     };
     /**
      * Clear the current framebuffer.
@@ -1667,6 +1728,60 @@ EventEmitter.EventEmitter = EventEmitter;
 if (true) {
   module.exports = EventEmitter;
 }
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * It's a WebGLShader.
+ */
+var GLCatShader = /** @class */ (function () {
+    /**
+     * Create a new GLCatShader instance.
+     */
+    function GLCatShader(glCat, shader) {
+        this.compiled = false;
+        this.glCat = glCat;
+        this.shader = shader;
+    }
+    /**
+     * Dispose the shader.
+     */
+    GLCatShader.prototype.dispose = function () {
+        this.glCat.getRenderingContext().deleteShader(this.shader);
+    };
+    /**
+     * Return whether the last compilation was successful or not.
+     */
+    GLCatShader.prototype.isCompiled = function () {
+        return this.compiled;
+    };
+    /**
+     * Retrieve its own shader.
+     */
+    GLCatShader.prototype.getShader = function () {
+        return this.shader;
+    };
+    /**
+     * Compile the shader.
+     */
+    GLCatShader.prototype.compile = function (code) {
+        var gl = this.glCat.getRenderingContext();
+        gl.shaderSource(this.shader, code);
+        gl.compileShader(this.shader);
+        this.compiled = gl.getShaderParameter(this.shader, gl.COMPILE_STATUS);
+        if (!this.compiled) {
+            this.glCat.spit(gl.getShaderInfoLog(this.shader));
+        }
+    };
+    return GLCatShader;
+}());
+exports.GLCatShader = GLCatShader;
 
 
 /***/ })

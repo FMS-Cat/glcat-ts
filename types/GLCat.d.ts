@@ -3,6 +3,7 @@ import { GLCatBuffer } from './GLCatBuffer';
 import { GLCatFramebuffer } from './GLCatFramebuffer';
 import { GLCatProgram } from './GLCatProgram';
 import { GLCatRenderbuffer } from './GLCatRenderbuffer';
+import { GLCatShader } from './GLCatShader';
 import { GLCatTexture } from './GLCatTexture';
 export declare type WebGLExtension = any;
 /**
@@ -40,11 +41,19 @@ export declare class GLCat extends EventEmitter {
     /**
      * Create a new shader object.
      */
-    createShader(type: number, code: string): WebGLShader | null;
+    createShader(type: number): GLCatShader | null;
     /**
      * Create a new GLCat program object.
      */
-    createProgram(vert: string, frag: string): GLCatProgram | null;
+    createProgram(): GLCatProgram | null;
+    /**
+     * Create a new GLCat program object, in lazier way.
+     */
+    lazyProgram(vert: string, frag: string): {
+        vertexShader: GLCatShader;
+        fragmentShader: GLCatShader;
+        program: GLCatProgram;
+    } | null;
     /**
      * Specify a program to use.
      */
@@ -69,7 +78,11 @@ export declare class GLCat extends EventEmitter {
     /**
      * Create a new framebufer, in lazier way.
      */
-    lazyFramebuffer(width: number, height: number, isFloat?: boolean): GLCatFramebuffer | null;
+    lazyFramebuffer(width: number, height: number, isFloat?: boolean): {
+        framebuffer: GLCatFramebuffer;
+        renderbuffer: GLCatRenderbuffer;
+        texture: GLCatTexture;
+    } | null;
     /**
      * Clear the current framebuffer.
      */
