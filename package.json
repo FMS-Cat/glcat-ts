@@ -4,7 +4,7 @@
   "description": "WebGL wrapper with plenty of hackability",
   "author": "FMS-Cat",
   "license": "MIT",
-  "main": "./dist/bundle.js",
+  "main": "./dist/glcat.js",
   "types": "./types/index.d.ts",
   "files": [
     "dist",
