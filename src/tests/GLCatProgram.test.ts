@@ -1,17 +1,26 @@
 import WebGL from 'gl';
 import { GLCat } from '../GLCat';
 import { GLCatProgram } from '../GLCatProgram';
-import quadVert from './shader/quad.vert';
-import uvFrag from './shader/uv.frag';
+import sQuadVert from './shader/quad.vert';
+import sUvFrag from './shader/uv.frag';
+import { GLCatShader } from '../GLCatShader';
 
 describe( 'GLCatProgram', () => {
   let gl: WebGLRenderingContext;
   let glCat: GLCat;
+  let quadVert: GLCatShader;
+  let uvFrag: GLCatShader;
   let program: GLCatProgram;
 
   beforeAll( () => {
     gl = WebGL( 300, 150 );
     glCat = new GLCat( gl );
+
+    quadVert = glCat.createShader( gl.VERTEX_SHADER )!;
+    quadVert.compile( sQuadVert );
+
+    uvFrag = glCat.createShader( gl.FRAGMENT_SHADER )!;
+    uvFrag.compile( sUvFrag );
   } );
 
   afterAll( () => {
@@ -20,7 +29,7 @@ describe( 'GLCatProgram', () => {
   } );
 
   it( 'should be instantiated via glCat.createProgram', () => {
-    const tempProgram = glCat.createProgram( quadVert, uvFrag );
+    const tempProgram = glCat.createProgram();
     expect( tempProgram ).not.toBeNull();
     program = tempProgram!;
   } );
@@ -28,6 +37,13 @@ describe( 'GLCatProgram', () => {
   describe( 'getProgram', () => {
     it ( 'should return its own WebGLProgram', () => {
       expect( program.getProgram() ).not.toBeNull();
+    } );
+  } );
+
+  describe( 'link', () => {
+    it ( 'should link the WebGLProgram successfully', () => {
+      program.link( quadVert, uvFrag );
+      expect( program.isLinked() ).toBe( true );
     } );
   } );
 

@@ -1,9 +1,5 @@
 import WebGL from 'gl';
 import { GLCat } from '../GLCat';
-import invalidVert from './shader/invalid.vert';
-import posFrag from './shader/pos.frag';
-import quadVert from './shader/quad.vert';
-import uvFrag from './shader/uv.frag';
 
 describe( 'GLCat', () => {
   let gl: WebGLRenderingContext;
@@ -62,39 +58,15 @@ describe( 'GLCat', () => {
 
   describe( 'createShader', () => {
     it ( 'should create a new shader object', () => {
-      const shader = glCat.createShader( gl.VERTEX_SHADER, quadVert );
+      const shader = glCat.createShader( gl.VERTEX_SHADER );
       expect( shader ).not.toBeNull();
-    } );
-
-    it ( 'should throw a shader compile error', () => {
-      expect( () => {
-        glCat.createShader( gl.VERTEX_SHADER, invalidVert );
-      } ).toThrow();
     } );
   } );
 
   describe( 'createProgram', () => {
     it ( 'should create a new program object', () => {
-      const program = glCat.createProgram( quadVert, uvFrag );
+      const program = glCat.createProgram();
       expect( program ).not.toBeNull();
-    } );
-
-    it ( 'should throw a vertex shader compile error', () => {
-      expect( () => {
-        glCat.createProgram( invalidVert, uvFrag );
-      } ).toThrow();
-    } );
-
-    it ( 'should throw a fragment shader compile error', () => {
-      expect( () => {
-        glCat.createProgram( quadVert, quadVert );
-      } ).toThrow();
-    } );
-
-    it ( 'should throw a linker compile error', () => {
-      expect( () => {
-        glCat.createProgram( quadVert, posFrag );
-      } ).toThrow();
     } );
   } );
 } );
