@@ -16,6 +16,8 @@ export class GLCatTexture {
   constructor( glCat: GLCat, texture: WebGLTexture ) {
     this.glCat = glCat;
     this.texture = texture;
+    this.textureFilter( GL.LINEAR );
+    this.textureWrap( GL.CLAMP_TO_EDGE );
   }
 
   /**
