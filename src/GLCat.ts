@@ -121,24 +121,20 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new GLCat program object, in lazier way.
    */
-  public lazyProgram( vert: string, frag: string ): {
-    vertexShader: GLCatShader | null,
-    fragmentShader: GLCatShader | null,
-    program: GLCatProgram | null
-  } {
+  public lazyProgram( vert: string, frag: string ): GLCatProgram | null {
     const gl = this.gl;
 
     // == vert =====================================================================================
     const vertexShader = this.createShader( gl.VERTEX_SHADER );
     if ( vertexShader === null ) {
       this.spit( GLCat.unexpectedNullDetectedError );
-      return { vertexShader: null, fragmentShader: null, program: null };
+      return null;
     }
 
     vertexShader.compile( vert );
     if ( !vertexShader.isCompiled() ) {
       vertexShader.dispose();
-      return { vertexShader: null, fragmentShader: null, program: null };
+      return null;
     }
 
     // == frag =====================================================================================
@@ -146,14 +142,14 @@ export class GLCat extends EventEmitter {
     if ( fragmentShader === null ) {
       vertexShader.dispose();
       this.spit( GLCat.unexpectedNullDetectedError );
-      return { vertexShader: null, fragmentShader: null, program: null };
+      return null;
     }
 
     fragmentShader.compile( frag );
     if ( !fragmentShader.isCompiled() ) {
       vertexShader.dispose();
       fragmentShader.dispose();
-      return { vertexShader: null, fragmentShader: null, program: null };
+      return null;
     }
 
     // == program ==================================================================================
@@ -162,7 +158,7 @@ export class GLCat extends EventEmitter {
       vertexShader.dispose();
       fragmentShader.dispose();
       this.spit( GLCat.unexpectedNullDetectedError );
-      return { vertexShader: null, fragmentShader: null, program: null };
+      return null;
     }
 
     program.link( vertexShader, fragmentShader );
@@ -170,14 +166,10 @@ export class GLCat extends EventEmitter {
       vertexShader.dispose();
       fragmentShader.dispose();
       program.dispose();
-      return { vertexShader: null, fragmentShader: null, program: null };
+      return null;
     }
 
-    return {
-      vertexShader,
-      fragmentShader,
-      program
-    };
+    return program;
   }
 
   /**
@@ -258,22 +250,18 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new framebufer, in lazier way.
    */
-  public lazyFramebuffer( width: number, height: number, isFloat: boolean = false ): {
-    framebuffer: GLCatFramebuffer | null,
-    renderbuffer: GLCatRenderbuffer | null,
-    texture: GLCatTexture | null
-  } {
+  public lazyFramebuffer( width: number, height: number, isFloat: boolean = false ): GLCatFramebuffer | null {
     const framebuffer = this.createFramebuffer();
     if ( framebuffer === null ) {
       this.spit( GLCat.unexpectedNullDetectedError );
-      return { framebuffer: null, renderbuffer: null, texture: null };
+      return null;
     }
 
     const renderbuffer = this.createRenderbuffer();
     if ( renderbuffer === null ) {
       framebuffer.dispose();
       this.spit( GLCat.unexpectedNullDetectedError );
-      return { framebuffer: null, renderbuffer: null, texture: null };
+      return null;
     }
     renderbuffer.init( width, height );
     framebuffer.attachRenderbuffer( renderbuffer );
@@ -283,7 +271,7 @@ export class GLCat extends EventEmitter {
       framebuffer.dispose();
       renderbuffer.dispose();
       this.spit( GLCat.unexpectedNullDetectedError );
-      return { framebuffer: null, renderbuffer: null, texture: null };
+      return null;
     }
     if ( isFloat ) {
       texture.setTextureFromFloatArray( width, height, null );
@@ -292,11 +280,7 @@ export class GLCat extends EventEmitter {
     }
     framebuffer.attachTexture( texture );
 
-    return {
-      framebuffer,
-      renderbuffer,
-      texture
-    };
+    return framebuffer;
   }
 
   /**

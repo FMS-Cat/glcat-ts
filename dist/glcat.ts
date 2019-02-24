@@ -1228,25 +1228,25 @@ var GLCat = /** @class */ (function (_super) {
         var vertexShader = this.createShader(gl.VERTEX_SHADER);
         if (vertexShader === null) {
             this.spit(GLCat.unexpectedNullDetectedError);
-            return { vertexShader: null, fragmentShader: null, program: null };
+            return null;
         }
         vertexShader.compile(vert);
         if (!vertexShader.isCompiled()) {
             vertexShader.dispose();
-            return { vertexShader: null, fragmentShader: null, program: null };
+            return null;
         }
         // == frag =====================================================================================
         var fragmentShader = this.createShader(gl.FRAGMENT_SHADER);
         if (fragmentShader === null) {
             vertexShader.dispose();
             this.spit(GLCat.unexpectedNullDetectedError);
-            return { vertexShader: null, fragmentShader: null, program: null };
+            return null;
         }
         fragmentShader.compile(frag);
         if (!fragmentShader.isCompiled()) {
             vertexShader.dispose();
             fragmentShader.dispose();
-            return { vertexShader: null, fragmentShader: null, program: null };
+            return null;
         }
         // == program ==================================================================================
         var program = this.createProgram();
@@ -1254,20 +1254,16 @@ var GLCat = /** @class */ (function (_super) {
             vertexShader.dispose();
             fragmentShader.dispose();
             this.spit(GLCat.unexpectedNullDetectedError);
-            return { vertexShader: null, fragmentShader: null, program: null };
+            return null;
         }
         program.link(vertexShader, fragmentShader);
         if (!program.isLinked()) {
             vertexShader.dispose();
             fragmentShader.dispose();
             program.dispose();
-            return { vertexShader: null, fragmentShader: null, program: null };
+            return null;
         }
-        return {
-            vertexShader: vertexShader,
-            fragmentShader: fragmentShader,
-            program: program
-        };
+        return program;
     };
     /**
      * Specify a program to use.
@@ -1337,13 +1333,13 @@ var GLCat = /** @class */ (function (_super) {
         var framebuffer = this.createFramebuffer();
         if (framebuffer === null) {
             this.spit(GLCat.unexpectedNullDetectedError);
-            return { framebuffer: null, renderbuffer: null, texture: null };
+            return null;
         }
         var renderbuffer = this.createRenderbuffer();
         if (renderbuffer === null) {
             framebuffer.dispose();
             this.spit(GLCat.unexpectedNullDetectedError);
-            return { framebuffer: null, renderbuffer: null, texture: null };
+            return null;
         }
         renderbuffer.init(width, height);
         framebuffer.attachRenderbuffer(renderbuffer);
@@ -1352,7 +1348,7 @@ var GLCat = /** @class */ (function (_super) {
             framebuffer.dispose();
             renderbuffer.dispose();
             this.spit(GLCat.unexpectedNullDetectedError);
-            return { framebuffer: null, renderbuffer: null, texture: null };
+            return null;
         }
         if (isFloat) {
             texture.setTextureFromFloatArray(width, height, null);
@@ -1361,11 +1357,7 @@ var GLCat = /** @class */ (function (_super) {
             texture.setTextureFromArray(width, height, null);
         }
         framebuffer.attachTexture(texture);
-        return {
-            framebuffer: framebuffer,
-            renderbuffer: renderbuffer,
-            texture: texture
-        };
+        return framebuffer;
     };
     /**
      * Clear the current framebuffer.

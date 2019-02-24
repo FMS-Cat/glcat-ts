@@ -49,11 +49,7 @@ export declare class GLCat extends EventEmitter {
     /**
      * Create a new GLCat program object, in lazier way.
      */
-    lazyProgram(vert: string, frag: string): {
-        vertexShader: GLCatShader | null;
-        fragmentShader: GLCatShader | null;
-        program: GLCatProgram | null;
-    };
+    lazyProgram(vert: string, frag: string): GLCatProgram | null;
     /**
      * Specify a program to use.
      */
@@ -78,11 +74,7 @@ export declare class GLCat extends EventEmitter {
     /**
      * Create a new framebufer, in lazier way.
      */
-    lazyFramebuffer(width: number, height: number, isFloat?: boolean): {
-        framebuffer: GLCatFramebuffer | null;
-        renderbuffer: GLCatRenderbuffer | null;
-        texture: GLCatTexture | null;
-    };
+    lazyFramebuffer(width: number, height: number, isFloat?: boolean): GLCatFramebuffer | null;
     /**
      * Clear the current framebuffer.
      */
