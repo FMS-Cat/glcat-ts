@@ -8,7 +8,7 @@ module.exports = ( env, argv ) => {
 
   return {
     entry: {
-      'glcat.ts': './src/index.ts'
+      'glcat.js': './src/index.ts'
     },
     output: {
       path: path.join( __dirname, 'dist' ),
