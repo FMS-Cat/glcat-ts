@@ -7,6 +7,8 @@ import { GLCat } from './GLCat';
 export class GLCatTexture {
   private glCat: GLCat;
   private texture: WebGLTexture;
+  private width: number = 0;
+  private height: number = 0;
 
   /**
    * Create a new GLCatTexture instance.
@@ -21,6 +23,20 @@ export class GLCatTexture {
    */
   public getTexture(): WebGLTexture {
     return this.texture;
+  }
+
+  /**
+   * Return its width.
+   */
+  public getWidth(): number {
+    return this.width;
+  }
+
+  /**
+   * Return its height.
+   */
+  public getHeight(): number {
+    return this.height;
   }
 
   /**
@@ -62,6 +78,9 @@ export class GLCatTexture {
     gl.bindTexture( gl.TEXTURE_2D, this.texture );
     gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source );
     gl.bindTexture( gl.TEXTURE_2D, null );
+
+    this.width = source.width;
+    this.height = source.height;
   }
 
   /**
@@ -80,6 +99,9 @@ export class GLCatTexture {
     gl.bindTexture( gl.TEXTURE_2D, this.texture );
     gl.texImage2D( gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, source );
     gl.bindTexture( gl.TEXTURE_2D, null );
+
+    this.width = width;
+    this.height = height;
   }
 
   /**
@@ -103,6 +125,9 @@ export class GLCatTexture {
       this.textureFilter( gl.NEAREST );
     }
     gl.bindTexture( gl.TEXTURE_2D, null );
+
+    this.width = width;
+    this.height = height;
   }
 
   /**
@@ -114,11 +139,15 @@ export class GLCatTexture {
     gl.bindTexture( gl.TEXTURE_2D, this.texture );
     gl.copyTexImage2D( gl.TEXTURE_2D, 0, gl.RGBA, 0, 0, width, height, 0 );
     gl.bindTexture( gl.TEXTURE_2D, null );
+
+    this.width = width;
+    this.height = height;
   }
 
   /**
    * Set new cubemap data into this texture.
    * @param textures Array of iamges. Order: `X+`, `X-`, `Y+`, `Y-`, `Z+`, `Z-`
+   * @todo due to compatibility of its `width` and `height` it should not be used yet
    */
   public setCubemap( textures: TexImageSource[] ) {
     const gl = this.glCat.getRenderingContext();

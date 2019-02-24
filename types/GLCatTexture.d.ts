@@ -5,6 +5,8 @@ import { GLCat } from './GLCat';
 export declare class GLCatTexture {
     private glCat;
     private texture;
+    private width;
+    private height;
     /**
      * Create a new GLCatTexture instance.
      */
@@ -13,6 +15,14 @@ export declare class GLCatTexture {
      * Retrieve its own texture.
      */
     getTexture(): WebGLTexture;
+    /**
+     * Return its width.
+     */
+    getWidth(): number;
+    /**
+     * Return its height.
+     */
+    getHeight(): number;
     /**
      * Specify how to filter the texture.
      */
@@ -48,6 +58,7 @@ export declare class GLCatTexture {
     /**
      * Set new cubemap data into this texture.
      * @param textures Array of iamges. Order: `X+`, `X-`, `Y+`, `Y-`, `Z+`, `Z-`
+     * @todo due to compatibility of its `width` and `height` it should not be used yet
      */
     setCubemap(textures: TexImageSource[]): void;
 }

@@ -519,7 +519,7 @@ var GLCatFramebuffer = /** @class */ (function () {
         if (attachment === void 0) { attachment = constants_1.default.COLOR_ATTACHMENT0; }
         var gl = this.glCat.getRenderingContext();
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture.getTexture(), 0);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, attachment, gl.TEXTURE_2D, texture.getTexture(), 0);
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         this.texture = texture;
     };
@@ -831,6 +831,8 @@ var GLCatRenderbuffer = /** @class */ (function () {
      * Create a new GLCatTexture instance.
      */
     function GLCatRenderbuffer(glCat, renderbuffer) {
+        this.width = 0;
+        this.height = 0;
         this.glCat = glCat;
         this.renderbuffer = renderbuffer;
     }
@@ -839,6 +841,18 @@ var GLCatRenderbuffer = /** @class */ (function () {
      */
     GLCatRenderbuffer.prototype.getRenderbuffer = function () {
         return this.renderbuffer;
+    };
+    /**
+     * Return its width.
+     */
+    GLCatRenderbuffer.prototype.getWidth = function () {
+        return this.width;
+    };
+    /**
+     * Return its height.
+     */
+    GLCatRenderbuffer.prototype.getHeight = function () {
+        return this.height;
     };
     /**
      * Initialize this renderbuffer.
@@ -850,6 +864,8 @@ var GLCatRenderbuffer = /** @class */ (function () {
         gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderbuffer);
         gl.renderbufferStorage(gl.RENDERBUFFER, format, width, height);
         gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+        this.width = width;
+        this.height = height;
     };
     return GLCatRenderbuffer;
 }());
@@ -875,6 +891,8 @@ var GLCatTexture = /** @class */ (function () {
      * Create a new GLCatTexture instance.
      */
     function GLCatTexture(glCat, texture) {
+        this.width = 0;
+        this.height = 0;
         this.glCat = glCat;
         this.texture = texture;
     }
@@ -883,6 +901,18 @@ var GLCatTexture = /** @class */ (function () {
      */
     GLCatTexture.prototype.getTexture = function () {
         return this.texture;
+    };
+    /**
+     * Return its width.
+     */
+    GLCatTexture.prototype.getWidth = function () {
+        return this.width;
+    };
+    /**
+     * Return its height.
+     */
+    GLCatTexture.prototype.getHeight = function () {
+        return this.height;
     };
     GLCatTexture.prototype.textureFilter = function (filterMag, filterMin) {
         if (filterMag === void 0) { filterMag = constants_1.default.NEAREST; }
@@ -910,6 +940,8 @@ var GLCatTexture = /** @class */ (function () {
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
         gl.bindTexture(gl.TEXTURE_2D, null);
+        this.width = source.width;
+        this.height = source.height;
     };
     /**
      * Set new data into this texture.
@@ -922,6 +954,8 @@ var GLCatTexture = /** @class */ (function () {
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, source);
         gl.bindTexture(gl.TEXTURE_2D, null);
+        this.width = width;
+        this.height = height;
     };
     /**
      * Set new data into this texture.
@@ -938,6 +972,8 @@ var GLCatTexture = /** @class */ (function () {
             this.textureFilter(gl.NEAREST);
         }
         gl.bindTexture(gl.TEXTURE_2D, null);
+        this.width = width;
+        this.height = height;
     };
     /**
      * Copy pixels from current framebuffer to given texture.
@@ -947,10 +983,13 @@ var GLCatTexture = /** @class */ (function () {
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.copyTexImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 0, 0, width, height, 0);
         gl.bindTexture(gl.TEXTURE_2D, null);
+        this.width = width;
+        this.height = height;
     };
     /**
      * Set new cubemap data into this texture.
      * @param textures Array of iamges. Order: `X+`, `X-`, `Y+`, `Y-`, `Z+`, `Z-`
+     * @todo due to compatibility of its `width` and `height` it should not be used yet
      */
     GLCatTexture.prototype.setCubemap = function (textures) {
         var gl = this.glCat.getRenderingContext();

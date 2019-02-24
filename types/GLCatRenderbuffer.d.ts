@@ -5,6 +5,8 @@ import { GLCat } from './GLCat';
 export declare class GLCatRenderbuffer {
     private glCat;
     private renderbuffer;
+    private width;
+    private height;
     /**
      * Create a new GLCatTexture instance.
      */
@@ -13,6 +15,14 @@ export declare class GLCatRenderbuffer {
      * Return its own renderbuffer.
      */
     getRenderbuffer(): WebGLRenderbuffer;
+    /**
+     * Return its width.
+     */
+    getWidth(): number;
+    /**
+     * Return its height.
+     */
+    getHeight(): number;
     /**
      * Initialize this renderbuffer.
      * If `format` is not given, it will be initialized as `DEPTH_COMPONENT16` .

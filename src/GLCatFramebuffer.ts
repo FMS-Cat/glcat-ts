@@ -61,7 +61,7 @@ export class GLCatFramebuffer {
     const gl = this.glCat.getRenderingContext();
 
     gl.bindFramebuffer( gl.FRAMEBUFFER, this.framebuffer );
-    gl.framebufferTexture2D( gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture.getTexture(), 0 );
+    gl.framebufferTexture2D( gl.FRAMEBUFFER, attachment, gl.TEXTURE_2D, texture.getTexture(), 0 );
     gl.bindFramebuffer( gl.FRAMEBUFFER, null );
 
     this.texture = texture;

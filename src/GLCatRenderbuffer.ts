@@ -7,6 +7,8 @@ import { GLCat } from './GLCat';
 export class GLCatRenderbuffer {
   private glCat: GLCat;
   private renderbuffer: WebGLRenderbuffer;
+  private width: number = 0;
+  private height: number = 0;
 
   /**
    * Create a new GLCatTexture instance.
@@ -24,6 +26,20 @@ export class GLCatRenderbuffer {
   }
 
   /**
+   * Return its width.
+   */
+  public getWidth(): number {
+    return this.width;
+  }
+
+  /**
+   * Return its height.
+   */
+  public getHeight(): number {
+    return this.height;
+  }
+
+  /**
    * Initialize this renderbuffer.
    * If `format` is not given, it will be initialized as `DEPTH_COMPONENT16` .
    */
@@ -33,5 +49,8 @@ export class GLCatRenderbuffer {
     gl.bindRenderbuffer( gl.RENDERBUFFER, this.renderbuffer );
     gl.renderbufferStorage( gl.RENDERBUFFER, format, width, height );
     gl.bindRenderbuffer( gl.RENDERBUFFER, null );
+
+    this.width = width;
+    this.height = height;
   }
 }
