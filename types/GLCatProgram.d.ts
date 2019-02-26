@@ -124,14 +124,14 @@ export declare class GLCatProgram {
      * @param texture Texture object
      * @param number Specify a texture unit, in integer
      */
-    uniformTexture(name: string, texture: WebGLTexture | null, number?: number): void;
+    uniformTexture(name: string, texture: WebGLTexture, number?: number): void;
     /**
      * Attach a `samplerCube` type uniform texture.
      * @param name Name of the uniform texture
      * @param texture Texture object
      * @param number Specify a texture unit, in integer
      */
-    uniformCubemap(name: string, texture: WebGLTexture | null, number?: number): void;
+    uniformCubemap(name: string, texture: WebGLTexture, number?: number): void;
     /**
      * Retrieve attribute location.
      */
