@@ -14,8 +14,8 @@ export type WebGLExtension = any;
 export class GLCat extends EventEmitter {
   public static unexpectedNullDetectedError = new Error( 'GLCat: Unexpected null detected' );
 
-  private gl: WebGLRenderingContext;
-  private extensionCache: { [ name: string ]: WebGLExtension } = {};
+  private __gl: WebGLRenderingContext;
+  private __extensionCache: { [ name: string ]: WebGLExtension } = {};
 
   /**
    * Create a new GLCat instance.
@@ -24,7 +24,7 @@ export class GLCat extends EventEmitter {
   constructor( gl: WebGLRenderingContext ) {
     super();
 
-    this.gl = gl;
+    this.__gl = gl;
 
     gl.enable( gl.DEPTH_TEST );
     gl.depthFunc( gl.LEQUAL );
@@ -55,7 +55,7 @@ export class GLCat extends EventEmitter {
    * Return its own WebGLRenderingContext.
    */
   public getRenderingContext(): WebGLRenderingContext {
-    return this.gl;
+    return this.__gl;
   }
 
   /**
@@ -63,14 +63,14 @@ export class GLCat extends EventEmitter {
    * If they is your precious one and you cannot live without him, turn on `throwIfNotFound`.
    */
   public getExtension( name: string, throwIfNotFound?: boolean ): WebGLExtension | null {
-    const gl = this.gl;
+    const gl = this.__gl;
 
-    if ( this.extensionCache[ name ] ) {
-      return this.extensionCache[ name ];
+    if ( this.__extensionCache[ name ] ) {
+      return this.__extensionCache[ name ];
     } else {
-      this.extensionCache[ name ] = gl.getExtension( name );
-      if ( this.extensionCache[ name ] ) {
-        return this.extensionCache[ name ];
+      this.__extensionCache[ name ] = gl.getExtension( name );
+      if ( this.__extensionCache[ name ] ) {
+        return this.__extensionCache[ name ];
       } else {
         if ( throwIfNotFound ) {
           this.spit( 'GLCat.getExtension: The extension "' + name + '" is not supported' );
@@ -92,7 +92,7 @@ export class GLCat extends EventEmitter {
    * Create a new shader object.
    */
   public createShader( type: number ): GLCatShader | null {
-    const gl = this.gl;
+    const gl = this.__gl;
 
     const shader = gl.createShader( type );
     if ( shader === null ) {
@@ -107,7 +107,7 @@ export class GLCat extends EventEmitter {
    * Create a new GLCat program object.
    */
   public createProgram(): GLCatProgram | null {
-    const gl = this.gl;
+    const gl = this.__gl;
 
     const program = gl.createProgram();
     if ( program === null ) {
@@ -122,7 +122,7 @@ export class GLCat extends EventEmitter {
    * Create a new GLCat program object, in lazier way.
    */
   public lazyProgram( vert: string, frag: string ): GLCatProgram | null {
-    const gl = this.gl;
+    const gl = this.__gl;
 
     // == vert =====================================================================================
     const vertexShader = this.createShader( gl.VERTEX_SHADER );
@@ -176,7 +176,7 @@ export class GLCat extends EventEmitter {
    * Specify a program to use.
    */
   public useProgram( program: GLCatProgram | null ): void {
-    const gl = this.gl;
+    const gl = this.__gl;
 
     if ( program === null ) {
       this.spit( GLCat.unexpectedNullDetectedError );
@@ -190,7 +190,7 @@ export class GLCat extends EventEmitter {
    * Create a new vertex buffer.
    */
   public createBuffer(): GLCatBuffer | null {
-    const gl = this.gl;
+    const gl = this.__gl;
 
     const buffer = gl.createBuffer();
     if ( buffer === null ) {
@@ -205,7 +205,7 @@ export class GLCat extends EventEmitter {
    * Create a new texture.
    */
   public createTexture(): GLCatTexture | null {
-    const gl = this.gl;
+    const gl = this.__gl;
 
     const texture = gl.createTexture();
     if ( texture === null ) {
@@ -220,7 +220,7 @@ export class GLCat extends EventEmitter {
    * Create a new renderbuffer.
    */
   public createRenderbuffer(): GLCatRenderbuffer | null {
-    const gl = this.gl;
+    const gl = this.__gl;
 
     const renderbuffer = gl.createRenderbuffer();
     if ( renderbuffer === null ) {
@@ -236,7 +236,7 @@ export class GLCat extends EventEmitter {
    * TODO: DrawBuffers
    */
   public createFramebuffer(): GLCatFramebuffer | null {
-    const gl = this.gl;
+    const gl = this.__gl;
 
     const framebuffer = gl.createFramebuffer();
     if ( framebuffer === null ) {
@@ -293,7 +293,7 @@ export class GLCat extends EventEmitter {
     alpha: number = 1.0,
     depth: number = 1.0
   ): void {
-    const gl = this.gl;
+    const gl = this.__gl;
 
     gl.clearColor( red, green, blue, alpha );
     gl.clearDepth( depth );
