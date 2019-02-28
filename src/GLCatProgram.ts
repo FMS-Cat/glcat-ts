@@ -301,7 +301,7 @@ export class GLCatProgram {
    * @param texture Texture object
    * @param number Specify a texture unit, in integer
    */
-  public uniformTexture( name: string, texture: WebGLTexture | null, number: number = 0 ): void {
+  public uniformTexture( name: string, texture: WebGLTexture | null, number: number ): void {
     const gl = this.glCat.getRenderingContext();
 
     const location = this.getUniformLocation( name );
@@ -316,7 +316,7 @@ export class GLCatProgram {
    * @param texture Texture object
    * @param number Specify a texture unit, in integer
    */
-  public uniformCubemap( name: string, texture: WebGLTexture | null, number: number = 0 ): void {
+  public uniformCubemap( name: string, texture: WebGLTexture | null, number: number ): void {
     const gl = this.glCat.getRenderingContext();
 
     const location = this.getUniformLocation( name );
