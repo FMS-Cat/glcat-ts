@@ -16,6 +16,7 @@ export class GLCat extends EventEmitter {
 
   private __gl: WebGLRenderingContext;
   private __extensionCache: { [ name: string ]: WebGLExtension } = {};
+  private __dummyTextureCache?: GLCatTexture;
 
   /**
    * Create a new GLCat instance.
@@ -214,6 +215,24 @@ export class GLCat extends EventEmitter {
     }
 
     return new GLCatTexture( this, texture );
+  }
+
+  /**
+   * Create/retrieve a dummy texture, 100% organic pure #FF00FF texture.
+   */
+  public getDummyTexture(): GLCatTexture | null {
+    if ( this.__dummyTextureCache ) {
+      return this.__dummyTextureCache;
+    }
+
+    const texture = this.createTexture();
+    if ( texture === null ) {
+      this.spit( GLCat.unexpectedNullDetectedError );
+      return null;
+    }
+
+    texture.setTextureFromArray( 1, 1, new Uint8Array( [ 255, 0, 255, 255 ] ) );
+    return texture;
   }
 
   /**
