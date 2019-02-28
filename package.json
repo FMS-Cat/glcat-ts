@@ -1,6 +1,6 @@
 {
   "name": "@fms-cat/glcat-ts",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "WebGL wrapper with plenty of hackability",
   "author": "FMS-Cat",
   "license": "MIT",
