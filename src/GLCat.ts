@@ -232,6 +232,7 @@ export class GLCat extends EventEmitter {
     }
 
     texture.setTextureFromArray( 1, 1, new Uint8Array( [ 255, 0, 255, 255 ] ) );
+    this.__dummyTextureCache = texture;
     return texture;
   }
 
