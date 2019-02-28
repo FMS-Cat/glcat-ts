@@ -3,8 +3,8 @@ import { GLCat } from './GLCat';
  * It's a WebGLBuffer.
  */
 export declare class GLCatBuffer {
-    private glCat;
-    private buffer;
+    private __glCat;
+    private __buffer;
     /**
      * Create a new GLCatBuffer instance.
      */

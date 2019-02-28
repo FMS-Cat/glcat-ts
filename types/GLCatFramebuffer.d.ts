@@ -5,10 +5,10 @@ import { GLCatTexture } from './GLCatTexture';
  * It's a WebGLFramebuffer.
  */
 export declare class GLCatFramebuffer {
-    private glCat;
-    private framebuffer;
-    private renderbuffer;
-    private texture;
+    private __glCat;
+    private __framebuffer;
+    private __renderbuffer;
+    private __texture;
     /**
      * Create a new GLCatFramebuffer instance.
      */

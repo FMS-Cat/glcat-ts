@@ -5,12 +5,12 @@ import { GLCatShader } from './GLCatShader';
  * It's a WebGLProgram, but has cache of variable locations.
  */
 export declare class GLCatProgram {
-    private glCat;
-    private program;
-    private shaders;
-    private attribLocationCache;
-    private uniformLocationCache;
-    private linked;
+    private __glCat;
+    private __program;
+    private __shaders;
+    private __attribLocationCache;
+    private __uniformLocationCache;
+    private __linked;
     /**
      * Create a new GLCatProgram instance.
      */
@@ -124,14 +124,14 @@ export declare class GLCatProgram {
      * @param texture Texture object
      * @param number Specify a texture unit, in integer
      */
-    uniformTexture(name: string, texture: WebGLTexture | null, number?: number): void;
+    uniformTexture(name: string, texture: WebGLTexture | null, number: number): void;
     /**
      * Attach a `samplerCube` type uniform texture.
      * @param name Name of the uniform texture
      * @param texture Texture object
      * @param number Specify a texture unit, in integer
      */
-    uniformCubemap(name: string, texture: WebGLTexture | null, number?: number): void;
+    uniformCubemap(name: string, texture: WebGLTexture | null, number: number): void;
     /**
      * Retrieve attribute location.
      */

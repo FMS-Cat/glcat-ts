@@ -11,8 +11,9 @@ export declare type WebGLExtension = any;
  */
 export declare class GLCat extends EventEmitter {
     static unexpectedNullDetectedError: Error;
-    private gl;
-    private extensionCache;
+    private __gl;
+    private __extensionCache;
+    private __dummyTextureCache?;
     /**
      * Create a new GLCat instance.
      * WebGLRenderingContext is required.
@@ -62,6 +63,10 @@ export declare class GLCat extends EventEmitter {
      * Create a new texture.
      */
     createTexture(): GLCatTexture | null;
+    /**
+     * Create/retrieve a dummy texture, 100% organic pure #FF00FF texture.
+     */
+    getDummyTexture(): GLCatTexture | null;
     /**
      * Create a new renderbuffer.
      */

@@ -3,9 +3,9 @@ import { GLCat } from './GLCat';
  * It's a WebGLShader.
  */
 export declare class GLCatShader {
-    private glCat;
-    private shader;
-    private compiled;
+    private __glCat;
+    private __shader;
+    private __compiled;
     /**
      * Create a new GLCatShader instance.
      */

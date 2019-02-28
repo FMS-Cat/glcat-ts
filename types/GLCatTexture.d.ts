@@ -3,10 +3,10 @@ import { GLCat } from './GLCat';
  * It's a WebGLTexture.
  */
 export declare class GLCatTexture {
-    private glCat;
-    private texture;
-    private width;
-    private height;
+    private __glCat;
+    private __texture;
+    private __width;
+    private __height;
     /**
      * Create a new GLCatTexture instance.
      */
