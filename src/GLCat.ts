@@ -304,6 +304,75 @@ export class GLCat extends EventEmitter {
   }
 
   /**
+   * Create a new draw buffers, in lazier way.
+   * If you can't grab `WEBGL_draw_buffers` extension, you'll die instantly at this point.
+   */
+  public lazyDrawbuffers(
+    width: number,
+    height: number,
+    numBuffers: number,
+    isFloat: boolean = false
+  ): GLCatFramebuffer | null {
+    const ext = this.getExtension( 'WEBGL_draw_buffers', true );
+    if ( ext.MAX_DRAW_BUFFERS_WEBGL < numBuffers ) {
+      this.spit( Error( 'GLCat: Maximum draw buffers count exceeded' ) );
+    }
+
+    const framebuffer = this.createFramebuffer();
+    if ( framebuffer === null ) {
+      this.spit( GLCat.unexpectedNullDetectedError );
+      return null;
+    }
+
+    const renderbuffer = this.createRenderbuffer();
+    if ( renderbuffer === null ) {
+      framebuffer.dispose();
+      this.spit( GLCat.unexpectedNullDetectedError );
+      return null;
+    }
+    renderbuffer.init( width, height );
+    framebuffer.attachRenderbuffer( renderbuffer );
+
+    for ( let i = 0; i < numBuffers; i ++ ) {
+      const texture = this.createTexture();
+
+      if ( texture === null ) {
+        framebuffer.dispose();
+        renderbuffer.dispose();
+        this.spit( GLCat.unexpectedNullDetectedError );
+        return null;
+      }
+
+      if ( isFloat ) {
+        texture.setTextureFromFloatArray( width, height, null );
+      } else {
+        texture.setTextureFromArray( width, height, null );
+      }
+      framebuffer.attachTexture( texture, ext.COLOR_ATTACHMENT0_WEBGL + i );
+    }
+
+    return framebuffer;
+  }
+
+  /**
+   * Call this before you're gonna use draw buffers.
+   * If you can't grab `WEBGL_draw_buffers` extension, you'll die instantly at this point.
+   */
+  public drawBuffers( numBuffers: number[] | number ) {
+    const ext = this.getExtension( 'WEBGL_draw_buffers', true );
+
+    if ( Array.isArray( numBuffers ) ) {
+      ext.drawBuffersWEBGL( numBuffers );
+    } else {
+      const array: number[] = [];
+      for ( let i = 0; i < numBuffers; i ++ ) {
+        array[ i ] = ext.COLOR_ATTACHMENT0_WEBGL + i;
+      }
+      ext.drawBuffersWEBGL( array );
+    }
+  }
+
+  /**
    * Clear the current framebuffer.
    */
   public clear(
