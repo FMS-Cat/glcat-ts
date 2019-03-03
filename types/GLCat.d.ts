@@ -81,6 +81,16 @@ export declare class GLCat extends EventEmitter {
      */
     lazyFramebuffer(width: number, height: number, isFloat?: boolean): GLCatFramebuffer | null;
     /**
+     * Create a new draw buffers, in lazier way.
+     * If you can't grab `WEBGL_draw_buffers` extension, you'll die instantly at this point.
+     */
+    lazyDrawbuffers(width: number, height: number, numBuffers: number, isFloat?: boolean): GLCatFramebuffer | null;
+    /**
+     * Call this before you're gonna use draw buffers.
+     * If you can't grab `WEBGL_draw_buffers` extension, you'll die instantly at this point.
+     */
+    drawBuffers(numBuffers: number[] | number): void;
+    /**
      * Clear the current framebuffer.
      */
     clear(red?: number, green?: number, blue?: number, alpha?: number, depth?: number): void;

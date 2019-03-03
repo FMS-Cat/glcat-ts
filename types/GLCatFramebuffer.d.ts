@@ -8,7 +8,7 @@ export declare class GLCatFramebuffer {
     private __glCat;
     private __framebuffer;
     private __renderbuffer;
-    private __texture;
+    private __textureMap;
     /**
      * Create a new GLCatFramebuffer instance.
      */
@@ -16,7 +16,7 @@ export declare class GLCatFramebuffer {
     /**
      * Dispose the framebuffer.
      */
-    dispose(): void;
+    dispose(alsoAttached?: boolean): void;
     /**
      * Return its own framebuffer.
      */
@@ -28,7 +28,7 @@ export declare class GLCatFramebuffer {
     /**
      * Return its attached texture.
      */
-    getTexture(): GLCatTexture | null;
+    getTexture(attachment?: number): GLCatTexture | null;
     /**
      * Attach a renderbuffer to this framebuffer.
      */
