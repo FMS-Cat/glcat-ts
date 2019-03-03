@@ -47,7 +47,7 @@ export class GLCat extends EventEmitter {
       } else if ( error ) {
         throw error;
       } else {
-        throw new Error( 'Something went wrong' );
+        throw new Error( 'GLCat: Something went wrong' );
       }
     }
   }
