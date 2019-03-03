@@ -10,7 +10,7 @@ export class GLCatFramebuffer {
   private __glCat: GLCat;
   private __framebuffer: WebGLFramebuffer;
   private __renderbuffer: GLCatRenderbuffer | null = null;
-  private __texture: GLCatTexture | null = null;
+  private __textureMap: { [ attachment: number ]: GLCatTexture } = {};
 
   /**
    * Create a new GLCatFramebuffer instance.
@@ -23,8 +23,20 @@ export class GLCatFramebuffer {
   /**
    * Dispose the framebuffer.
    */
-  public dispose() {
-    this.__glCat.getRenderingContext().deleteFramebuffer( this.__framebuffer );
+  public dispose( alsoAttached: boolean = false ) {
+    const gl = this.__glCat.getRenderingContext();
+
+    gl.deleteFramebuffer( this.__framebuffer );
+
+    if ( alsoAttached ) {
+      if ( this.__renderbuffer ) {
+        gl.deleteRenderbuffer( this.__renderbuffer.getRenderbuffer() );
+      }
+
+      Object.values( this.__textureMap ).forEach( ( texture ) => {
+        gl.deleteTexture( texture.getTexture() );
+      } );
+    }
   }
 
   /**
@@ -44,8 +56,8 @@ export class GLCatFramebuffer {
   /**
    * Return its attached texture.
    */
-  public getTexture(): GLCatTexture | null {
-    return this.__texture;
+  public getTexture( attachment: number = GL.COLOR_ATTACHMENT0 ): GLCatTexture | null {
+    return this.__textureMap[ attachment ];
   }
 
   /**
@@ -71,6 +83,6 @@ export class GLCatFramebuffer {
     gl.framebufferTexture2D( gl.FRAMEBUFFER, attachment, gl.TEXTURE_2D, texture.getTexture(), 0 );
     gl.bindFramebuffer( gl.FRAMEBUFFER, null );
 
-    this.__texture = texture;
+    this.__textureMap[ attachment ] = texture;
   }
 }
