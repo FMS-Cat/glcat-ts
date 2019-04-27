@@ -18,11 +18,13 @@
     "build": "yarn build-dist && yarn build-types",
     "test": "jest"
   },
+  "dependencies": {
+    "eventemitter3": "^3.1.0"
+  },
   "devDependencies": {
     "@types/gl": "^4.1.0",
     "@types/jest": "^23.3.10",
     "@types/webgl-ext": "^0.0.30",
-    "eventemitter3": "^3.1.0",
     "fork-ts-checker-webpack-plugin": "^0.5.2",
     "gl": "^4.2.2",
     "jest": "^23.6.0",
