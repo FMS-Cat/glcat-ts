@@ -45,7 +45,7 @@ jobs:
             - deps-{{ checksum "package.json" }}
       - run:
           name: Test
-          command: xvfb-run -s "-ac -screen 0 1920x1080x24" yarn test --runInBand
+          command: xvfb-run -s "-ac -screen 0 1920x1080x24" yarn test --no-cache
 
 workflows:
   version: 2
