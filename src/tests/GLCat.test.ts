@@ -1,5 +1,7 @@
 import WebGL from 'gl';
 import { GLCat } from '../GLCat';
+import sQuadVert from './shader/quad.vert';
+import sUvFrag from './shader/uv.frag';
 
 describe( 'GLCat', () => {
   let gl: WebGLRenderingContext;
@@ -19,10 +21,23 @@ describe( 'GLCat', () => {
     expect( glCat ).toBeInstanceOf( GLCat );
   } );
 
+  describe( 'getRenderingContext', () => {
+    it( 'should return its own WebGLRenderingContext', () => {
+      const result = glCat.getRenderingContext();
+      expect( result ).toBe( gl );
+    } );
+  } );
+
   describe( 'getExtension', () => {
+    let extInstancedArrays: any;
     it( 'should retrieve a WebGL extension', () => {
+      extInstancedArrays = glCat.getExtension( 'ANGLE_instanced_arrays' );
+      expect( extInstancedArrays.drawArraysInstancedANGLE ).not.toBeNull();
+    } );
+
+    it( 'should return already retrieved WebGL extension when I attempt to retrieve twice', () => {
       const ext = glCat.getExtension( 'ANGLE_instanced_arrays' );
-      expect( ext ).not.toBeNull();
+      expect( extInstancedArrays ).toBe( ext );
     } );
 
     it( 'should throw an error when attempt to retrieve unsupported WebGL extension', () => {
@@ -57,15 +72,22 @@ describe( 'GLCat', () => {
   } );
 
   describe( 'createShader', () => {
-    it ( 'should create a new shader object', () => {
+    it( 'should create a new shader object', () => {
       const shader = glCat.createShader( gl.VERTEX_SHADER );
       expect( shader ).not.toBeNull();
     } );
   } );
 
   describe( 'createProgram', () => {
-    it ( 'should create a new program object', () => {
+    it( 'should create a new program object', () => {
       const program = glCat.createProgram();
+      expect( program ).not.toBeNull();
+    } );
+  } );
+
+  describe( 'lazyProgram', () => {
+    it( 'should create a new program object', () => {
+      const program = glCat.lazyProgram( sQuadVert, sUvFrag );
       expect( program ).not.toBeNull();
     } );
   } );
