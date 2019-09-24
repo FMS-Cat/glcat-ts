@@ -5,6 +5,7 @@
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "removeComments": false,
