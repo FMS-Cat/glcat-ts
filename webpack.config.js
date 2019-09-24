@@ -14,7 +14,6 @@ module.exports = ( env, argv ) => {
       path: path.join( __dirname, 'dist' ),
       filename: '[name]',
       library: 'GLCat',
-      libraryExport: 'default',
       libraryTarget: 'umd',
       globalObject: 'this'
     },
