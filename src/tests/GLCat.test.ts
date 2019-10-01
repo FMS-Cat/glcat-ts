@@ -23,7 +23,7 @@ describe( 'GLCat', () => {
 
   describe( 'getRenderingContext', () => {
     it( 'should return its own WebGLRenderingContext', () => {
-      const result = glCat.getRenderingContext();
+      const result = glCat.gl;
       expect( result ).toBe( gl );
     } );
   } );

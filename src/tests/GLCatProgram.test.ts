@@ -36,14 +36,14 @@ describe( 'GLCatProgram', () => {
 
   describe( 'getProgram', () => {
     it ( 'should return its own WebGLProgram', () => {
-      expect( program.getProgram() ).not.toBeNull();
+      expect( program.raw ).not.toBeNull();
     } );
   } );
 
   describe( 'link', () => {
     it ( 'should link the WebGLProgram successfully', () => {
       program.link( quadVert, uvFrag );
-      expect( program.isLinked() ).toBe( true );
+      expect( program.isLinked ).toBe( true );
     } );
   } );
 

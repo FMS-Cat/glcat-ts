@@ -25,7 +25,7 @@ describe( 'GLCatProgram', () => {
 
   describe( 'getBuffer', () => {
     it ( 'should return its own WebGLBuffer', () => {
-      expect( buffer.getBuffer() ).not.toBeNull();
+      expect( buffer.raw ).not.toBeNull();
     } );
   } );
 } );
