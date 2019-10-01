@@ -13,16 +13,16 @@
 
   const program = glCat.lazyProgram(
     'attribute vec2 p; void main() { gl_Position = vec4( p, 0.0, 1.0 ); }',
-    'void main() { gl_FragColor = vec4( 0.0, 1.0, 1.0, 1.0 ); }'
+    'precision highp float; uniform vec3 color; void main() { gl_FragColor = vec4( color, 1.0 ); }'
   );
 
   glCat.useProgram( program );
 
   program.attribute( 'p', vboQuad, 2 );
+  program.uniform( 'color', '3f', 0.0, 0.5, 1.0 );
 
   gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
 
   vboQuad.dispose();
-  program.getShaders().forEach( ( shader ) => shader.dispose() );
-  program.dispose();
+  program.dispose( true );
 </script>

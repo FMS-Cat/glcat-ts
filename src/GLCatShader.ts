@@ -9,6 +9,20 @@ export class GLCatShader {
   private __compiled: boolean = false;
 
   /**
+   * Its own shader.
+   */
+  public get shader(): WebGLShader {
+    return this.__shader;
+  }
+
+  /**
+   * Its own shader. Shorter than [[GLCatShader.shader]].
+   */
+  public get raw(): WebGLShader {
+    return this.__shader;
+  }
+
+  /**
    * Create a new GLCatShader instance.
    */
   constructor( glCat: GLCat, shader: WebGLShader ) {
@@ -20,7 +34,7 @@ export class GLCatShader {
    * Dispose the shader.
    */
   public dispose() {
-    this.__glCat.getRenderingContext().deleteShader( this.__shader );
+    this.__glCat.gl.deleteShader( this.__shader );
   }
 
   /**
@@ -31,17 +45,10 @@ export class GLCatShader {
   }
 
   /**
-   * Retrieve its own shader.
-   */
-  public getShader(): WebGLShader {
-    return this.__shader;
-  }
-
-  /**
    * Compile the shader.
    */
   public compile( code: string ): void {
-    const gl = this.__glCat.getRenderingContext();
+    const { gl } = this.__glCat;
 
     gl.shaderSource( this.__shader, code );
     gl.compileShader( this.__shader );

@@ -19,6 +19,20 @@ export class GLCat extends EventEmitter {
   private __dummyTextureCache?: GLCatTexture;
 
   /**
+   * Its own WebGLRenderingContext.
+   */
+  public get renderingContext(): WebGLRenderingContext {
+    return this.__gl;
+  }
+
+  /**
+   * Its own WebGLRenderingContext. Shorter than [[GLCat.renderingContext]]
+   */
+  public get gl(): WebGLRenderingContext {
+    return this.__gl;
+  }
+
+  /**
    * Create a new GLCat instance.
    * WebGLRenderingContext is required.
    */
@@ -31,6 +45,25 @@ export class GLCat extends EventEmitter {
     gl.depthFunc( gl.LEQUAL );
     gl.enable( gl.BLEND );
     gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
+  }
+
+  /**
+   * A dummy texture, 100% organic pure #FF00FF texture.
+   */
+  public dummyTexture(): GLCatTexture | null {
+    if ( this.__dummyTextureCache ) {
+      return this.__dummyTextureCache;
+    }
+
+    const texture = this.createTexture();
+    if ( texture === null ) {
+      this.spit( GLCat.unexpectedNullDetectedError );
+      return null;
+    }
+
+    texture.setTextureFromArray( 1, 1, new Uint8Array( [ 255, 0, 255, 255 ] ) );
+    this.__dummyTextureCache = texture;
+    return texture;
   }
 
   /**
@@ -50,13 +83,6 @@ export class GLCat extends EventEmitter {
         throw new Error( 'GLCat: Something went wrong' );
       }
     }
-  }
-
-  /**
-   * Return its own WebGLRenderingContext.
-   */
-  public getRenderingContext(): WebGLRenderingContext {
-    return this.__gl;
   }
 
   /**
@@ -163,7 +189,7 @@ export class GLCat extends EventEmitter {
     }
 
     program.link( vertexShader, fragmentShader );
-    if ( !program.isLinked() ) {
+    if ( !program.isLinked ) {
       vertexShader.dispose();
       fragmentShader.dispose();
       program.dispose();
@@ -184,7 +210,7 @@ export class GLCat extends EventEmitter {
       return;
     }
 
-    gl.useProgram( program.getProgram() );
+    gl.useProgram( program.raw );
   }
 
   /**
@@ -215,25 +241,6 @@ export class GLCat extends EventEmitter {
     }
 
     return new GLCatTexture( this, texture );
-  }
-
-  /**
-   * Create/retrieve a dummy texture, 100% organic pure #FF00FF texture.
-   */
-  public getDummyTexture(): GLCatTexture | null {
-    if ( this.__dummyTextureCache ) {
-      return this.__dummyTextureCache;
-    }
-
-    const texture = this.createTexture();
-    if ( texture === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
-    }
-
-    texture.setTextureFromArray( 1, 1, new Uint8Array( [ 255, 0, 255, 255 ] ) );
-    this.__dummyTextureCache = texture;
-    return texture;
   }
 
   /**

@@ -11,6 +11,34 @@ export class GLCatRenderbuffer {
   private __height: number = 0;
 
   /**
+   * Its own renderbuffer.
+   */
+  public get renderbuffer(): WebGLRenderbuffer {
+    return this.__renderbuffer;
+  }
+
+  /**
+   * Its own renderbuffer. Shorter than [[GLCatRenderBuffer.renderbuffer]].
+   */
+  public get raw(): WebGLRenderbuffer {
+    return this.__renderbuffer;
+  }
+
+  /**
+   * Its width.
+   */
+  public get width(): number {
+    return this.__width;
+  }
+
+  /**
+   * Its height.
+   */
+  public get height(): number {
+    return this.__height;
+  }
+
+  /**
    * Create a new GLCatTexture instance.
    */
   constructor( glCat: GLCat, renderbuffer: WebGLRenderbuffer ) {
@@ -22,28 +50,7 @@ export class GLCatRenderbuffer {
    * Dispose the renderbuffer.
    */
   public dispose() {
-    this.__glCat.getRenderingContext().deleteRenderbuffer( this.__renderbuffer );
-  }
-
-  /**
-   * Return its own renderbuffer.
-   */
-  public getRenderbuffer(): WebGLRenderbuffer {
-    return this.__renderbuffer;
-  }
-
-  /**
-   * Return its width.
-   */
-  public getWidth(): number {
-    return this.__width;
-  }
-
-  /**
-   * Return its height.
-   */
-  public getHeight(): number {
-    return this.__height;
+    this.__glCat.gl.deleteRenderbuffer( this.__renderbuffer );
   }
 
   /**
@@ -51,7 +58,7 @@ export class GLCatRenderbuffer {
    * If `format` is not given, it will be initialized as `DEPTH_COMPONENT16` .
    */
   public init( width: number, height: number, format: number = GL.DEPTH_COMPONENT16 ): void {
-    const gl = this.__glCat.getRenderingContext();
+    const { gl } = this.__glCat;
 
     gl.bindRenderbuffer( gl.RENDERBUFFER, this.__renderbuffer );
     gl.renderbufferStorage( gl.RENDERBUFFER, format, width, height );

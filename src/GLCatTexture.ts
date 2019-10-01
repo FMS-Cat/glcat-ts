@@ -11,6 +11,34 @@ export class GLCatTexture {
   private __height: number = 0;
 
   /**
+   * Its own texture.
+   */
+  public get texture(): WebGLTexture {
+    return this.__texture;
+  }
+
+  /**
+   * Its own texture. Shorter than [[GLCatTexture.textured]]
+   */
+  public get raw(): WebGLTexture {
+    return this.__texture;
+  }
+
+  /**
+   * Its width.
+   */
+  public get width(): number {
+    return this.__width;
+  }
+
+  /**
+   * Its height.
+   */
+  public get height(): number {
+    return this.__height;
+  }
+
+  /**
    * Create a new GLCatTexture instance.
    */
   constructor( glCat: GLCat, texture: WebGLTexture ) {
@@ -24,28 +52,7 @@ export class GLCatTexture {
    * Dispose the texture.
    */
   public dispose() {
-    this.__glCat.getRenderingContext().deleteTexture( this.__texture );
-  }
-
-  /**
-   * Retrieve its own texture.
-   */
-  public getTexture(): WebGLTexture {
-    return this.__texture;
-  }
-
-  /**
-   * Return its width.
-   */
-  public getWidth(): number {
-    return this.__width;
-  }
-
-  /**
-   * Return its height.
-   */
-  public getHeight(): number {
-    return this.__height;
+    this.__glCat.gl.deleteTexture( this.__texture );
   }
 
   /**
@@ -55,7 +62,7 @@ export class GLCatTexture {
   public textureFilter( filter: number ): void;
   public textureFilter( filterMag: number, filterMin: number ): void;
   public textureFilter( filterMag: number = GL.NEAREST, filterMin: number = filterMag ): void {
-    const gl = this.__glCat.getRenderingContext();
+    const { gl } = this.__glCat;
 
     gl.bindTexture( gl.TEXTURE_2D, this.__texture );
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filterMag );
@@ -70,7 +77,7 @@ export class GLCatTexture {
   public textureWrap( wrap: number ): void;
   public textureWrap( wrapS: number, wrapT: number ): void;
   public textureWrap( wrapS: number = GL.CLAMP_TO_EDGE, wrapT: number = wrapS ): void {
-    const gl = this.__glCat.getRenderingContext();
+    const { gl } = this.__glCat;
 
     gl.bindTexture( gl.TEXTURE_2D, this.__texture );
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS );
@@ -82,7 +89,7 @@ export class GLCatTexture {
    * Set new data into this texture.
    */
   public setTexture( source: TexImageSource ): void {
-    const gl = this.__glCat.getRenderingContext();
+    const { gl } = this.__glCat;
 
     gl.bindTexture( gl.TEXTURE_2D, this.__texture );
     gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source );
@@ -103,7 +110,7 @@ export class GLCatTexture {
     source: Uint8Array | null,
     format: number = GL.RGBA
   ): void {
-    const gl = this.__glCat.getRenderingContext();
+    const { gl } = this.__glCat;
 
     gl.bindTexture( gl.TEXTURE_2D, this.__texture );
     gl.texImage2D( gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, source );
@@ -124,7 +131,7 @@ export class GLCatTexture {
     source: Float32Array | null,
     format: number = GL.RGBA
   ): void {
-    const gl = this.__glCat.getRenderingContext();
+    const { gl } = this.__glCat;
 
     this.__glCat.getExtension( 'OES_texture_float', true );
 
@@ -143,7 +150,7 @@ export class GLCatTexture {
    * Copy pixels from current framebuffer to given texture.
    */
   public copyTexture( width: number, height: number ) {
-    const gl = this.__glCat.getRenderingContext();
+    const { gl } = this.__glCat;
 
     gl.bindTexture( gl.TEXTURE_2D, this.__texture );
     gl.copyTexImage2D( gl.TEXTURE_2D, 0, gl.RGBA, 0, 0, width, height, 0 );
@@ -159,7 +166,7 @@ export class GLCatTexture {
    * @todo due to compatibility of its `width` and `height` it should not be used yet
    */
   public setCubemap( textures: TexImageSource[] ) {
-    const gl = this.__glCat.getRenderingContext();
+    const { gl } = this.__glCat;
 
     gl.bindTexture( gl.TEXTURE_CUBE_MAP, this.__texture );
     for ( let i = 0; i < 6; i ++ ) {
