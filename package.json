@@ -15,8 +15,9 @@
     "types"
   ],
   "scripts": {
-    "preversion": "git-branch-is master && git merge dev",
+    "preversion": "git-branch-is dev",
     "version": "yarn all",
+    "postversion": "git checkout master && git merge dev && git push && git push --tags && npm publish",
     "all": "yarn test && yarn build",
     "dev": "webpack-dev-server --mode development",
     "build-types": "tsc --emitDeclarationOnly",
