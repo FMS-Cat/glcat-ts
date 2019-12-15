@@ -86,6 +86,30 @@ export class GLCatTexture {
   }
 
   /**
+   * Return a value for the passed parameter name.
+   * See: https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getParameter
+   */
+  public getParameter( pname: GLenum ): void {
+    const { gl } = this.__glCat;
+
+    gl.bindTexture( gl.TEXTURE_2D, this.__texture );
+    gl.getParameter( pname );
+    gl.bindTexture( gl.TEXTURE_2D, null );
+  }
+
+  /**
+   * Specify the pixel storage modes.
+   * See: https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/pixelStorei
+   */
+  public pixelStorei( pname: GLenum, param: number | boolean ): void {
+    const { gl } = this.__glCat;
+
+    gl.bindTexture( gl.TEXTURE_2D, this.__texture );
+    gl.pixelStorei( pname, param );
+    gl.bindTexture( gl.TEXTURE_2D, null );
+  }
+
+  /**
    * Set new data into this texture.
    */
   public setTexture( source: TexImageSource ): void {
