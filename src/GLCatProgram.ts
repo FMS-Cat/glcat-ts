@@ -86,8 +86,7 @@ export class GLCatProgram {
 
     this.__linked = gl.getProgramParameter( this.__program, gl.LINK_STATUS );
     if ( !this.__linked ) {
-      this.__glCat.spit( gl.getProgramInfoLog( this.__program ) );
-      return;
+      throw new Error( gl.getProgramInfoLog( this.__program )! );
     }
 
     this.__shaders = shaders.concat();

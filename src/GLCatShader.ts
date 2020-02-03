@@ -55,7 +55,7 @@ export class GLCatShader {
 
     this.__compiled = gl.getShaderParameter( this.__shader, gl.COMPILE_STATUS );
     if ( !this.__compiled ) {
-      this.__glCat.spit( gl.getShaderInfoLog( this.__shader ) );
+      throw new Error( gl.getShaderInfoLog( this.__shader )! );
     }
   }
 }

@@ -50,39 +50,19 @@ export class GLCat extends EventEmitter {
   /**
    * A dummy texture, 100% organic pure #FF00FF texture.
    */
-  public dummyTexture(): GLCatTexture | null {
+  public dummyTexture(): GLCatTexture {
     if ( this.__dummyTextureCache ) {
       return this.__dummyTextureCache;
     }
 
     const texture = this.createTexture();
     if ( texture === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
     texture.setTextureFromArray( 1, 1, new Uint8Array( [ 255, 0, 255, 255 ] ) );
     this.__dummyTextureCache = texture;
     return texture;
-  }
-
-  /**
-   * It's... just an `emit( 'error', ...args )`.
-   * But, if there are no listeners subscribed to 'error' event,
-   * it will throw an error instead. What a cool!
-   */
-  public spit( error?: Error | string | null ) {
-    const bool = super.emit( 'error', error );
-
-    if ( !bool ) {
-      if ( typeof error === 'string' ) {
-        throw new Error( error );
-      } else if ( error ) {
-        throw error;
-      } else {
-        throw new Error( 'GLCat: Something went wrong' );
-      }
-    }
   }
 
   /**
@@ -100,7 +80,7 @@ export class GLCat extends EventEmitter {
         return this.__extensionCache[ name ];
       } else {
         if ( throwIfNotFound ) {
-          this.spit( 'GLCat.getExtension: The extension "' + name + '" is not supported' );
+          throw new Error( 'GLCat.getExtension: The extension "' + name + '" is not supported' );
         }
         return null;
       }
@@ -118,13 +98,12 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new shader object.
    */
-  public createShader( type: number ): GLCatShader | null {
+  public createShader( type: number ): GLCatShader {
     const gl = this.__gl;
 
     const shader = gl.createShader( type );
     if ( shader === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
     return new GLCatShader( this, shader );
@@ -133,13 +112,12 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new GLCat program object.
    */
-  public createProgram(): GLCatProgram | null {
+  public createProgram(): GLCatProgram {
     const gl = this.__gl;
 
     const program = gl.createProgram();
     if ( program === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
     return new GLCatProgram( this, program );
@@ -148,35 +126,35 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new GLCat program object, in lazier way.
    */
-  public lazyProgram( vert: string, frag: string ): GLCatProgram | null {
+  public lazyProgram( vert: string, frag: string ): GLCatProgram {
     const gl = this.__gl;
 
     // == vert =====================================================================================
     const vertexShader = this.createShader( gl.VERTEX_SHADER );
     if ( vertexShader === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
-    vertexShader.compile( vert );
-    if ( !vertexShader.isCompiled() ) {
+    try {
+      vertexShader.compile( vert );
+    } catch ( e ) {
       vertexShader.dispose();
-      return null;
+      throw e;
     }
 
     // == frag =====================================================================================
     const fragmentShader = this.createShader( gl.FRAGMENT_SHADER );
     if ( fragmentShader === null ) {
       vertexShader.dispose();
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
-    fragmentShader.compile( frag );
-    if ( !fragmentShader.isCompiled() ) {
+    try {
+      fragmentShader.compile( frag );
+    } catch ( e ) {
       vertexShader.dispose();
       fragmentShader.dispose();
-      return null;
+      throw e;
     }
 
     // == program ==================================================================================
@@ -184,16 +162,16 @@ export class GLCat extends EventEmitter {
     if ( program === null ) {
       vertexShader.dispose();
       fragmentShader.dispose();
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
-    program.link( vertexShader, fragmentShader );
-    if ( !program.isLinked ) {
+    try {
+      program.link( vertexShader, fragmentShader );
+    } catch ( e ) {
       vertexShader.dispose();
       fragmentShader.dispose();
       program.dispose();
-      return null;
+      throw e;
     }
 
     return program;
@@ -206,8 +184,7 @@ export class GLCat extends EventEmitter {
     const gl = this.__gl;
 
     if ( program === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
     gl.useProgram( program.raw );
@@ -216,13 +193,12 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new vertex buffer.
    */
-  public createBuffer(): GLCatBuffer | null {
+  public createBuffer(): GLCatBuffer {
     const gl = this.__gl;
 
     const buffer = gl.createBuffer();
     if ( buffer === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
     return new GLCatBuffer( this, buffer );
@@ -231,13 +207,12 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new texture.
    */
-  public createTexture(): GLCatTexture | null {
+  public createTexture(): GLCatTexture {
     const gl = this.__gl;
 
     const texture = gl.createTexture();
     if ( texture === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
     return new GLCatTexture( this, texture );
@@ -246,13 +221,12 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new renderbuffer.
    */
-  public createRenderbuffer(): GLCatRenderbuffer | null {
+  public createRenderbuffer(): GLCatRenderbuffer {
     const gl = this.__gl;
 
     const renderbuffer = gl.createRenderbuffer();
     if ( renderbuffer === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
     return new GLCatRenderbuffer( this, renderbuffer );
@@ -262,13 +236,12 @@ export class GLCat extends EventEmitter {
    * Create a new framebuffer.
    * TODO: DrawBuffers
    */
-  public createFramebuffer(): GLCatFramebuffer | null {
+  public createFramebuffer(): GLCatFramebuffer {
     const gl = this.__gl;
 
     const framebuffer = gl.createFramebuffer();
     if ( framebuffer === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
     return new GLCatFramebuffer( this, framebuffer );
@@ -277,18 +250,16 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new framebufer, in lazier way.
    */
-  public lazyFramebuffer( width: number, height: number, isFloat: boolean = false ): GLCatFramebuffer | null {
+  public lazyFramebuffer( width: number, height: number, isFloat: boolean = false ): GLCatFramebuffer {
     const framebuffer = this.createFramebuffer();
     if ( framebuffer === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
     const renderbuffer = this.createRenderbuffer();
     if ( renderbuffer === null ) {
       framebuffer.dispose();
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
     renderbuffer.init( width, height );
     framebuffer.attachRenderbuffer( renderbuffer );
@@ -297,8 +268,7 @@ export class GLCat extends EventEmitter {
     if ( texture === null ) {
       framebuffer.dispose();
       renderbuffer.dispose();
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
     if ( isFloat ) {
       texture.setTextureFromFloatArray( width, height, null );
@@ -319,23 +289,21 @@ export class GLCat extends EventEmitter {
     height: number,
     numBuffers: number,
     isFloat: boolean = false
-  ): GLCatFramebuffer | null {
+  ): GLCatFramebuffer {
     const ext = this.getExtension( 'WEBGL_draw_buffers', true );
     if ( ext.MAX_DRAW_BUFFERS_WEBGL < numBuffers ) {
-      this.spit( Error( 'GLCat: Maximum draw buffers count exceeded' ) );
+      throw Error( 'GLCat: Maximum draw buffers count exceeded' );
     }
 
     const framebuffer = this.createFramebuffer();
     if ( framebuffer === null ) {
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
 
     const renderbuffer = this.createRenderbuffer();
     if ( renderbuffer === null ) {
       framebuffer.dispose();
-      this.spit( GLCat.unexpectedNullDetectedError );
-      return null;
+      throw GLCat.unexpectedNullDetectedError;
     }
     renderbuffer.init( width, height );
     framebuffer.attachRenderbuffer( renderbuffer );
@@ -346,8 +314,7 @@ export class GLCat extends EventEmitter {
       if ( texture === null ) {
         framebuffer.dispose();
         renderbuffer.dispose();
-        this.spit( GLCat.unexpectedNullDetectedError );
-        return null;
+        throw GLCat.unexpectedNullDetectedError;
       }
 
       if ( isFloat ) {
