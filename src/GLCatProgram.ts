@@ -93,6 +93,41 @@ export class GLCatProgram {
   }
 
   /**
+   * Attach shaders and link this program.
+   * It's gonna be asynchronous if you have the KHR_parallel_shader_compile extension support.
+   */
+  public linkAsync( ...shaders: GLCatShader[] ): Promise<void> {
+    const glCat = this.__glCat;
+    const { gl } = this.__glCat;
+    const extParallel = glCat.getExtension( 'KHR_parallel_shader_compile' );
+
+    shaders.forEach( ( shader ) => gl.attachShader( this.__program, shader.raw ) );
+    gl.linkProgram( this.__program );
+
+    return new Promise( ( resolve, reject ) => {
+      const update = () => {
+        if (
+          !extParallel ||
+          gl.getProgramParameter( this.__program, extParallel.COMPLETION_STATUS_KHR ) === true
+        ) {
+          this.__linked = gl.getProgramParameter( this.__program, gl.LINK_STATUS );
+          if ( !this.__linked ) {
+            reject( gl.getProgramInfoLog( this.__program ) );
+            return;
+          }
+
+          this.__shaders = shaders.concat();
+          resolve();
+          return;
+        }
+
+        requestAnimationFrame( update );
+      };
+      update();
+    } );
+  }
+
+  /**
    * Attach an attribute variable.
    * @param name Name of the attribute variable
    * @param buffer Vertex buffer. Can be null, to disable attribute array

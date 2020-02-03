@@ -178,6 +178,59 @@ export class GLCat extends EventEmitter {
   }
 
   /**
+   * Create a new GLCat program object, in lazier way.
+   * It's gonna be asynchronous if you have the KHR_parallel_shader_compile extension support.
+   */
+  public lazyProgramAsync( vert: string, frag: string ): Promise<GLCatProgram> {
+    const gl = this.__gl;
+
+    // == vert =====================================================================================
+    const vertexShader = this.createShader( gl.VERTEX_SHADER );
+    if ( vertexShader === null ) {
+      return Promise.reject( GLCat.unexpectedNullDetectedError );
+    }
+
+    try {
+      vertexShader.compile( vert );
+    } catch ( e ) {
+      vertexShader.dispose();
+      return Promise.reject( e );
+    }
+
+    // == frag =====================================================================================
+    const fragmentShader = this.createShader( gl.FRAGMENT_SHADER );
+    if ( fragmentShader === null ) {
+      vertexShader.dispose();
+      return Promise.reject( GLCat.unexpectedNullDetectedError );
+    }
+
+    try {
+      fragmentShader.compile( frag );
+    } catch ( e ) {
+      vertexShader.dispose();
+      fragmentShader.dispose();
+      return Promise.reject( e );
+    }
+
+    // == program ==================================================================================
+    const program = this.createProgram();
+    if ( program === null ) {
+      vertexShader.dispose();
+      fragmentShader.dispose();
+      return Promise.reject( GLCat.unexpectedNullDetectedError );
+    }
+
+    return program.linkAsync( vertexShader, fragmentShader ).then( () => {
+      return program;
+    } ).catch( ( e ) => {
+      vertexShader.dispose();
+      fragmentShader.dispose();
+      program.dispose();
+      throw e;
+    } );
+  }
+
+  /**
    * Specify a program to use.
    */
   public useProgram( program: GLCatProgram | null ): void {
