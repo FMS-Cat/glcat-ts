@@ -2,6 +2,7 @@ import GL from './constants';
 import { GLCat } from './GLCat';
 import { GLCatBuffer } from './GLCatBuffer';
 import { GLCatShader } from './GLCatShader';
+import { GLCatTexture } from './GLCatTexture';
 
 export type GLCatProgramUniformType =
   '1f' | '2f' | '3f' | '4f' |
@@ -379,13 +380,13 @@ export class GLCatProgram {
    * @param name Name of the uniform texture
    * @param texture Texture object
    */
-  public uniformTexture( name: string, texture: WebGLTexture | null ): void {
+  public uniformTexture( name: string, texture: GLCatTexture | null ): void {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
     const unit = this.getUniformTextureUnit( name );
     gl.activeTexture( gl.TEXTURE0 + unit );
-    gl.bindTexture( gl.TEXTURE_2D, texture );
+    gl.bindTexture( gl.TEXTURE_2D, texture?.raw || null );
     gl.uniform1i( location, unit );
   }
 
@@ -394,13 +395,13 @@ export class GLCatProgram {
    * @param name Name of the uniform texture
    * @param texture Texture object
    */
-  public uniformCubemap( name: string, texture: WebGLTexture | null ): void {
+  public uniformCubemap( name: string, texture: GLCatTexture | null ): void {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
     const unit = this.getUniformTextureUnit( name );
     gl.activeTexture( gl.TEXTURE0 + unit );
-    gl.bindTexture( gl.TEXTURE_CUBE_MAP, texture );
+    gl.bindTexture( gl.TEXTURE_CUBE_MAP, texture?.raw || null );
     gl.uniform1i( location, unit );
   }
 
