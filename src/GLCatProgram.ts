@@ -19,6 +19,8 @@ export class GLCatProgram {
   private __shaders: GLCatShader[] | null = null;
   private __attribLocationCache: { [ name: string ]: number } = {};
   private __uniformLocationCache: { [ name: string ]: WebGLUniformLocation | null } = {};
+  private __uniformTextureUnitMap: { [ name: string ]: number } = {};
+  private __uniformtextureUnitIndex = 0;
   private __linked: boolean = false;
 
   /**
@@ -376,30 +378,30 @@ export class GLCatProgram {
    * Attach a `sampler2D` type uniform texture.
    * @param name Name of the uniform texture
    * @param texture Texture object
-   * @param number Specify a texture unit, in integer
    */
-  public uniformTexture( name: string, texture: WebGLTexture | null, number: number ): void {
+  public uniformTexture( name: string, texture: WebGLTexture | null ): void {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.activeTexture( gl.TEXTURE0 + number );
+    const unit = this.getUniformTextureUnit( name );
+    gl.activeTexture( gl.TEXTURE0 + unit );
     gl.bindTexture( gl.TEXTURE_2D, texture );
-    gl.uniform1i( location, number );
+    gl.uniform1i( location, unit );
   }
 
   /**
    * Attach a `samplerCube` type uniform texture.
    * @param name Name of the uniform texture
    * @param texture Texture object
-   * @param number Specify a texture unit, in integer
    */
-  public uniformCubemap( name: string, texture: WebGLTexture | null, number: number ): void {
+  public uniformCubemap( name: string, texture: WebGLTexture | null ): void {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.activeTexture( gl.TEXTURE0 + number );
+    const unit = this.getUniformTextureUnit( name );
+    gl.activeTexture( gl.TEXTURE0 + unit );
     gl.bindTexture( gl.TEXTURE_CUBE_MAP, texture );
-    gl.uniform1i( location, number );
+    gl.uniform1i( location, unit );
   }
 
   /**
@@ -438,5 +440,17 @@ export class GLCatProgram {
       this.__uniformLocationCache[ name ] = location;
       return location;
     }
+  }
+
+  /**
+   * Retrieve or create a texture unit that corresponds to given name.
+   */
+  public getUniformTextureUnit( name: string ): number {
+    if ( this.__uniformTextureUnitMap[ name ] === undefined ) {
+      this.__uniformTextureUnitMap[ name ] = this.__uniformtextureUnitIndex;
+      this.__uniformtextureUnitIndex ++;
+    }
+
+    return this.__uniformTextureUnitMap[ name ];
   }
 }
