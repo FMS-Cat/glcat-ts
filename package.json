@@ -28,7 +28,8 @@
     "docs": "typedoc --out docs --mode file --excludeNotExported",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "jest",
-    "gh-pages": "node ./utils/gh-pages.js"
+    "gh-pages": "node ./utils/gh-pages.js",
+    "build-docker-image": "docker build -t fmscat/glcat-ts-circleci ./.circleci && docker push fmscat/glcat-ts-circleci"
   },
   "dependencies": {
     "eventemitter3": "^4.0.0"
