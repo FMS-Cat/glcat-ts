@@ -1,7 +1,7 @@
 import WebGL from 'gl';
 import { GLCat } from '../GLCat';
-import sQuadVert from './shader/quad.vert';
-import sUvFrag from './shader/uv.frag';
+import sQuadVert from './shaders/quad.vert';
+import sUvFrag from './shaders/uv.frag';
 
 describe( 'GLCat', () => {
   let gl: WebGLRenderingContext;
