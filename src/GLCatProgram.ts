@@ -22,7 +22,7 @@ export class GLCatProgram {
   private __uniformLocationCache: { [ name: string ]: WebGLUniformLocation | null } = {};
   private __uniformTextureUnitMap: { [ name: string ]: number } = {};
   private __uniformtextureUnitIndex = 0;
-  private __linked: boolean = false;
+  private __linked = false;
 
   /**
    * Its own program.
@@ -48,14 +48,14 @@ export class GLCatProgram {
   /**
    * Whether the last link operation was successful or not.
    */
-  public get isLinked() {
+  public get isLinked(): boolean {
     return this.__linked;
   }
 
   /**
    * Create a new GLCatProgram instance.
    */
-  constructor( glCat: GLCat, program: WebGLProgram ) {
+  public constructor( glCat: GLCat, program: WebGLProgram ) {
     this.__glCat = glCat;
     this.__program = program;
   }
@@ -63,7 +63,7 @@ export class GLCatProgram {
   /**
    * Dispose the program.
    */
-  public dispose( alsoAttached: boolean = false ) {
+  public dispose( alsoAttached = false ): void {
     const { gl } = this.__glCat;
 
     gl.deleteProgram( this.__program );
@@ -108,7 +108,7 @@ export class GLCatProgram {
     gl.linkProgram( this.__program );
 
     return new Promise( ( resolve, reject ) => {
-      const update = () => {
+      const update = (): void => {
         if (
           !extParallel ||
           gl.getProgramParameter( this.__program, extParallel.COMPLETION_STATUS_KHR ) === true
@@ -139,8 +139,8 @@ export class GLCatProgram {
   public attribute(
     name: string,
     buffer: GLCatBuffer | null,
-    size: number = 1,
-    divisor: number = 0,
+    size = 1,
+    divisor = 0,
     type: number = GL.FLOAT,
     stride = 0,
     offset = 0
@@ -180,7 +180,11 @@ export class GLCatProgram {
    * Attach an uniform variable.
    * See also: [[GLCatProgram.uniform]]
    */
-  public uniformVector( name: string, type: GLCatProgramUniformType, value: Float32List | Int32List ): void {
+  public uniformVector(
+    name: string,
+    type: GLCatProgramUniformType,
+    value: Float32List | Int32List
+  ): void {
     const func = ( this as any )[ 'uniform' + type ];
     func.call( this, name, value );
   }
@@ -348,7 +352,7 @@ export class GLCatProgram {
   /**
    * Attach an uniformMatrix2fv variable.
    */
-  public uniformMatrix2fv( name: string, array: Float32List, transpose: boolean = false ): void {
+  public uniformMatrix2fv( name: string, array: Float32List, transpose = false ): void {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
@@ -358,7 +362,7 @@ export class GLCatProgram {
   /**
    * Attach an uniformMatrix3fv variable.
    */
-  public uniformMatrix3fv( name: string, array: Float32List, transpose: boolean = false ): void {
+  public uniformMatrix3fv( name: string, array: Float32List, transpose = false ): void {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
@@ -368,7 +372,7 @@ export class GLCatProgram {
   /**
    * Attach an uniformMatrix4fv variable.
    */
-  public uniformMatrix4fv( name: string, array: Float32List, transpose: boolean = false ): void {
+  public uniformMatrix4fv( name: string, array: Float32List, transpose = false ): void {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );

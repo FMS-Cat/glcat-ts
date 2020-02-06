@@ -25,7 +25,7 @@ export class GLCatBuffer {
   /**
    * Create a new GLCatBuffer instance.
    */
-  constructor( glCat: GLCat, buffer: WebGLBuffer ) {
+  public constructor( glCat: GLCat, buffer: WebGLBuffer ) {
     this.__glCat = glCat;
     this.__buffer = buffer;
   }
@@ -33,14 +33,17 @@ export class GLCatBuffer {
   /**
    * Dispose the buffer.
    */
-  public dispose() {
+  public dispose(): void {
     this.__glCat.gl.deleteBuffer( this.__buffer );
   }
 
   /**
    * Set new data into this buffer.
    */
-  public setVertexbuffer( source: ArrayBuffer | ArrayBufferView | null, usage: number = GL.STATIC_DRAW ): void {
+  public setVertexbuffer(
+    source: ArrayBuffer | ArrayBufferView | null,
+    usage: number = GL.STATIC_DRAW
+  ): void {
     const { gl } = this.__glCat;
 
     gl.bindBuffer( gl.ARRAY_BUFFER, this.__buffer );
@@ -51,7 +54,10 @@ export class GLCatBuffer {
   /**
    * Set new index data into this buffer.
    */
-  public setIndexbuffer( source: ArrayBuffer | ArrayBufferView | null, usage: number = GL.STATIC_DRAW ): void {
+  public setIndexbuffer(
+    source: ArrayBuffer | ArrayBufferView | null,
+    usage: number = GL.STATIC_DRAW
+  ): void {
     const { gl } = this.__glCat;
 
     gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.__buffer );

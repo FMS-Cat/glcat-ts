@@ -6,7 +6,7 @@ import { GLCat } from './GLCat';
 export class GLCatShader {
   private __glCat: GLCat;
   private __shader: WebGLShader;
-  private __compiled: boolean = false;
+  private __compiled = false;
 
   /**
    * Its own shader.
@@ -25,7 +25,7 @@ export class GLCatShader {
   /**
    * Create a new GLCatShader instance.
    */
-  constructor( glCat: GLCat, shader: WebGLShader ) {
+  public constructor( glCat: GLCat, shader: WebGLShader ) {
     this.__glCat = glCat;
     this.__shader = shader;
   }
@@ -33,14 +33,14 @@ export class GLCatShader {
   /**
    * Dispose the shader.
    */
-  public dispose() {
+  public dispose(): void {
     this.__glCat.gl.deleteShader( this.__shader );
   }
 
   /**
    * Return whether the last compilation was successful or not.
    */
-  public isCompiled() {
+  public isCompiled(): boolean {
     return this.__compiled;
   }
 
