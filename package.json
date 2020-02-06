@@ -31,9 +31,7 @@
     "gh-pages": "node ./utils/gh-pages.js",
     "build-docker-image": "docker build -t fmscat/glcat-ts-circleci ./.circleci && docker push fmscat/glcat-ts-circleci"
   },
-  "dependencies": {
-    "eventemitter3": "^4.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/gl": "^4.1.0",
     "@types/jest": "^24.0.23",

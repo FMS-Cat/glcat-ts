@@ -1,4 +1,3 @@
-import { EventEmitter } from 'eventemitter3';
 import { GLCatBuffer } from './GLCatBuffer';
 import { GLCatFramebuffer } from './GLCatFramebuffer';
 import { GLCatProgram } from './GLCatProgram';
@@ -11,7 +10,7 @@ export type WebGLExtension = any;
 /**
  * WebGL wrapper with plenty of hackability.
  */
-export class GLCat extends EventEmitter {
+export class GLCat {
   public static unexpectedNullDetectedError = new Error( 'GLCat: Unexpected null detected' );
 
   private __gl: WebGLRenderingContext;
@@ -37,8 +36,6 @@ export class GLCat extends EventEmitter {
    * WebGLRenderingContext is required.
    */
   public constructor( gl: WebGLRenderingContext ) {
-    super();
-
     this.__gl = gl;
 
     gl.enable( gl.DEPTH_TEST );
