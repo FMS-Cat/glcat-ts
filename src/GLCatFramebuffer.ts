@@ -44,7 +44,7 @@ export class GLCatFramebuffer {
   /**
    * Create a new GLCatFramebuffer instance.
    */
-  constructor( glCat: GLCat, framebuffer: WebGLFramebuffer ) {
+  public constructor( glCat: GLCat, framebuffer: WebGLFramebuffer ) {
     this.__glCat = glCat;
     this.__framebuffer = framebuffer;
   }
@@ -52,7 +52,7 @@ export class GLCatFramebuffer {
   /**
    * Dispose the framebuffer.
    */
-  public dispose( alsoAttached: boolean = false ) {
+  public dispose( alsoAttached = false ): void {
     const { gl } = this.__glCat;
 
     gl.deleteFramebuffer( this.__framebuffer );
@@ -78,7 +78,10 @@ export class GLCatFramebuffer {
   /**
    * Attach a renderbuffer to this framebuffer.
    */
-  public attachRenderbuffer( renderbuffer: GLCatRenderbuffer, attachment: number = GL.DEPTH_ATTACHMENT ): void {
+  public attachRenderbuffer(
+    renderbuffer: GLCatRenderbuffer,
+    attachment: number = GL.DEPTH_ATTACHMENT
+  ): void {
     const { gl } = this.__glCat;
 
     gl.bindFramebuffer( gl.FRAMEBUFFER, this.__framebuffer );

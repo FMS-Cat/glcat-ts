@@ -1,18 +1,17 @@
 /* eslint-env node */
 
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import * as path from 'path';
-import webpack from 'webpack';
-import packageJson from './package.json';
+const ForkTsCheckerWebpackPlugin = require( 'fork-ts-checker-webpack-plugin' );
+const path = require( 'path' );
+const webpack = require( 'webpack' );
+const packageJson = require( './package.json' );
 
-export default ( env: any, argv: any ) => {
-  const VERSION = packageJson.version;
-  const PROD = argv.mode === 'production';
-  console.info( `Webpack: Building ${packageJson.name} ${VERSION} under ${argv.mode} mode...` );
+module.exports = ( env, argv ) => {
+  const isProd = argv.mode === 'production';
+  console.info( `Webpack: Building ${packageJson.name} ${packageJson.version} under ${argv.mode} mode...` );
 
-  const banner = PROD
-    ? `${packageJson.name} v${VERSION} - (c) ${packageJson.author}, MIT License`
-    : `${packageJson.name} v${VERSION}
+  const banner = isProd
+    ? `${packageJson.name} v${packageJson.version} - (c) ${packageJson.author}, MIT License`
+    : `${packageJson.name} v${packageJson.version}
 ${packageJson.description}
 
 Copyright (c) 2019 ${packageJson.author}
@@ -23,7 +22,7 @@ Repository: ${packageJson.repository.url}`;
 
   return {
     entry: {
-      [PROD ? 'glcat.min.js' : 'glcat.js']: './src/index.ts'
+      [isProd ? 'glcat.min.js' : 'glcat.js']: './src/index.ts'
     },
     output: {
       path: path.join( __dirname, 'dist' ),
@@ -57,14 +56,14 @@ Repository: ${packageJson.repository.url}`;
       inline: true
     },
     optimization: {
-      minimize: PROD
+      minimize: isProd
     },
     plugins: [
       new webpack.BannerPlugin( banner ),
       new webpack.DefinePlugin( {
-        'process.env': { PROD },
+        'process.env': { PROD: isProd },
       } ),
-      ...( PROD ? [
+      ...( isProd ? [
         // nothing in there
       ] : [
         new webpack.NamedModulesPlugin(),
@@ -72,6 +71,6 @@ Repository: ${packageJson.repository.url}`;
         new ForkTsCheckerWebpackPlugin( { checkSyntacticErrors: true } ),
       ] ),
     ],
-    devtool: PROD ? false : 'inline-source-map'
+    devtool: isProd ? false : 'inline-source-map'
   };
 };

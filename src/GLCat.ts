@@ -36,7 +36,7 @@ export class GLCat extends EventEmitter {
    * Create a new GLCat instance.
    * WebGLRenderingContext is required.
    */
-  constructor( gl: WebGLRenderingContext ) {
+  public constructor( gl: WebGLRenderingContext ) {
     super();
 
     this.__gl = gl;
@@ -303,7 +303,7 @@ export class GLCat extends EventEmitter {
   /**
    * Create a new framebufer, in lazier way.
    */
-  public lazyFramebuffer( width: number, height: number, isFloat: boolean = false ): GLCatFramebuffer {
+  public lazyFramebuffer( width: number, height: number, isFloat = false ): GLCatFramebuffer {
     const framebuffer = this.createFramebuffer();
     if ( framebuffer === null ) {
       throw GLCat.unexpectedNullDetectedError;
@@ -341,7 +341,7 @@ export class GLCat extends EventEmitter {
     width: number,
     height: number,
     numBuffers: number,
-    isFloat: boolean = false
+    isFloat = false
   ): GLCatFramebuffer {
     const ext = this.getExtension( 'WEBGL_draw_buffers', true );
     if ( ext.MAX_DRAW_BUFFERS_WEBGL < numBuffers ) {
@@ -385,7 +385,7 @@ export class GLCat extends EventEmitter {
    * Call this before you're gonna use draw buffers.
    * If you can't grab `WEBGL_draw_buffers` extension, you'll die instantly at this point.
    */
-  public drawBuffers( numBuffers: number[] | number ) {
+  public drawBuffers( numBuffers: number[] | number ): void {
     const ext = this.getExtension( 'WEBGL_draw_buffers', true );
 
     if ( Array.isArray( numBuffers ) ) {
@@ -403,11 +403,11 @@ export class GLCat extends EventEmitter {
    * Clear the current framebuffer.
    */
   public clear(
-    red: number = 0.0,
-    green: number = 0.0,
-    blue: number = 0.0,
-    alpha: number = 1.0,
-    depth: number = 1.0
+    red = 0.0,
+    green = 0.0,
+    blue = 0.0,
+    alpha = 1.0,
+    depth = 1.0
   ): void {
     const gl = this.__gl;
 

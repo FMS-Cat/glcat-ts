@@ -7,8 +7,8 @@ import { GLCat } from './GLCat';
 export class GLCatRenderbuffer {
   private __glCat: GLCat;
   private __renderbuffer: WebGLRenderbuffer;
-  private __width: number = 0;
-  private __height: number = 0;
+  private __width = 0;
+  private __height = 0;
 
   /**
    * Its own renderbuffer.
@@ -41,7 +41,7 @@ export class GLCatRenderbuffer {
   /**
    * Create a new GLCatTexture instance.
    */
-  constructor( glCat: GLCat, renderbuffer: WebGLRenderbuffer ) {
+  public constructor( glCat: GLCat, renderbuffer: WebGLRenderbuffer ) {
     this.__glCat = glCat;
     this.__renderbuffer = renderbuffer;
   }
@@ -49,7 +49,7 @@ export class GLCatRenderbuffer {
   /**
    * Dispose the renderbuffer.
    */
-  public dispose() {
+  public dispose(): void {
     this.__glCat.gl.deleteRenderbuffer( this.__renderbuffer );
   }
 

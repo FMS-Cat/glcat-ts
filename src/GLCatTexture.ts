@@ -7,8 +7,8 @@ import { GLCat } from './GLCat';
 export class GLCatTexture {
   private __glCat: GLCat;
   private __texture: WebGLTexture;
-  private __width: number = 0;
-  private __height: number = 0;
+  private __width = 0;
+  private __height = 0;
 
   /**
    * Its own texture.
@@ -41,7 +41,7 @@ export class GLCatTexture {
   /**
    * Create a new GLCatTexture instance.
    */
-  constructor( glCat: GLCat, texture: WebGLTexture ) {
+  public constructor( glCat: GLCat, texture: WebGLTexture ) {
     this.__glCat = glCat;
     this.__texture = texture;
     this.textureFilter( GL.LINEAR );
@@ -51,7 +51,7 @@ export class GLCatTexture {
   /**
    * Dispose the texture.
    */
-  public dispose() {
+  public dispose(): void {
     this.__glCat.gl.deleteTexture( this.__texture );
   }
 
@@ -173,7 +173,7 @@ export class GLCatTexture {
   /**
    * Copy pixels from current framebuffer to given texture.
    */
-  public copyTexture( width: number, height: number ) {
+  public copyTexture( width: number, height: number ): void {
     const { gl } = this.__glCat;
 
     gl.bindTexture( gl.TEXTURE_2D, this.__texture );
@@ -189,12 +189,19 @@ export class GLCatTexture {
    * @param textures Array of iamges. Order: `X+`, `X-`, `Y+`, `Y-`, `Z+`, `Z-`
    * @todo due to compatibility of its `width` and `height` it should not be used yet
    */
-  public setCubemap( textures: TexImageSource[] ) {
+  public setCubemap( textures: TexImageSource[] ): void {
     const { gl } = this.__glCat;
 
     gl.bindTexture( gl.TEXTURE_CUBE_MAP, this.__texture );
     for ( let i = 0; i < 6; i ++ ) {
-      gl.texImage2D( gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[ i ] );
+      gl.texImage2D(
+        gl.TEXTURE_CUBE_MAP_POSITIVE_X + i,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        textures[ i ]
+      );
     }
     gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
     gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
