@@ -1,4 +1,4 @@
-export default {
+export const GL = {
   ACTIVE_ATTRIBUTES: 35721,
   ACTIVE_ATTRIBUTE_MAX_LENGTH: 35722,
   ACTIVE_TEXTURE: 34016,

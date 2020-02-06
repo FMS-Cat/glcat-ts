@@ -1,4 +1,4 @@
-import GL from './constants';
+import { GL } from './GL';
 import { GLCat } from './GLCat';
 import { GLCatBuffer } from './GLCatBuffer';
 import { GLCatShader } from './GLCatShader';
