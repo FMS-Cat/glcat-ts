@@ -47,7 +47,7 @@ export class GLCat {
   /**
    * A dummy texture, 100% organic pure #FF00FF texture.
    */
-  public dummyTexture(): GLCatTexture {
+  public get dummyTexture(): GLCatTexture {
     if ( this.__dummyTextureCache ) {
       return this.__dummyTextureCache;
     }
