@@ -11,7 +11,7 @@ export type WebGLExtension = any;
  * WebGL wrapper with plenty of hackability.
  */
 export class GLCat {
-  public static unexpectedNullDetectedError = new Error( 'GLCat: Unexpected null detected' );
+  public static unexpectedNullDetectedError = 'GLCat: Unexpected null detected';
 
   private __gl: WebGLRenderingContext;
   private __extensionCache: { [ name: string ]: WebGLExtension } = {};
@@ -54,7 +54,7 @@ export class GLCat {
 
     const texture = this.createTexture();
     if ( texture === null ) {
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     texture.setTextureFromArray( 1, 1, new Uint8Array( [ 255, 0, 255, 255 ] ) );
@@ -100,7 +100,7 @@ export class GLCat {
 
     const shader = gl.createShader( type );
     if ( shader === null ) {
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     return new GLCatShader( this, shader );
@@ -114,7 +114,7 @@ export class GLCat {
 
     const program = gl.createProgram();
     if ( program === null ) {
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     return new GLCatProgram( this, program );
@@ -129,7 +129,7 @@ export class GLCat {
     // == vert =====================================================================================
     const vertexShader = this.createShader( gl.VERTEX_SHADER );
     if ( vertexShader === null ) {
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     try {
@@ -143,7 +143,7 @@ export class GLCat {
     const fragmentShader = this.createShader( gl.FRAGMENT_SHADER );
     if ( fragmentShader === null ) {
       vertexShader.dispose();
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     try {
@@ -159,7 +159,7 @@ export class GLCat {
     if ( program === null ) {
       vertexShader.dispose();
       fragmentShader.dispose();
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     try {
@@ -184,7 +184,7 @@ export class GLCat {
     // == vert =====================================================================================
     const vertexShader = this.createShader( gl.VERTEX_SHADER );
     if ( vertexShader === null ) {
-      return Promise.reject( GLCat.unexpectedNullDetectedError );
+      return Promise.reject( new Error( GLCat.unexpectedNullDetectedError ) );
     }
 
     try {
@@ -198,7 +198,7 @@ export class GLCat {
     const fragmentShader = this.createShader( gl.FRAGMENT_SHADER );
     if ( fragmentShader === null ) {
       vertexShader.dispose();
-      return Promise.reject( GLCat.unexpectedNullDetectedError );
+      return Promise.reject( new Error( GLCat.unexpectedNullDetectedError ) );
     }
 
     try {
@@ -214,7 +214,7 @@ export class GLCat {
     if ( program === null ) {
       vertexShader.dispose();
       fragmentShader.dispose();
-      return Promise.reject( GLCat.unexpectedNullDetectedError );
+      return Promise.reject( new Error( GLCat.unexpectedNullDetectedError ) );
     }
 
     return program.linkAsync( vertexShader, fragmentShader ).then( () => {
@@ -234,7 +234,7 @@ export class GLCat {
     const gl = this.__gl;
 
     if ( program === null ) {
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     gl.useProgram( program.raw );
@@ -248,7 +248,7 @@ export class GLCat {
 
     const buffer = gl.createBuffer();
     if ( buffer === null ) {
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     return new GLCatBuffer( this, buffer );
@@ -262,7 +262,7 @@ export class GLCat {
 
     const texture = gl.createTexture();
     if ( texture === null ) {
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     return new GLCatTexture( this, texture );
@@ -276,7 +276,7 @@ export class GLCat {
 
     const renderbuffer = gl.createRenderbuffer();
     if ( renderbuffer === null ) {
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     return new GLCatRenderbuffer( this, renderbuffer );
@@ -291,7 +291,7 @@ export class GLCat {
 
     const framebuffer = gl.createFramebuffer();
     if ( framebuffer === null ) {
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     return new GLCatFramebuffer( this, framebuffer );
@@ -303,13 +303,13 @@ export class GLCat {
   public lazyFramebuffer( width: number, height: number, isFloat = false ): GLCatFramebuffer {
     const framebuffer = this.createFramebuffer();
     if ( framebuffer === null ) {
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     const renderbuffer = this.createRenderbuffer();
     if ( renderbuffer === null ) {
       framebuffer.dispose();
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
     renderbuffer.init( width, height );
     framebuffer.attachRenderbuffer( renderbuffer );
@@ -318,7 +318,7 @@ export class GLCat {
     if ( texture === null ) {
       framebuffer.dispose();
       renderbuffer.dispose();
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
     if ( isFloat ) {
       texture.setTextureFromFloatArray( width, height, null );
@@ -347,13 +347,13 @@ export class GLCat {
 
     const framebuffer = this.createFramebuffer();
     if ( framebuffer === null ) {
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
 
     const renderbuffer = this.createRenderbuffer();
     if ( renderbuffer === null ) {
       framebuffer.dispose();
-      throw GLCat.unexpectedNullDetectedError;
+      throw new Error( GLCat.unexpectedNullDetectedError );
     }
     renderbuffer.init( width, height );
     framebuffer.attachRenderbuffer( renderbuffer );
@@ -364,7 +364,7 @@ export class GLCat {
       if ( texture === null ) {
         framebuffer.dispose();
         renderbuffer.dispose();
-        throw GLCat.unexpectedNullDetectedError;
+        throw new Error( GLCat.unexpectedNullDetectedError );
       }
 
       if ( isFloat ) {
