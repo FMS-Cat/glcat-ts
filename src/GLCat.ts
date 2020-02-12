@@ -233,11 +233,7 @@ export class GLCat {
   public useProgram( program: GLCatProgram | null ): void {
     const gl = this.__gl;
 
-    if ( program === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
-
-    gl.useProgram( program.raw );
+    gl.useProgram( program?.raw || null );
   }
 
   /**
