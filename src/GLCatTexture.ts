@@ -1,6 +1,8 @@
 import { GL } from './GL';
 import { GLCat } from './GLCat';
 
+const zeroTextureArray = new Uint8Array( [ 0, 0, 0, 0 ] );
+
 /**
  * It's a WebGLTexture.
  */
@@ -208,5 +210,13 @@ export class GLCatTexture {
     gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
     gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
     gl.bindTexture( gl.TEXTURE_CUBE_MAP, null );
+  }
+
+  /**
+   * Set [ 0, 0, 0, 0 ] to this texture.
+   * Useful for temporary use..
+   */
+  public setZeroTexture(): void {
+    this.setTextureFromArray( 1, 1, zeroTextureArray );
   }
 }
