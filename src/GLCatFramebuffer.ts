@@ -50,6 +50,17 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
   }
 
   /**
+   * Bind this framebuffer and execute given callback.
+   */
+  public bindFramebuffer( callback: () => void ): void {
+    const { gl } = this.__glCat;
+
+    gl.bindFramebuffer( gl.FRAMEBUFFER, this.__framebuffer );
+    callback();
+    gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+  }
+
+  /**
    * Dispose the framebuffer.
    */
   public dispose( alsoAttached = false ): void {
@@ -84,9 +95,9 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
   ): void {
     const { gl } = this.__glCat;
 
-    gl.bindFramebuffer( gl.FRAMEBUFFER, this.__framebuffer );
-    gl.framebufferRenderbuffer( gl.FRAMEBUFFER, attachment, gl.RENDERBUFFER, renderbuffer.raw );
-    gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+    this.bindFramebuffer( () => {
+      gl.framebufferRenderbuffer( gl.FRAMEBUFFER, attachment, gl.RENDERBUFFER, renderbuffer.raw );
+    } );
 
     this.__renderbuffer = renderbuffer;
   }
@@ -100,9 +111,9 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
   ): void {
     const { gl } = this.__glCat;
 
-    gl.bindFramebuffer( gl.FRAMEBUFFER, this.__framebuffer );
-    gl.framebufferTexture2D( gl.FRAMEBUFFER, attachment, gl.TEXTURE_2D, texture.raw, 0 );
-    gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+    this.bindFramebuffer( () => {
+      gl.framebufferTexture2D( gl.FRAMEBUFFER, attachment, gl.TEXTURE_2D, texture.raw, 0 );
+    } );
 
     this.__textureMap[ attachment ] = texture;
   }

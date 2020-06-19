@@ -375,59 +375,123 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     numBuffers: number,
     isFloat = false
   ): GLCatFramebuffer<TContext> {
-    const ext = this.getExtension( 'WEBGL_draw_buffers', true );
-    if ( ext.MAX_DRAW_BUFFERS_WEBGL < numBuffers ) {
-      throw Error( 'GLCat: Maximum draw buffers count exceeded' );
-    }
+    const { gl } = this;
 
-    const framebuffer = this.createFramebuffer();
-    if ( framebuffer === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
+    if ( gl instanceof WebGL2RenderingContext ) {
+      if ( gl.MAX_DRAW_BUFFERS < numBuffers ) {
+        throw new Error( 'GLCat: Maximum draw buffers count exceeded' );
+      }
 
-    const renderbuffer = this.createRenderbuffer();
-    if ( renderbuffer === null ) {
-      framebuffer.dispose();
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
-    renderbuffer.init( width, height );
-    framebuffer.attachRenderbuffer( renderbuffer );
-
-    for ( let i = 0; i < numBuffers; i ++ ) {
-      const texture = this.createTexture();
-
-      if ( texture === null ) {
-        framebuffer.dispose();
-        renderbuffer.dispose();
+      const framebuffer = this.createFramebuffer();
+      if ( framebuffer === null ) {
         throw new Error( GLCat.unexpectedNullDetectedError );
       }
 
-      if ( isFloat ) {
-        texture.setTextureFromFloatArray( width, height, null );
-      } else {
-        texture.setTextureFromArray( width, height, null );
+      const renderbuffer = this.createRenderbuffer();
+      if ( renderbuffer === null ) {
+        framebuffer.dispose();
+        throw new Error( GLCat.unexpectedNullDetectedError );
       }
-      framebuffer.attachTexture( texture, ext.COLOR_ATTACHMENT0_WEBGL + i );
-    }
+      renderbuffer.init( width, height );
+      framebuffer.attachRenderbuffer( renderbuffer );
 
-    return framebuffer;
+      for ( let i = 0; i < numBuffers; i ++ ) {
+        const texture = this.createTexture();
+
+        if ( texture === null ) {
+          framebuffer.dispose();
+          renderbuffer.dispose();
+          throw new Error( GLCat.unexpectedNullDetectedError );
+        }
+
+        if ( isFloat ) {
+          texture.setTextureFromFloatArray( width, height, null );
+        } else {
+          texture.setTextureFromArray( width, height, null );
+        }
+        framebuffer.attachTexture( texture, gl.COLOR_ATTACHMENT0 + i );
+      }
+
+      return framebuffer;
+    } else {
+      const ext = this.getExtension( 'WEBGL_draw_buffers', true );
+      if ( ext.MAX_DRAW_BUFFERS_WEBGL < numBuffers ) {
+        throw new Error( 'GLCat: Maximum draw buffers count exceeded' );
+      }
+
+      const framebuffer = this.createFramebuffer();
+      if ( framebuffer === null ) {
+        throw new Error( GLCat.unexpectedNullDetectedError );
+      }
+
+      const renderbuffer = this.createRenderbuffer();
+      if ( renderbuffer === null ) {
+        framebuffer.dispose();
+        throw new Error( GLCat.unexpectedNullDetectedError );
+      }
+      renderbuffer.init( width, height );
+      framebuffer.attachRenderbuffer( renderbuffer );
+
+      for ( let i = 0; i < numBuffers; i ++ ) {
+        const texture = this.createTexture();
+
+        if ( texture === null ) {
+          framebuffer.dispose();
+          renderbuffer.dispose();
+          throw new Error( GLCat.unexpectedNullDetectedError );
+        }
+
+        if ( isFloat ) {
+          texture.setTextureFromFloatArray( width, height, null );
+        } else {
+          texture.setTextureFromArray( width, height, null );
+        }
+        framebuffer.attachTexture( texture, ext.COLOR_ATTACHMENT0_WEBGL + i );
+      }
+
+      return framebuffer;
+    }
   }
 
   /**
    * Call this before you're gonna use draw buffers.
    * If you can't grab `WEBGL_draw_buffers` extension, you'll die instantly at this point.
+   * If callback is provided, it will execute immediately, and undo the draw buffer after the callback.
    */
-  public drawBuffers( numBuffers: number[] | number ): void {
-    const ext = this.getExtension( 'WEBGL_draw_buffers', true );
+  public drawBuffers( arrayOrNumBuffers?: number[] | number, callback?: () => void ): void {
+    const { gl } = this;
 
-    if ( Array.isArray( numBuffers ) ) {
-      ext.drawBuffersWEBGL( numBuffers );
-    } else {
-      const array: number[] = [];
-      for ( let i = 0; i < numBuffers; i ++ ) {
-        array[ i ] = ext.COLOR_ATTACHMENT0_WEBGL + i;
+    if ( gl instanceof WebGL2RenderingContext ) {
+      if ( Array.isArray( arrayOrNumBuffers ) ) {
+        gl.drawBuffers( arrayOrNumBuffers );
+      } else if ( arrayOrNumBuffers ) {
+        const array: number[] = [];
+        for ( let i = 0; i < arrayOrNumBuffers; i ++ ) {
+          array[ i ] = gl.COLOR_ATTACHMENT0 + i;
+        }
+        gl.drawBuffers( array );
+      } else {
+        gl.drawBuffers( [ gl.COLOR_ATTACHMENT0 ] );
       }
-      ext.drawBuffersWEBGL( array );
+    } else {
+      const ext = this.getExtension( 'WEBGL_draw_buffers', true );
+
+      if ( Array.isArray( arrayOrNumBuffers ) ) {
+        ext.drawBuffersWEBGL( arrayOrNumBuffers );
+      } else if ( arrayOrNumBuffers ) {
+        const array: number[] = [];
+        for ( let i = 0; i < arrayOrNumBuffers; i ++ ) {
+          array[ i ] = ext.COLOR_ATTACHMENT0_WEBGL + i;
+        }
+        ext.drawBuffersWEBGL( array );
+      } else {
+        ext.drawBuffersWEBGL( [ gl.BACK ] );
+      }
+    }
+
+    if ( callback ) {
+      callback();
+      this.drawBuffers();
     }
   }
 
