@@ -25,4 +25,8 @@
     vboQuad.dispose();
     program.dispose( true );
   } );
+
+  const error = new Error( 'We should do something more interesting in this example' );
+  error.name = 'NotFunnyExampleError';
+  throw error;
 </script>

@@ -1,0 +1,88 @@
+<body>
+  <canvas id="canvas" width=1280 height=720></canvas>
+</body>
+
+<script src="../dist/glcat.js"></script>
+<script type="module">
+  import {
+    Matrix4,
+    TRIANGLE_STRIP_QUAD_3D,
+    TRIANGLE_STRIP_QUAD_NORMAL,
+    TRIANGLE_STRIP_QUAD_UV,
+    Vector3,
+  } from 'https://unpkg.com/@fms-cat/experimental@0.4.1/dist/fms-cat-experimental.module.min.js';
+
+  const canvas = document.getElementById( 'canvas' );
+  const gl = canvas.getContext( 'webgl' );
+  const glCat = new GLCat( gl );
+
+  const vboQuad = glCat.createBuffer();
+  vboQuad.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD_3D ) );
+
+  const vboNormal = glCat.createBuffer();
+  vboNormal.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD_NORMAL ) );
+
+  const vboUv = glCat.createBuffer();
+  vboUv.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD_UV ) );
+
+  const shaderVert = `attribute vec3 aPosition;
+attribute vec3 aNormal;
+attribute vec2 aUv;
+varying vec3 vPosition;
+varying vec3 vNormal;
+varying vec2 vUv;
+uniform mat4 modelMatrix;
+uniform mat4 normalMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+
+void main() {
+  vNormal = ( normalMatrix * vec4( aNormal, 0.0 ) ).xyz;
+  vUv = aUv;
+  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( aPosition, 1.0 );
+}
+`;
+
+  const shaderFrag = `precision highp float;
+
+#define LIGHT_DIR vec3( 0.0, 0.0, 1.0 )
+
+varying vec2 vUv;
+varying vec3 vNormal;
+
+void main() {
+  vec3 color = vec3( vUv, 0.5 );
+  float diffuse = abs( dot( vNormal, LIGHT_DIR ) );
+  gl_FragColor = vec4( diffuse * color, 1.0 );
+}
+`;
+
+  const viewMatrix = Matrix4.lookAtInverse( new Vector3( [ 0.0, 0.0, 5.0 ] ) );
+  const projectionMatrix = Matrix4.perspective( 45.0, 0.01, 100.0 )
+    .multiply( Matrix4.scale( new Vector3( [ 9.0 / 16.0, 1.0, 1.0 ] ) ) );
+
+  const program = glCat.lazyProgram( shaderVert, shaderFrag );
+
+  glCat.useProgram( program );
+
+  program.attribute( 'aPosition', vboQuad, 3 );
+  program.attribute( 'aNormal', vboNormal, 3 );
+  program.attribute( 'aUv', vboUv, 2 );
+
+  program.uniformVector( 'viewMatrix', 'Matrix4fv', viewMatrix.elements );
+  program.uniformVector( 'projectionMatrix', 'Matrix4fv', projectionMatrix.elements );
+
+  function update() {
+    const time = Date.now() * 0.001;
+    const modelMatrix = Matrix4.rotateY( time );
+
+    glCat.clear( 0.0, 0.0, 0.0, 1.0 );
+
+    program.uniformVector( 'modelMatrix', 'Matrix4fv', modelMatrix.elements );
+    program.uniformVector( 'normalMatrix', 'Matrix4fv', modelMatrix.transpose.elements );
+    gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+
+    requestAnimationFrame( update );
+  }
+  update();
+</script>
