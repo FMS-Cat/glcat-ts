@@ -4,38 +4,39 @@ import { GLCatProgram } from './GLCatProgram';
 import { GLCatRenderbuffer } from './GLCatRenderbuffer';
 import { GLCatShader } from './GLCatShader';
 import { GLCatTexture } from './GLCatTexture';
+import { GLCatVertexArray } from './GLCatVertexArray';
 
 export type WebGLExtension = any;
 
 /**
  * WebGL wrapper with plenty of hackability.
  */
-export class GLCat {
+export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
   public static unexpectedNullDetectedError = 'GLCat: Unexpected null detected';
 
-  private __gl: WebGLRenderingContext;
+  private __gl: TContext;
   private __extensionCache: { [ name: string ]: WebGLExtension } = {};
-  private __dummyTextureCache?: GLCatTexture;
+  private __dummyTextureCache?: GLCatTexture<TContext>;
 
   /**
-   * Its own WebGLRenderingContext.
+   * Its own rendering context.
    */
-  public get renderingContext(): WebGLRenderingContext {
+  public get renderingContext(): TContext {
     return this.__gl;
   }
 
   /**
-   * Its own WebGLRenderingContext. Shorter than [[GLCat.renderingContext]]
+   * Its own rendering context. Shorter than [[GLCat.renderingContext]]
    */
-  public get gl(): WebGLRenderingContext {
+  public get gl(): TContext {
     return this.__gl;
   }
 
   /**
    * Create a new GLCat instance.
-   * WebGLRenderingContext is required.
+   * Rendering context is required.
    */
-  public constructor( gl: WebGLRenderingContext ) {
+  public constructor( gl: TContext ) {
     this.__gl = gl;
 
     gl.enable( gl.DEPTH_TEST );
@@ -47,7 +48,7 @@ export class GLCat {
   /**
    * A dummy texture, 100% organic pure #FF00FF texture.
    */
-  public get dummyTexture(): GLCatTexture {
+  public get dummyTexture(): GLCatTexture<TContext> {
     if ( this.__dummyTextureCache ) {
       return this.__dummyTextureCache;
     }
@@ -95,7 +96,7 @@ export class GLCat {
   /**
    * Create a new shader object.
    */
-  public createShader( type: number ): GLCatShader {
+  public createShader( type: number ): GLCatShader<TContext> {
     const gl = this.__gl;
 
     const shader = gl.createShader( type );
@@ -109,7 +110,7 @@ export class GLCat {
   /**
    * Create a new GLCat program object.
    */
-  public createProgram(): GLCatProgram {
+  public createProgram(): GLCatProgram<TContext> {
     const gl = this.__gl;
 
     const program = gl.createProgram();
@@ -123,7 +124,7 @@ export class GLCat {
   /**
    * Create a new GLCat program object, in lazier way.
    */
-  public lazyProgram( vert: string, frag: string ): GLCatProgram {
+  public lazyProgram( vert: string, frag: string ): GLCatProgram<TContext> {
     const gl = this.__gl;
 
     // == vert =====================================================================================
@@ -178,7 +179,7 @@ export class GLCat {
    * Create a new GLCat program object, in lazier way.
    * It's gonna be asynchronous if you have the KHR_parallel_shader_compile extension support.
    */
-  public lazyProgramAsync( vert: string, frag: string ): Promise<GLCatProgram> {
+  public lazyProgramAsync( vert: string, frag: string ): Promise<GLCatProgram<TContext>> {
     const gl = this.__gl;
 
     // == vert =====================================================================================
@@ -230,7 +231,7 @@ export class GLCat {
   /**
    * Specify a program to use.
    */
-  public useProgram( program: GLCatProgram | null ): void {
+  public useProgram( program: GLCatProgram<TContext> | null ): void {
     const gl = this.__gl;
 
     gl.useProgram( program?.raw || null );
@@ -239,7 +240,7 @@ export class GLCat {
   /**
    * Create a new vertex buffer.
    */
-  public createBuffer(): GLCatBuffer {
+  public createBuffer(): GLCatBuffer<TContext> {
     const gl = this.__gl;
 
     const buffer = gl.createBuffer();
@@ -251,9 +252,34 @@ export class GLCat {
   }
 
   /**
+   * Create a new vertex array.
+   */
+  public createVertexArray(): GLCatVertexArray<TContext> {
+    const gl = this.__gl;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      const vertexArray = gl.createVertexArray();
+      if ( vertexArray === null ) {
+        throw new Error( GLCat.unexpectedNullDetectedError );
+      }
+
+      return new GLCatVertexArray( this, vertexArray as any );
+    } else {
+      const ext = this.getExtension( 'OES_vertex_array_object', true );
+
+      const vertexArray = ext.createVertexArrayOES();
+      if ( vertexArray === null ) {
+        throw new Error( GLCat.unexpectedNullDetectedError );
+      }
+
+      return new GLCatVertexArray( this, vertexArray );
+    }
+  }
+
+  /**
    * Create a new texture.
    */
-  public createTexture(): GLCatTexture {
+  public createTexture(): GLCatTexture<TContext> {
     const gl = this.__gl;
 
     const texture = gl.createTexture();
@@ -267,7 +293,7 @@ export class GLCat {
   /**
    * Create a new renderbuffer.
    */
-  public createRenderbuffer(): GLCatRenderbuffer {
+  public createRenderbuffer(): GLCatRenderbuffer<TContext> {
     const gl = this.__gl;
 
     const renderbuffer = gl.createRenderbuffer();
@@ -282,7 +308,7 @@ export class GLCat {
    * Create a new framebuffer.
    * TODO: DrawBuffers
    */
-  public createFramebuffer(): GLCatFramebuffer {
+  public createFramebuffer(): GLCatFramebuffer<TContext> {
     const gl = this.__gl;
 
     const framebuffer = gl.createFramebuffer();
@@ -296,7 +322,11 @@ export class GLCat {
   /**
    * Create a new framebufer, in lazier way.
    */
-  public lazyFramebuffer( width: number, height: number, isFloat = false ): GLCatFramebuffer {
+  public lazyFramebuffer(
+    width: number,
+    height: number,
+    isFloat = false
+  ): GLCatFramebuffer<TContext> {
     const framebuffer = this.createFramebuffer();
     if ( framebuffer === null ) {
       throw new Error( GLCat.unexpectedNullDetectedError );
@@ -335,7 +365,7 @@ export class GLCat {
     height: number,
     numBuffers: number,
     isFloat = false
-  ): GLCatFramebuffer {
+  ): GLCatFramebuffer<TContext> {
     const ext = this.getExtension( 'WEBGL_draw_buffers', true );
     if ( ext.MAX_DRAW_BUFFERS_WEBGL < numBuffers ) {
       throw Error( 'GLCat: Maximum draw buffers count exceeded' );

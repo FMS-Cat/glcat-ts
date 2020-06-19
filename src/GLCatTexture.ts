@@ -6,8 +6,8 @@ const zeroTextureArray = new Uint8Array( [ 0, 0, 0, 0 ] );
 /**
  * It's a WebGLTexture.
  */
-export class GLCatTexture {
-  private __glCat: GLCat;
+export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+  private __glCat: GLCat<TContext>;
   private __texture: WebGLTexture;
   private __width = 0;
   private __height = 0;
@@ -43,7 +43,7 @@ export class GLCatTexture {
   /**
    * Create a new GLCatTexture instance.
    */
-  public constructor( glCat: GLCat, texture: WebGLTexture ) {
+  public constructor( glCat: GLCat<TContext>, texture: WebGLTexture ) {
     this.__glCat = glCat;
     this.__texture = texture;
     this.textureFilter( GL.LINEAR );

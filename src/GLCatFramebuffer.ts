@@ -6,11 +6,11 @@ import { GLCatTexture } from './GLCatTexture';
 /**
  * It's a WebGLFramebuffer.
  */
-export class GLCatFramebuffer {
-  private __glCat: GLCat;
+export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+  private __glCat: GLCat<TContext>;
   private __framebuffer: WebGLFramebuffer;
-  private __renderbuffer: GLCatRenderbuffer | null = null;
-  private __textureMap: { [ attachment: number ]: GLCatTexture } = {};
+  private __renderbuffer: GLCatRenderbuffer<TContext> | null = null;
+  private __textureMap: { [ attachment: number ]: GLCatTexture<TContext> } = {};
 
   /**
    * Its own framebuffer.
@@ -29,7 +29,7 @@ export class GLCatFramebuffer {
   /**
    * Its attached renderbuffer.
    */
-  public get renderbuffer(): GLCatRenderbuffer | null {
+  public get renderbuffer(): GLCatRenderbuffer<TContext> | null {
     return this.__renderbuffer;
   }
 
@@ -37,14 +37,14 @@ export class GLCatFramebuffer {
    * Its attached texture.
    * If you want to retrieve other than `COLOR_ATTACHMENT0`, try [[GLCatFramebuffer.getTexture]] instead.
    */
-  public get texture(): GLCatTexture | null {
+  public get texture(): GLCatTexture<TContext> | null {
     return this.__textureMap[ GL.COLOR_ATTACHMENT0 ];
   }
 
   /**
    * Create a new GLCatFramebuffer instance.
    */
-  public constructor( glCat: GLCat, framebuffer: WebGLFramebuffer ) {
+  public constructor( glCat: GLCat<TContext>, framebuffer: WebGLFramebuffer ) {
     this.__glCat = glCat;
     this.__framebuffer = framebuffer;
   }
@@ -71,7 +71,7 @@ export class GLCatFramebuffer {
   /**
    * Retrieve its attached texture.
    */
-  public getTexture( attachment: number = GL.COLOR_ATTACHMENT0 ): GLCatTexture | null {
+  public getTexture( attachment: number = GL.COLOR_ATTACHMENT0 ): GLCatTexture<TContext> | null {
     return this.__textureMap[ attachment ];
   }
 
@@ -79,7 +79,7 @@ export class GLCatFramebuffer {
    * Attach a renderbuffer to this framebuffer.
    */
   public attachRenderbuffer(
-    renderbuffer: GLCatRenderbuffer,
+    renderbuffer: GLCatRenderbuffer<TContext>,
     attachment: number = GL.DEPTH_ATTACHMENT
   ): void {
     const { gl } = this.__glCat;
@@ -94,7 +94,10 @@ export class GLCatFramebuffer {
   /**
    * Attach a texture to this framebuffer.
    */
-  public attachTexture( texture: GLCatTexture, attachment: number = GL.COLOR_ATTACHMENT0 ): void {
+  public attachTexture(
+    texture: GLCatTexture<TContext>,
+    attachment: number = GL.COLOR_ATTACHMENT0
+  ): void {
     const { gl } = this.__glCat;
 
     gl.bindFramebuffer( gl.FRAMEBUFFER, this.__framebuffer );

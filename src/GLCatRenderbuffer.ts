@@ -4,8 +4,8 @@ import { GLCat } from './GLCat';
 /**
  * It's a WebGLRenderbuffer.
  */
-export class GLCatRenderbuffer {
-  private __glCat: GLCat;
+export class GLCatRenderbuffer<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+  private __glCat: GLCat<TContext>;
   private __renderbuffer: WebGLRenderbuffer;
   private __width = 0;
   private __height = 0;
@@ -41,7 +41,7 @@ export class GLCatRenderbuffer {
   /**
    * Create a new GLCatTexture instance.
    */
-  public constructor( glCat: GLCat, renderbuffer: WebGLRenderbuffer ) {
+  public constructor( glCat: GLCat<TContext>, renderbuffer: WebGLRenderbuffer ) {
     this.__glCat = glCat;
     this.__renderbuffer = renderbuffer;
   }

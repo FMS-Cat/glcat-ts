@@ -14,10 +14,10 @@ export type GLCatProgramUniformType =
 /**
  * It's a WebGLProgram, but has cache of variable locations.
  */
-export class GLCatProgram {
-  private __glCat: GLCat;
+export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+  private __glCat: GLCat<TContext>;
   private __program: WebGLProgram;
-  private __shaders: GLCatShader[] | null = null;
+  private __shaders: GLCatShader<TContext>[] | null = null;
   private __attribLocationCache: { [ name: string ]: number } = {};
   private __uniformLocationCache: { [ name: string ]: WebGLUniformLocation | null } = {};
   private __uniformTextureUnitMap: { [ name: string ]: number } = {};
@@ -41,7 +41,7 @@ export class GLCatProgram {
   /**
    * Its shaders.
    */
-  public get shaders(): GLCatShader[] | null {
+  public get shaders(): GLCatShader<TContext>[] | null {
     return this.__shaders ? this.__shaders.concat() : null;
   }
 
@@ -55,7 +55,7 @@ export class GLCatProgram {
   /**
    * Create a new GLCatProgram instance.
    */
-  public constructor( glCat: GLCat, program: WebGLProgram ) {
+  public constructor( glCat: GLCat<TContext>, program: WebGLProgram ) {
     this.__glCat = glCat;
     this.__program = program;
   }
@@ -81,7 +81,7 @@ export class GLCatProgram {
   /**
    * Attach shaders and link this program.
    */
-  public link( ...shaders: GLCatShader[] ): void {
+  public link( ...shaders: GLCatShader<TContext>[] ): void {
     const { gl } = this.__glCat;
 
     shaders.forEach( ( shader ) => gl.attachShader( this.__program, shader.raw ) );
@@ -99,7 +99,7 @@ export class GLCatProgram {
    * Attach shaders and link this program.
    * It's gonna be asynchronous if you have the KHR_parallel_shader_compile extension support.
    */
-  public linkAsync( ...shaders: GLCatShader[] ): Promise<void> {
+  public linkAsync( ...shaders: GLCatShader<TContext>[] ): Promise<void> {
     const glCat = this.__glCat;
     const { gl } = this.__glCat;
     const extParallel = glCat.getExtension( 'KHR_parallel_shader_compile' );
@@ -138,7 +138,7 @@ export class GLCatProgram {
    */
   public attribute(
     name: string,
-    buffer: GLCatBuffer | null,
+    buffer: GLCatBuffer<TContext> | null,
     size = 1,
     divisor = 0,
     type: number = GL.FLOAT,
@@ -384,7 +384,7 @@ export class GLCatProgram {
    * @param name Name of the uniform texture
    * @param texture Texture object
    */
-  public uniformTexture( name: string, texture: GLCatTexture | null ): void {
+  public uniformTexture( name: string, texture: GLCatTexture<TContext> | null ): void {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
@@ -399,7 +399,7 @@ export class GLCatProgram {
    * @param name Name of the uniform texture
    * @param texture Texture object
    */
-  public uniformCubemap( name: string, texture: GLCatTexture | null ): void {
+  public uniformCubemap( name: string, texture: GLCatTexture<TContext> | null ): void {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
