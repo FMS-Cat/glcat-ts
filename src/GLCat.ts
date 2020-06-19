@@ -67,6 +67,15 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
    * Retrieve an extension.
    * If they is your precious one and you cannot live without him, turn on `throwIfNotFound`.
    */
+  public getExtension(
+    name: 'ANGLE_instanced_arrays',
+    throwIfNotFound?: false
+  ): ANGLE_instanced_arrays | null; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'ANGLE_instanced_arrays',
+    throwIfNotFound: true
+  ): ANGLE_instanced_arrays; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension( name: string, throwIfNotFound?: boolean ): WebGLExtension | null;
   public getExtension( name: string, throwIfNotFound?: boolean ): WebGLExtension | null {
     const gl = this.__gl;
 
@@ -419,6 +428,45 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
         array[ i ] = ext.COLOR_ATTACHMENT0_WEBGL + i;
       }
       ext.drawBuffersWEBGL( array );
+    }
+  }
+
+  /**
+   * a wrapper of drawElementsInstanced.
+   */
+  public drawArraysInstanced(
+    mode: GLenum,
+    first: GLint,
+    count: GLsizei,
+    primcount: GLsizei
+  ): void {
+    const { gl } = this;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      gl.drawArraysInstanced( mode, first, count, primcount );
+    } else {
+      const ext = this.getExtension( 'ANGLE_instanced_arrays', true );
+      ext.drawArraysInstancedANGLE( mode, first, count, primcount );
+    }
+  }
+
+  /**
+   * a wrapper of drawElementsInstanced.
+   */
+  public drawElementsInstanced(
+    mode: GLenum,
+    count: GLsizei,
+    type: GLenum,
+    offset: GLintptr,
+    instanceCount: GLsizei
+  ): void {
+    const { gl } = this;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      gl.drawElementsInstanced( mode, count, type, offset, instanceCount );
+    } else {
+      const ext = this.getExtension( 'ANGLE_instanced_arrays', true );
+      ext.drawElementsInstancedANGLE( mode, count, type, offset, instanceCount );
     }
   }
 
