@@ -70,9 +70,9 @@ export class GLCatVertexArray<TContext extends WebGLRenderingContext | WebGL2Ren
   }
 
   /**
-   * Assign a vertex buffer to the vertex array.
+   * Bind a vertex buffer to the vertex array.
    */
-  public assignVertexbuffer(
+  public bindVertexbuffer(
     source: GLCatBuffer<TContext>,
     location: number,
     size = 1,
@@ -100,9 +100,9 @@ export class GLCatVertexArray<TContext extends WebGLRenderingContext | WebGL2Ren
   }
 
   /**
-   * Assign an index buffer to the vertex array.
+   * Bind an index buffer to the vertex array.
    */
-  public assignIndexbuffer(
+  public bindIndexbuffer(
     source: GLCatBuffer<TContext>
   ): void {
     const { gl } = this.__glCat;

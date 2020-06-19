@@ -26,20 +26,20 @@
 
   const vboQuad = glCat.createBuffer();
   vboQuad.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD_3D ) );
-  vao.assignVertexbuffer( vboQuad, locations.vertex, 3 );
+  vao.bindVertexbuffer( vboQuad, locations.vertex, 3 );
 
   const vboNormal = glCat.createBuffer();
   vboNormal.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD_NORMAL ) );
-  vao.assignVertexbuffer( vboNormal, locations.normal, 3 );
+  vao.bindVertexbuffer( vboNormal, locations.normal, 3 );
 
   const vboUv = glCat.createBuffer();
   vboUv.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD_UV ) );
-  vao.assignVertexbuffer( vboUv, locations.texcoord0, 2 );
+  vao.bindVertexbuffer( vboUv, locations.texcoord0, 2 );
 
   const iboLength = 4;
   const ibo = glCat.createBuffer();
   ibo.setIndexbuffer( new Uint16Array( [ 0, 1, 2, 3 ] ) );
-  vao.assignIndexbuffer( ibo );
+  vao.bindIndexbuffer( ibo );
 
   const shaderVert = `#version 300 es
 
