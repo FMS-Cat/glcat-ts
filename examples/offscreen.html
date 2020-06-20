@@ -1,0 +1,117 @@
+<body>
+  <canvas id="canvas" width=1280 height=720></canvas>
+</body>
+
+<script type="module">
+  import { GLCat } from '../dist/glcat.module.js';
+  import {
+    TRIANGLE_STRIP_QUAD,
+    TRIANGLE_STRIP_QUAD_3D,
+    TRIANGLE_STRIP_QUAD_UV,
+    Vector3,
+    Matrix4
+  } from 'https://unpkg.com/@fms-cat/experimental@0.4.1/dist/fms-cat-experimental.module.min.js';
+
+  const canvas = document.getElementById( 'canvas' );
+  const gl = canvas.getContext( 'webgl' );
+  const glCat = new GLCat( gl );
+
+  const vboQuad = glCat.createBuffer();
+  vboQuad.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD ) );
+
+  const vboQuad3D = glCat.createBuffer();
+  vboQuad3D.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD_3D ) );
+
+  const vboUv = glCat.createBuffer();
+  vboUv.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD_UV ) );
+
+  const framebuffer = glCat.lazyFramebuffer( 1280, 720 );
+
+  const shaderOffscreenVert = `attribute vec3 aVertex;
+attribute vec2 aUv;
+varying vec2 vUv;
+
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+
+void main() {
+  vUv = aUv;
+  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( aVertex, 1.0 );
+}
+`;
+
+  const shaderOffscreenFrag = `precision highp float;
+
+uniform vec3 color;
+
+varying vec2 vUv;
+
+void main() {
+  gl_FragColor = vec4( vUv, 0.5, 1.0 );
+}
+`;
+
+const shaderPostVert = `attribute vec2 aVertex;
+attribute vec2 aUv;
+varying vec2 vUv;
+
+void main() {
+  vUv = aUv;
+  gl_Position = vec4( aVertex, 0.0, 1.0 );
+}
+`;
+
+  const shaderPostFrag = `precision highp float;
+
+uniform float time;
+uniform sampler2D sampler0;
+
+varying vec2 vUv;
+
+void main() {
+  vec2 uv = vUv;
+  uv.x += 0.02 * sin( 40.0 * uv.y + 10.0 * time );
+  gl_FragColor = texture2D( sampler0, uv );
+}
+`;
+
+  const viewMatrix = Matrix4.lookAtInverse( new Vector3( [ 0.0, 0.0, 5.0 ] ) );
+  const projectionMatrix = Matrix4.perspective( 45.0, 0.01, 100.0 )
+    .multiply( Matrix4.scale( new Vector3( [ 9.0 / 16.0, 1.0, 1.0 ] ) ) );
+
+  const programOffscreen = glCat.lazyProgram( shaderOffscreenVert, shaderOffscreenFrag );
+  programOffscreen.attribute( 'aVertex', vboQuad3D, 3 );
+  programOffscreen.attribute( 'aUv', vboUv, 2 );
+  programOffscreen.uniformVector( 'viewMatrix', 'Matrix4fv', viewMatrix.elements );
+  programOffscreen.uniformVector( 'projectionMatrix', 'Matrix4fv', projectionMatrix.elements );
+
+  const programPost = glCat.lazyProgram( shaderPostVert, shaderPostFrag );
+  programPost.attribute( 'aVertex', vboQuad, 2 );
+  programPost.attribute( 'aUv', vboUv, 2 );
+  programPost.uniformTexture( 'sampler0', framebuffer.texture );
+
+  function update() {
+    const time = ( Date.now() * 0.001 ) % ( 2.0 * Math.PI );
+    const modelMatrix = Matrix4.rotateY( time );
+
+    programOffscreen.uniformVector( 'modelMatrix', 'Matrix4fv', modelMatrix.elements );
+    programOffscreen.uniformVector( 'normalMatrix', 'Matrix4fv', modelMatrix.transpose.elements );
+
+    glCat.useProgram( programOffscreen, () => {
+      glCat.bindFramebuffer( framebuffer, () => {
+        glCat.clear( 0.0, 0.0, 0.0, 1.0 );
+        gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+      } );
+    } );
+
+    programPost.uniform( 'time', '1f', time );
+
+    glCat.useProgram( programPost, () => {
+      gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+    } );
+
+    requestAnimationFrame( update );
+  }
+  update();
+</script>

@@ -1,0 +1,116 @@
+<body>
+  <canvas id="canvas" width=1280 height=720></canvas>
+</body>
+
+<script type="module">
+  import { GLCat } from '../dist/glcat.module.js';
+  import {
+    TRIANGLE_STRIP_QUAD,
+    TRIANGLE_STRIP_QUAD_UV,
+  } from 'https://unpkg.com/@fms-cat/experimental@0.4.1/dist/fms-cat-experimental.module.min.js';
+
+  const canvas = document.getElementById( 'canvas' );
+  const gl = canvas.getContext( 'webgl2' );
+  const glCat = new GLCat( gl );
+
+  const vboQuad = glCat.createBuffer();
+  vboQuad.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD ) );
+
+  const vboUv = glCat.createBuffer();
+  vboUv.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD_UV ) );
+
+  const drawbuffers = glCat.lazyDrawbuffers( 1280, 720, 4 );
+
+  const shaderVert = `#version 300 es
+
+in vec2 aVertex;
+in vec2 aUv;
+out vec2 vUv;
+
+void main() {
+  vUv = aUv;
+  gl_Position = vec4( aVertex, 0.0, 1.0 );
+}
+`;
+
+  const shaderMRTFrag = `#version 300 es
+
+precision highp float;
+
+uniform vec3 color;
+
+in vec2 vUv;
+layout (location = 0) out vec4 fragColor0;
+layout (location = 1) out vec4 fragColor1;
+layout (location = 2) out vec4 fragColor2;
+layout (location = 3) out vec4 fragColor3;
+
+void main() {
+  fragColor0 = vec4( 0.0, 0.5, 1.0, 1.0 );
+  fragColor1 = vec4( vUv, 0.5, 1.0 );
+  fragColor2 = vec4( sin( 100.0 * vUv.x ), 0.0, 0.0, 1.0 );
+  fragColor3 = vec4( vec3( sin( 100.0 * vUv.y ) ), 1.0 );
+}
+`;
+
+  const shaderPostFrag = `#version 300 es
+
+precision highp float;
+
+uniform sampler2D sampler0;
+uniform sampler2D sampler1;
+uniform sampler2D sampler2;
+uniform sampler2D sampler3;
+
+in vec2 vUv;
+out vec4 fragColor;
+
+void main() {
+  vec2 uv = fract( 2.0 * vUv );
+
+  if ( vUv.y < 0.5 ) {
+    if ( vUv.x < 0.5 ) {
+      fragColor = texture( sampler0, uv );
+    } else {
+      fragColor = texture( sampler1, uv );
+    }
+  } else {
+    if ( vUv.x < 0.5 ) {
+      fragColor = texture( sampler2, uv );
+    } else {
+      fragColor = texture( sampler3, uv );
+    }
+  }
+}
+`;
+
+  const programMRT = glCat.lazyProgram( shaderVert, shaderMRTFrag );
+  const programPost = glCat.lazyProgram( shaderVert, shaderPostFrag );
+
+  function update() {
+    programMRT.attribute( 'aVertex', vboQuad, 2 );
+    programMRT.attribute( 'aUv', vboUv, 2 );
+
+    glCat.useProgram( programMRT, () => {
+      glCat.bindFramebuffer( drawbuffers, () => {
+        glCat.drawBuffers( 4, () => {
+          gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+        } );
+      } );
+    } );
+
+    programPost.attribute( 'aVertex', vboQuad, 2 );
+    programPost.attribute( 'aUv', vboUv, 2 );
+    programPost.uniformTexture( 'sampler0', drawbuffers.getTexture( gl.COLOR_ATTACHMENT0 ) );
+    programPost.uniformTexture( 'sampler1', drawbuffers.getTexture( gl.COLOR_ATTACHMENT1 ) );
+    programPost.uniformTexture( 'sampler2', drawbuffers.getTexture( gl.COLOR_ATTACHMENT2 ) );
+    programPost.uniformTexture( 'sampler3', drawbuffers.getTexture( gl.COLOR_ATTACHMENT3 ) );
+
+    glCat.useProgram( programPost, () => {
+      gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+    } );
+
+    requestAnimationFrame( update );
+  }
+  update();
+</script>

@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>GLCatRenderbuffer | @fms-cat/glcat-ts</title>
-	<meta name="description" content="">
+	<meta name="description" content="Documentation for @fms-cat/glcat-ts">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -13,7 +13,7 @@
 	<div class="tsd-page-toolbar">
 		<div class="container">
 			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
 					<div class="field">
 						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
 						<input id="tsd-search-field" type="text" />
@@ -57,7 +57,7 @@
 					<a href="glcatrenderbuffer.html">GLCatRenderbuffer</a>
 				</li>
 			</ul>
-			<h1>Class GLCatRenderbuffer</h1>
+			<h1>Class GLCatRenderbuffer&lt;TContext&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -70,6 +70,14 @@
 						<p>It&#39;s a WebGLRenderbuffer.</p>
 					</div>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>TContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebGLRenderingContext</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">WebGL2RenderingContext</span></h4>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
@@ -112,6 +120,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="glcatrenderbuffer.html#dispose" class="tsd-kind-icon">dispose</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="glcatrenderbuffer.html#init" class="tsd-kind-icon">init</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="glcatrenderbuffer.html#initmultisample" class="tsd-kind-icon">init<wbr>Multisample</a></li>
 							</ul>
 						</section>
 					</div>
@@ -123,13 +132,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new GLCat<wbr>Renderbuffer<span class="tsd-signature-symbol">(</span>glCat<span class="tsd-signature-symbol">: </span><a href="glcat.html" class="tsd-signature-type">GLCat</a>, renderbuffer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebGLRenderbuffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="glcatrenderbuffer.html" class="tsd-signature-type">GLCatRenderbuffer</a></li>
+						<li class="tsd-signature tsd-kind-icon">new GLCat<wbr>Renderbuffer<span class="tsd-signature-symbol">(</span>glCat<span class="tsd-signature-symbol">: </span><a href="glcat.html" class="tsd-signature-type">GLCat</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span>, renderbuffer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebGLRenderbuffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="glcatrenderbuffer.html" class="tsd-signature-type">GLCatRenderbuffer</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatRenderbuffer.ts#L39">GLCatRenderbuffer.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L39">GLCatRenderbuffer.ts:39</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -140,7 +149,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>glCat: <a href="glcat.html" class="tsd-signature-type">GLCat</a></h5>
+									<h5>glCat: <a href="glcat.html" class="tsd-signature-type">GLCat</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
 									<h5>renderbuffer: <span class="tsd-signature-type">WebGLRenderbuffer</span></h5>
@@ -156,10 +165,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="__glcat" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> __gl<wbr>Cat</h3>
-					<div class="tsd-signature tsd-kind-icon">__gl<wbr>Cat<span class="tsd-signature-symbol">:</span> <a href="glcat.html" class="tsd-signature-type">GLCat</a></div>
+					<div class="tsd-signature tsd-kind-icon">__gl<wbr>Cat<span class="tsd-signature-symbol">:</span> <a href="glcat.html" class="tsd-signature-type">GLCat</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatRenderbuffer.ts#L8">GLCatRenderbuffer.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L8">GLCatRenderbuffer.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -169,7 +178,7 @@
 					<div class="tsd-signature tsd-kind-icon">__height<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatRenderbuffer.ts#L11">GLCatRenderbuffer.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L11">GLCatRenderbuffer.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -179,7 +188,7 @@
 					<div class="tsd-signature tsd-kind-icon">__renderbuffer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLRenderbuffer</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatRenderbuffer.ts#L9">GLCatRenderbuffer.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L9">GLCatRenderbuffer.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -189,7 +198,7 @@
 					<div class="tsd-signature tsd-kind-icon">__width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatRenderbuffer.ts#L10">GLCatRenderbuffer.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L10">GLCatRenderbuffer.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -206,7 +215,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatRenderbuffer.ts#L37">GLCatRenderbuffer.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L37">GLCatRenderbuffer.ts:37</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -228,7 +237,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatRenderbuffer.ts#L23">GLCatRenderbuffer.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L23">GLCatRenderbuffer.ts:23</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -250,7 +259,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatRenderbuffer.ts#L16">GLCatRenderbuffer.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L16">GLCatRenderbuffer.ts:16</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -272,7 +281,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatRenderbuffer.ts#L30">GLCatRenderbuffer.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L30">GLCatRenderbuffer.ts:30</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -297,7 +306,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatRenderbuffer.ts#L52">GLCatRenderbuffer.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L52">GLCatRenderbuffer.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -313,19 +322,18 @@
 					<a name="init" class="tsd-anchor"></a>
 					<h3>init</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, format<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>format<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatRenderbuffer.ts#L60">GLCatRenderbuffer.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L59">GLCatRenderbuffer.ts:59</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Initialize this renderbuffer.
-									If <code>format</code> is not given, it will be initialized as <code>DEPTH_COMPONENT16</code> .</p>
+									<p>Initialize this renderbuffer.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -337,7 +345,55 @@
 									<h5>height: <span class="tsd-signature-type">number</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> format: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = GL.DEPTH_COMPONENT16</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>format<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = {}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>format<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="initmultisample" class="tsd-anchor"></a>
+					<h3>init<wbr>Multisample</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">init<wbr>Multisample<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>format<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>samples<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatRenderbuffer.ts#L78">GLCatRenderbuffer.ts:78</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Initialize this renderbuffer with multisample enabled.
+									If you are using WebGL1, it will fallback to non multisample one instead.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>width: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>height: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>format<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>samples<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = {}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>format<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>samples<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -356,21 +412,9 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class">
-						<a href="glcat.html" class="tsd-kind-icon">GLCat</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="glcatbuffer.html" class="tsd-kind-icon">GLCat<wbr>Buffer</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="glcatframebuffer.html" class="tsd-kind-icon">GLCat<wbr>Framebuffer</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="glcatprogram.html" class="tsd-kind-icon">GLCat<wbr>Program</a>
-					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class">
+					<li class="current tsd-kind-class tsd-has-type-parameter">
 						<a href="glcatrenderbuffer.html" class="tsd-kind-icon">GLCat<wbr>Renderbuffer</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
@@ -406,28 +450,13 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="glcatrenderbuffer.html#init" class="tsd-kind-icon">init</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="glcatrenderbuffer.html#initmultisample" class="tsd-kind-icon">init<wbr>Multisample</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class">
-						<a href="glcatshader.html" class="tsd-kind-icon">GLCat<wbr>Shader</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="glcattexture.html" class="tsd-kind-icon">GLCat<wbr>Texture</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="../globals.html#glcatprogramuniformtype" class="tsd-kind-icon">GLCat<wbr>Program<wbr>Uniform<wbr>Type</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="../globals.html#webglextension" class="tsd-kind-icon">WebGLExtension</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="../globals.html#zerotexturearray" class="tsd-kind-icon">zero<wbr>Texture<wbr>Array</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="../globals.html#gl" class="tsd-kind-icon">GL</a>
-					</li>
 				</ul>
 			</nav>
 		</div>
@@ -438,57 +467,13 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
 			</ul>
 		</div>
 	</div>

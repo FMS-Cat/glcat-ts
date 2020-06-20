@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>GLCatTexture | @fms-cat/glcat-ts</title>
-	<meta name="description" content="">
+	<meta name="description" content="Documentation for @fms-cat/glcat-ts">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -13,7 +13,7 @@
 	<div class="tsd-page-toolbar">
 		<div class="container">
 			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
 					<div class="field">
 						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
 						<input id="tsd-search-field" type="text" />
@@ -57,7 +57,7 @@
 					<a href="glcattexture.html">GLCatTexture</a>
 				</li>
 			</ul>
-			<h1>Class GLCatTexture</h1>
+			<h1>Class GLCatTexture&lt;TContext&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -70,6 +70,14 @@
 						<p>It&#39;s a WebGLTexture.</p>
 					</div>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>TContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebGLRenderingContext</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">WebGL2RenderingContext</span></h4>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
@@ -119,6 +127,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="glcattexture.html#settexturefromarray" class="tsd-kind-icon">set<wbr>Texture<wbr>From<wbr>Array</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="glcattexture.html#settexturefromfloatarray" class="tsd-kind-icon">set<wbr>Texture<wbr>From<wbr>Float<wbr>Array</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="glcattexture.html#setzerotexture" class="tsd-kind-icon">set<wbr>Zero<wbr>Texture</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="glcattexture.html#texstorage2d" class="tsd-kind-icon">tex<wbr>Storage2D</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="glcattexture.html#texturefilter" class="tsd-kind-icon">texture<wbr>Filter</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="glcattexture.html#texturewrap" class="tsd-kind-icon">texture<wbr>Wrap</a></li>
 							</ul>
@@ -132,13 +141,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new GLCat<wbr>Texture<span class="tsd-signature-symbol">(</span>glCat<span class="tsd-signature-symbol">: </span><a href="glcat.html" class="tsd-signature-type">GLCat</a>, texture<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebGLTexture</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="glcattexture.html" class="tsd-signature-type">GLCatTexture</a></li>
+						<li class="tsd-signature tsd-kind-icon">new GLCat<wbr>Texture<span class="tsd-signature-symbol">(</span>glCat<span class="tsd-signature-symbol">: </span><a href="glcat.html" class="tsd-signature-type">GLCat</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span>, texture<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebGLTexture</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="glcattexture.html" class="tsd-signature-type">GLCatTexture</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L41">GLCatTexture.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L42">GLCatTexture.ts:42</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -149,7 +158,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>glCat: <a href="glcat.html" class="tsd-signature-type">GLCat</a></h5>
+									<h5>glCat: <a href="glcat.html" class="tsd-signature-type">GLCat</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
 									<h5>texture: <span class="tsd-signature-type">WebGLTexture</span></h5>
@@ -165,10 +174,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="__glcat" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> __gl<wbr>Cat</h3>
-					<div class="tsd-signature tsd-kind-icon">__gl<wbr>Cat<span class="tsd-signature-symbol">:</span> <a href="glcat.html" class="tsd-signature-type">GLCat</a></div>
+					<div class="tsd-signature tsd-kind-icon">__gl<wbr>Cat<span class="tsd-signature-symbol">:</span> <a href="glcat.html" class="tsd-signature-type">GLCat</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L10">GLCatTexture.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L11">GLCatTexture.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -178,7 +187,7 @@
 					<div class="tsd-signature tsd-kind-icon">__height<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L13">GLCatTexture.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L14">GLCatTexture.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -188,7 +197,7 @@
 					<div class="tsd-signature tsd-kind-icon">__texture<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLTexture</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L11">GLCatTexture.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L12">GLCatTexture.ts:12</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -198,7 +207,7 @@
 					<div class="tsd-signature tsd-kind-icon">__width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L12">GLCatTexture.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L13">GLCatTexture.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -215,7 +224,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L39">GLCatTexture.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L40">GLCatTexture.ts:40</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -237,7 +246,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L25">GLCatTexture.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L26">GLCatTexture.ts:26</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -259,7 +268,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L18">GLCatTexture.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L19">GLCatTexture.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -281,7 +290,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L32">GLCatTexture.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L33">GLCatTexture.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -306,7 +315,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L178">GLCatTexture.ts:178</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L198">GLCatTexture.ts:198</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -337,7 +346,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L56">GLCatTexture.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L57">GLCatTexture.ts:57</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -353,13 +362,13 @@
 					<a name="getparameter" class="tsd-anchor"></a>
 					<h3>get<wbr>Parameter</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Parameter<span class="tsd-signature-symbol">(</span>pname<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GLenum</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Parameter<span class="tsd-signature-symbol">(</span>pname<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GLenum</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L94">GLCatTexture.ts:94</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L114">GLCatTexture.ts:114</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -374,7 +383,7 @@
 									<h5>pname: <span class="tsd-signature-type">GLenum</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -388,7 +397,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L106">GLCatTexture.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L126">GLCatTexture.ts:126</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -420,7 +429,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L194">GLCatTexture.ts:194</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L214">GLCatTexture.ts:214</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -456,7 +465,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L117">GLCatTexture.ts:117</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L137">GLCatTexture.ts:137</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -484,7 +493,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L133">GLCatTexture.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L153">GLCatTexture.ts:153</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -506,7 +515,7 @@
 									<h5>source: <span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> format: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = GL.RGBA</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> format: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = GL_RGBA</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -523,7 +532,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L154">GLCatTexture.ts:154</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L174">GLCatTexture.ts:174</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -545,7 +554,7 @@
 									<h5>source: <span class="tsd-signature-type">Float32Array</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> format: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = GL.RGBA</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> format: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = GL_RGBA</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -562,7 +571,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L219">GLCatTexture.ts:219</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L239">GLCatTexture.ts:239</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -571,6 +580,51 @@
 									Useful for temporary use..</p>
 								</div>
 							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="texstorage2d" class="tsd-anchor"></a>
+					<h3>tex<wbr>Storage2D</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">tex<wbr>Storage2D<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>format<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>level<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L94">GLCatTexture.ts:94</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Initialize the texture.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>width: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>height: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-symbol">{ </span>format<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>level<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = {}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>format<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>level<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+									</ul>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -587,7 +641,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L63">GLCatTexture.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L64">GLCatTexture.ts:64</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -600,7 +654,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L64">GLCatTexture.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L65">GLCatTexture.ts:65</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -614,7 +668,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L65">GLCatTexture.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L66">GLCatTexture.ts:66</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -642,7 +696,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L78">GLCatTexture.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L79">GLCatTexture.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -655,7 +709,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L79">GLCatTexture.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L80">GLCatTexture.ts:80</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -669,7 +723,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/59162af/src/GLCatTexture.ts#L80">GLCatTexture.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/001bf87/src/GLCatTexture.ts#L81">GLCatTexture.ts:81</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -697,27 +751,9 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class">
-						<a href="glcat.html" class="tsd-kind-icon">GLCat</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="glcatbuffer.html" class="tsd-kind-icon">GLCat<wbr>Buffer</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="glcatframebuffer.html" class="tsd-kind-icon">GLCat<wbr>Framebuffer</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="glcatprogram.html" class="tsd-kind-icon">GLCat<wbr>Program</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="glcatrenderbuffer.html" class="tsd-kind-icon">GLCat<wbr>Renderbuffer</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="glcatshader.html" class="tsd-kind-icon">GLCat<wbr>Shader</a>
-					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class">
+					<li class="current tsd-kind-class tsd-has-type-parameter">
 						<a href="glcattexture.html" class="tsd-kind-icon">GLCat<wbr>Texture</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
@@ -775,6 +811,9 @@
 								<a href="glcattexture.html#setzerotexture" class="tsd-kind-icon">set<wbr>Zero<wbr>Texture</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="glcattexture.html#texstorage2d" class="tsd-kind-icon">tex<wbr>Storage2D</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="glcattexture.html#texturefilter" class="tsd-kind-icon">texture<wbr>Filter</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -784,18 +823,6 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-type-alias">
-						<a href="../globals.html#glcatprogramuniformtype" class="tsd-kind-icon">GLCat<wbr>Program<wbr>Uniform<wbr>Type</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="../globals.html#webglextension" class="tsd-kind-icon">WebGLExtension</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="../globals.html#zerotexturearray" class="tsd-kind-icon">zero<wbr>Texture<wbr>Array</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="../globals.html#gl" class="tsd-kind-icon">GL</a>
-					</li>
 				</ul>
 			</nav>
 		</div>
@@ -806,57 +833,13 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
 			</ul>
 		</div>
 	</div>

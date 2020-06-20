@@ -6,15 +6,15 @@
   import { GLCat } from '../dist/glcat.module.js';
 
   const canvas = document.getElementById( 'canvas' );
-  const gl = canvas.getContext( 'webgl' );
+  const gl = canvas.getContext( 'webgl2' );
   const glCat = new GLCat( gl );
 
   const vboQuad = glCat.createBuffer();
   vboQuad.setVertexbuffer( new Float32Array( [ -1, -1, 1, -1, -1, 1, 1, 1 ] ) );
 
   const program = glCat.lazyProgram(
-    'attribute vec2 p; void main() { gl_Position = vec4( p, 0.0, 1.0 ); }',
-    'precision highp float; uniform vec3 color; void main() { gl_FragColor = vec4( color, 1.0 ); }'
+    '#version 300 es\nin vec2 p; void main() { gl_Position = vec4( p, 0.0, 1.0 ); }',
+    '#version 300 es\nprecision highp float; uniform vec3 color; out vec4 fragColor; void main() { fragColor = vec4( color, 1.0 ); }'
   );
 
   program.attribute( 'p', vboQuad, 2 );
