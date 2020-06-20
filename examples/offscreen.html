@@ -27,7 +27,7 @@
 
   const framebuffer = glCat.lazyFramebuffer( 1280, 720 );
 
-  const shaderMRTVert = `attribute vec3 aVertex;
+  const shaderOffscreenVert = `attribute vec3 aVertex;
 attribute vec2 aUv;
 varying vec2 vUv;
 
@@ -41,7 +41,7 @@ void main() {
 }
 `;
 
-  const shaderMRTFrag = `precision highp float;
+  const shaderOffscreenFrag = `precision highp float;
 
 uniform vec3 color;
 
@@ -80,7 +80,7 @@ void main() {
   const projectionMatrix = Matrix4.perspective( 45.0, 0.01, 100.0 )
     .multiply( Matrix4.scale( new Vector3( [ 9.0 / 16.0, 1.0, 1.0 ] ) ) );
 
-  const programOffscreen = glCat.lazyProgram( shaderMRTVert, shaderMRTFrag );
+  const programOffscreen = glCat.lazyProgram( shaderOffscreenVert, shaderOffscreenFrag );
   programOffscreen.attribute( 'aVertex', vboQuad3D, 3 );
   programOffscreen.attribute( 'aUv', vboUv, 2 );
   programOffscreen.uniformVector( 'viewMatrix', 'Matrix4fv', viewMatrix.elements );
