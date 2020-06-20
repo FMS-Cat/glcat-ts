@@ -527,7 +527,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
       samples = 4,
       isFloat = false,
       depthFormat = this.preferredDepthFormat,
-      fallback = true
+      fallbackWebGL1 = true
     } = {}
   ): GLCatFramebuffer<TContext> {
     const gl = this.__gl;
@@ -570,7 +570,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
         renderbufferDepth?.dispose();
         throw e;
       }
-    } else if ( fallback ) {
+    } else if ( fallbackWebGL1 ) {
       return this.lazyFramebuffer( width, height, { isFloat } );
     } else {
       throw GLCatErrors.WebGL2ExclusiveError;
