@@ -147,13 +147,12 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
 
   /**
    * Set new data into this texture.
-   * This function uses `Uint8Array`. If you want to source image data, use `GLCat.setTexture()` instead.
-   * Or you want to use float texture? Try this: `GLCat.setTextureFromFloatArray()`
+   * This function uses TypedArray. If you want to source image data, use `GLCat.setTexture()` instead.
    */
   public setTextureFromArray(
     width: number,
     height: number,
-    source: Uint8Array | null,
+    source: ArrayBufferView | null,
     {
       internalformat = GL_RGBA8,
       format = GL_RGBA,
