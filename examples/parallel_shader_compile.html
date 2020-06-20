@@ -15,14 +15,18 @@
     'attribute vec2 p; void main() { gl_Position = vec4( p, 0.0, 1.0 ); }',
     'precision highp float; uniform vec3 color; void main() { gl_FragColor = vec4( color, 1.0 ); }'
   ).then( ( program ) => {
-    glCat.useProgram( program );
-
     program.attribute( 'p', vboQuad, 2 );
     program.uniform( 'color', '3f', 0.0, 0.5, 1.0 );
 
-    gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+    glCat.useProgram( program, () => {
+      gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+    } );
 
     vboQuad.dispose();
     program.dispose( true );
   } );
+
+  const error = new Error( 'We should do something more interesting in this example' );
+  error.name = 'NotFunnyExampleError';
+  throw error;
 </script>

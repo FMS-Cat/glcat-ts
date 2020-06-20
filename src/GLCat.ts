@@ -1,41 +1,150 @@
+import { BindHelper } from './utils/BindHelper';
+import { GL } from './GL';
 import { GLCatBuffer } from './GLCatBuffer';
 import { GLCatFramebuffer } from './GLCatFramebuffer';
 import { GLCatProgram } from './GLCatProgram';
 import { GLCatRenderbuffer } from './GLCatRenderbuffer';
 import { GLCatShader } from './GLCatShader';
 import { GLCatTexture } from './GLCatTexture';
+import { GLCatVertexArray } from './GLCatVertexArray';
 
 export type WebGLExtension = any;
+
+export type GLCatVertexArrayRawType<TContext extends WebGLRenderingContext | WebGL2RenderingContext>
+  = TContext extends WebGL2RenderingContext
+    ? WebGLVertexArrayObject
+    : WebGLVertexArrayObjectOES;
 
 /**
  * WebGL wrapper with plenty of hackability.
  */
-export class GLCat {
-  public static unexpectedNullDetectedError = 'GLCat: Unexpected null detected';
+export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+  public static throwIfNull<T>( v: T | null ): T {
+    if ( v == null ) {
+      const error = new Error( 'GLCat: Unexpected null detected' );
+      error.name = 'UnexpectedNullDetectedError';
+      throw error;
+    } else {
+      return v;
+    }
+  }
 
-  private __gl: WebGLRenderingContext;
+  public static get WebGL2ExclusiveError(): Error {
+    const error = new Error( 'GLCat: Attempted to use WebGL2 exclusive stuff' );
+    error.name = 'WebGL2ExclusiveError';
+    return error;
+  }
+
+  public preferredMultisampleSamples = 4;
+
+  private __preferredDepthFormat: GLenum | null = null;
+  public get preferredDepthFormat(): GLenum {
+    if ( this.__preferredDepthFormat !== null ) {
+      return this.__preferredDepthFormat;
+    } else if ( this.__gl instanceof WebGL2RenderingContext ) {
+      return this.__gl.DEPTH24_STENCIL8;
+    } else {
+      return this.__gl.DEPTH_COMPONENT16;
+    }
+  }
+  public set preferredDepthFormat( format: GLenum ) {
+    this.__preferredDepthFormat = format;
+  }
+
+  private __gl: TContext;
+
+  private __bindHelperVertexBuffer = new BindHelper<GLCatBuffer<TContext> | null>(
+    null,
+    ( buffer ) => {
+      const gl = this.__gl;
+      gl.bindBuffer( gl.ARRAY_BUFFER, buffer?.raw ?? null );
+    }
+  );
+
+  private __bindHelperIndexBuffer = new BindHelper<GLCatBuffer<TContext> | null>(
+    null,
+    ( buffer ) => {
+      const gl = this.__gl;
+      gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, buffer?.raw ?? null );
+    }
+  );
+
+  private __bindHelperVertexArray = new BindHelper<GLCatVertexArray<TContext> | null>(
+    null,
+    ( vertexArray ) => {
+      this.rawBindVertexArray( vertexArray?.raw ?? null );
+    }
+  );
+
+  private __bindHelperTexture2D = new BindHelper<GLCatTexture<TContext> | null>(
+    null,
+    ( texture ) => {
+      const gl = this.__gl;
+      gl.bindTexture( gl.TEXTURE_2D, texture?.raw ?? null );
+    }
+  );
+
+  private __bindHelperTextureCubeMap = new BindHelper<GLCatTexture<TContext> | null>(
+    null,
+    ( texture ) => {
+      const gl = this.__gl;
+      gl.bindTexture( gl.TEXTURE_CUBE_MAP, texture?.raw ?? null );
+    }
+  );
+
+  private __bindHelperRenderbuffer = new BindHelper<GLCatRenderbuffer<TContext> | null>(
+    null,
+    ( renderbuffer ) => {
+      const gl = this.__gl;
+      gl.bindRenderbuffer( gl.RENDERBUFFER, renderbuffer?.raw ?? null );
+    }
+  );
+
+  private __bindHelperFramebuffer = new BindHelper<GLCatFramebuffer<TContext> | null>(
+    null,
+    ( framebuffer ) => {
+      const gl = this.__gl;
+      gl.bindFramebuffer( gl.FRAMEBUFFER, framebuffer?.raw ?? null );
+    }
+  );
+
+  private __bindHelperProgram = new BindHelper<GLCatProgram<TContext> | null>(
+    null,
+    ( program ) => {
+      const gl = this.__gl;
+      gl.useProgram( program?.raw ?? null );
+    }
+  );
+
+  private __bindHelperDrawBuffers = new BindHelper<GLenum[]>(
+    [ GL.COLOR_ATTACHMENT0 ],
+    ( buffers ) => {
+      this.rawDrawBuffers( buffers );
+    }
+  );
+
   private __extensionCache: { [ name: string ]: WebGLExtension } = {};
-  private __dummyTextureCache?: GLCatTexture;
+  private __dummyTextureCache?: GLCatTexture<TContext>;
 
   /**
-   * Its own WebGLRenderingContext.
+   * Its own rendering context.
    */
-  public get renderingContext(): WebGLRenderingContext {
+  public get renderingContext(): TContext {
     return this.__gl;
   }
 
   /**
-   * Its own WebGLRenderingContext. Shorter than [[GLCat.renderingContext]]
+   * Its own rendering context. Shorter than [[GLCat.renderingContext]]
    */
-  public get gl(): WebGLRenderingContext {
+  public get gl(): TContext {
     return this.__gl;
   }
 
   /**
    * Create a new GLCat instance.
-   * WebGLRenderingContext is required.
+   * Rendering context is required.
    */
-  public constructor( gl: WebGLRenderingContext ) {
+  public constructor( gl: TContext ) {
     this.__gl = gl;
 
     gl.enable( gl.DEPTH_TEST );
@@ -45,17 +154,42 @@ export class GLCat {
   }
 
   /**
+   * Wrapper of `gl.MAX_DRAW_BUFFERS`.
+   */
+  public get MAX_DRAW_BUFFERS(): number {
+    const gl = this.__gl;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      return gl.MAX_DRAW_BUFFERS;
+    } else {
+      const ext = this.getExtension( 'WEBGL_draw_buffers', true );
+      return ext.MAX_DRAW_BUFFERS_WEBGL;
+    }
+  }
+
+  /**
+   * Wrapper of `gl.COLOR_ATTACHMENT0`.
+   */
+  public get COLOR_ATTACHMENT0(): number {
+    const gl = this.__gl;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      return gl.COLOR_ATTACHMENT0;
+    } else {
+      const ext = this.getExtension( 'WEBGL_draw_buffers', true );
+      return ext.COLOR_ATTACHMENT0_WEBGL;
+    }
+  }
+
+  /**
    * A dummy texture, 100% organic pure #FF00FF texture.
    */
-  public get dummyTexture(): GLCatTexture {
+  public get dummyTexture(): GLCatTexture<TContext> {
     if ( this.__dummyTextureCache ) {
       return this.__dummyTextureCache;
     }
 
     const texture = this.createTexture();
-    if ( texture === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
 
     texture.setTextureFromArray( 1, 1, new Uint8Array( [ 255, 0, 255, 255 ] ) );
     this.__dummyTextureCache = texture;
@@ -66,6 +200,31 @@ export class GLCat {
    * Retrieve an extension.
    * If they is your precious one and you cannot live without him, turn on `throwIfNotFound`.
    */
+  public getExtension(
+    name: 'ANGLE_instanced_arrays',
+    throwIfNotFound?: false
+  ): ANGLE_instanced_arrays | null; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'ANGLE_instanced_arrays',
+    throwIfNotFound: true
+  ): ANGLE_instanced_arrays; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'OES_vertex_array_object',
+    throwIfNotFound?: false
+  ): OES_vertex_array_object | null; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'OES_vertex_array_object',
+    throwIfNotFound: true
+  ): OES_vertex_array_object; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'WEBGL_draw_buffers',
+    throwIfNotFound?: false
+  ): WEBGL_draw_buffers | null; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'WEBGL_draw_buffers',
+    throwIfNotFound: true
+  ): WEBGL_draw_buffers; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension( name: string, throwIfNotFound?: boolean ): WebGLExtension | null;
   public getExtension( name: string, throwIfNotFound?: boolean ): WebGLExtension | null {
     const gl = this.__gl;
 
@@ -95,13 +254,10 @@ export class GLCat {
   /**
    * Create a new shader object.
    */
-  public createShader( type: number ): GLCatShader {
+  public createShader( type: number ): GLCatShader<TContext> {
     const gl = this.__gl;
 
-    const shader = gl.createShader( type );
-    if ( shader === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
+    const shader = GLCat.throwIfNull( gl.createShader( type ) );
 
     return new GLCatShader( this, shader );
   }
@@ -109,13 +265,10 @@ export class GLCat {
   /**
    * Create a new GLCat program object.
    */
-  public createProgram(): GLCatProgram {
+  public createProgram(): GLCatProgram<TContext> {
     const gl = this.__gl;
 
-    const program = gl.createProgram();
-    if ( program === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
+    const program = GLCat.throwIfNull( gl.createProgram() );
 
     return new GLCatProgram( this, program );
   }
@@ -123,207 +276,347 @@ export class GLCat {
   /**
    * Create a new GLCat program object, in lazier way.
    */
-  public lazyProgram( vert: string, frag: string ): GLCatProgram {
+  public lazyProgram( vert: string, frag: string ): GLCatProgram<TContext> {
     const gl = this.__gl;
 
-    // == vert =====================================================================================
-    const vertexShader = this.createShader( gl.VERTEX_SHADER );
-    if ( vertexShader === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
+    let vertexShader: GLCatShader<TContext> | undefined;
+    let fragmentShader: GLCatShader<TContext> | undefined;
+    let program: GLCatShader<TContext> | undefined;
 
     try {
+      // == vert ===================================================================================
+      vertexShader = this.createShader( gl.VERTEX_SHADER );
       vertexShader.compile( vert );
-    } catch ( e ) {
-      vertexShader.dispose();
-      throw e;
-    }
 
-    // == frag =====================================================================================
-    const fragmentShader = this.createShader( gl.FRAGMENT_SHADER );
-    if ( fragmentShader === null ) {
-      vertexShader.dispose();
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
-
-    try {
+      // == frag ===================================================================================
+      const fragmentShader = this.createShader( gl.FRAGMENT_SHADER );
       fragmentShader.compile( frag );
-    } catch ( e ) {
-      vertexShader.dispose();
-      fragmentShader.dispose();
-      throw e;
-    }
 
-    // == program ==================================================================================
-    const program = this.createProgram();
-    if ( program === null ) {
-      vertexShader.dispose();
-      fragmentShader.dispose();
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
-
-    try {
+      // == program ================================================================================
+      const program = this.createProgram();
       program.link( vertexShader, fragmentShader );
+
+      // == almost done ============================================================================
+      return program;
     } catch ( e ) {
-      vertexShader.dispose();
-      fragmentShader.dispose();
-      program.dispose();
+      program?.dispose();
+      fragmentShader?.dispose();
+      vertexShader?.dispose();
       throw e;
     }
-
-    return program;
   }
 
   /**
    * Create a new GLCat program object, in lazier way.
    * It's gonna be asynchronous if you have the KHR_parallel_shader_compile extension support.
    */
-  public lazyProgramAsync( vert: string, frag: string ): Promise<GLCatProgram> {
+  public async lazyProgramAsync( vert: string, frag: string ): Promise<GLCatProgram<TContext>> {
     const gl = this.__gl;
 
-    // == vert =====================================================================================
-    const vertexShader = this.createShader( gl.VERTEX_SHADER );
-    if ( vertexShader === null ) {
-      return Promise.reject( new Error( GLCat.unexpectedNullDetectedError ) );
-    }
+    let vertexShader: GLCatShader<TContext> | undefined;
+    let fragmentShader: GLCatShader<TContext> | undefined;
+    let program: GLCatShader<TContext> | undefined;
 
     try {
+      // == vert ===================================================================================
+      const vertexShader = this.createShader( gl.VERTEX_SHADER );
       vertexShader.compile( vert );
-    } catch ( e ) {
-      vertexShader.dispose();
-      return Promise.reject( e );
-    }
 
-    // == frag =====================================================================================
-    const fragmentShader = this.createShader( gl.FRAGMENT_SHADER );
-    if ( fragmentShader === null ) {
-      vertexShader.dispose();
-      return Promise.reject( new Error( GLCat.unexpectedNullDetectedError ) );
-    }
-
-    try {
+      // == frag ===================================================================================
+      const fragmentShader = this.createShader( gl.FRAGMENT_SHADER );
       fragmentShader.compile( frag );
+
+      // == program ================================================================================
+      const program = this.createProgram();
+      await program.linkAsync( vertexShader, fragmentShader ).catch( ( e ) => {
+        program?.dispose();
+        fragmentShader?.dispose();
+        vertexShader?.dispose();
+        return Promise.reject( e );
+      } );
+
+      // == almost done ============================================================================
+      return program;
     } catch ( e ) {
-      vertexShader.dispose();
-      fragmentShader.dispose();
+      program?.dispose();
+      fragmentShader?.dispose();
+      vertexShader?.dispose();
       return Promise.reject( e );
     }
-
-    // == program ==================================================================================
-    const program = this.createProgram();
-    if ( program === null ) {
-      vertexShader.dispose();
-      fragmentShader.dispose();
-      return Promise.reject( new Error( GLCat.unexpectedNullDetectedError ) );
-    }
-
-    return program.linkAsync( vertexShader, fragmentShader ).then( () => {
-      return program;
-    } ).catch( ( e ) => {
-      vertexShader.dispose();
-      fragmentShader.dispose();
-      program.dispose();
-      throw e;
-    } );
   }
 
   /**
    * Specify a program to use.
+   * If callback is provided, it will execute the callback immediately, and undo the usage after the callback.
    */
-  public useProgram( program: GLCatProgram | null ): void {
-    const gl = this.__gl;
-
-    gl.useProgram( program?.raw || null );
+  public useProgram<T>(
+    program: GLCatProgram<TContext> | null,
+    callback?: ( program: GLCatProgram<TContext> | null ) => T
+  ): T {
+    return this.__bindHelperProgram.bind( program, callback );
   }
 
   /**
    * Create a new vertex buffer.
    */
-  public createBuffer(): GLCatBuffer {
+  public createBuffer(): GLCatBuffer<TContext> {
     const gl = this.__gl;
 
-    const buffer = gl.createBuffer();
-    if ( buffer === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
+    const buffer = GLCat.throwIfNull( gl.createBuffer() );
 
     return new GLCatBuffer( this, buffer );
   }
 
   /**
-   * Create a new texture.
+   * Bind a vertex buffer.
+   * If callback is provided, it will execute the callback immediately, and undo the bind after the callback.
    */
-  public createTexture(): GLCatTexture {
+  public bindVertexBuffer<T>(
+    buffer: GLCatBuffer<TContext> | null,
+    callback?: ( buffer: GLCatBuffer<TContext> | null ) => T
+  ): T {
+    return this.__bindHelperVertexBuffer.bind( buffer, callback );
+  }
+
+  /**
+   * Bind an index buffer.
+   * If callback is provided, it will execute the callback immediately, and undo the bind after the callback.
+   */
+  public bindIndexBuffer<T>(
+    buffer: GLCatBuffer<TContext> | null,
+    callback?: ( buffer: GLCatBuffer<TContext> | null ) => T
+  ): T {
+    return this.__bindHelperIndexBuffer.bind( buffer, callback );
+  }
+
+  /**
+   * Create a new vertex array.
+   */
+  public createVertexArray(): GLCatVertexArray<TContext> {
     const gl = this.__gl;
 
-    const texture = gl.createTexture();
-    if ( texture === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
+    if ( gl instanceof WebGL2RenderingContext ) {
+      const vertexArray = GLCat.throwIfNull( gl.createVertexArray() );
+
+      return new GLCatVertexArray( this, vertexArray as any );
+    } else {
+      const ext = this.getExtension( 'OES_vertex_array_object', true );
+
+      const vertexArray = GLCat.throwIfNull( ext.createVertexArrayOES() );
+
+      return new GLCatVertexArray( this, vertexArray as any );
     }
+  }
+
+  /**
+   * Wrapper of `gl.bindVertexArray`.
+   *
+   * {@link rawBindVertexArray} is better.
+   */
+  public rawBindVertexArray( array: GLCatVertexArrayRawType<TContext> | null ): void {
+    const gl = this.__gl;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      gl.bindVertexArray( array );
+    } else {
+      const ext = this.getExtension( 'OES_vertex_array_object', true );
+      ext.bindVertexArrayOES( array as any );
+    }
+  }
+
+  /**
+   * {@link rawBindVertexArray} but better.
+   *
+   * Bind a vertex array.
+   * If callback is provided, it will execute the callback immediately, and undo the bind after the callback.
+   */
+  public bindVertexArray<T>(
+    vertexArray: GLCatVertexArray<TContext> | null,
+    callback?: ( vertexArray: GLCatVertexArray<TContext> | null ) => T
+  ): T {
+    return this.__bindHelperVertexArray.bind( vertexArray, callback );
+  }
+
+  /**
+   * Create a new texture.
+   */
+  public createTexture(): GLCatTexture<TContext> {
+    const gl = this.__gl;
+
+    const texture = GLCat.throwIfNull( gl.createTexture() );
 
     return new GLCatTexture( this, texture );
   }
 
   /**
+   * Bind a 2D texture.
+   * If callback is provided, it will execute the callback immediately, and undo the bind after the callback.
+   */
+  public bindTexture2D<T>(
+    texture: GLCatTexture<TContext> | null,
+    callback?: ( texture: GLCatTexture<TContext> | null ) => T
+  ): T {
+    return this.__bindHelperTexture2D.bind( texture, callback );
+  }
+
+  /**
+   * Bind a cubemap texture.
+   * If callback is provided, it will execute the callback immediately, and undo the bind after the callback.
+   */
+  public bindTextureCubeMap<T>(
+    texture: GLCatTexture<TContext> | null,
+    callback?: ( texture: GLCatTexture<TContext> | null ) => T
+  ): T {
+    return this.__bindHelperTextureCubeMap.bind( texture, callback );
+  }
+
+  /**
    * Create a new renderbuffer.
    */
-  public createRenderbuffer(): GLCatRenderbuffer {
+  public createRenderbuffer(): GLCatRenderbuffer<TContext> {
     const gl = this.__gl;
 
-    const renderbuffer = gl.createRenderbuffer();
-    if ( renderbuffer === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
+    const renderbuffer = GLCat.throwIfNull( gl.createRenderbuffer() );
 
     return new GLCatRenderbuffer( this, renderbuffer );
   }
 
   /**
-   * Create a new framebuffer.
-   * TODO: DrawBuffers
+   * Bind a renderbuffer.
+   * If callback is provided, it will execute the callback immediately, and undo the bind after the callback.
    */
-  public createFramebuffer(): GLCatFramebuffer {
+  public bindRenderbuffer<T>(
+    renderbuffer: GLCatRenderbuffer<TContext> | null,
+    callback?: ( renderbuffer: GLCatRenderbuffer<TContext> | null ) => T
+  ): T {
+    return this.__bindHelperRenderbuffer.bind( renderbuffer, callback );
+  }
+
+  /**
+   * Create a new framebuffer.
+   */
+  public createFramebuffer(): GLCatFramebuffer<TContext> {
     const gl = this.__gl;
 
-    const framebuffer = gl.createFramebuffer();
-    if ( framebuffer === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
+    const framebuffer = GLCat.throwIfNull( gl.createFramebuffer() );
 
     return new GLCatFramebuffer( this, framebuffer );
   }
 
   /**
+   * Bind a framebuffer.
+   * If callback is provided, it will execute the callback immediately, and undo the bind after the callback.
+   */
+  public bindFramebuffer<T>(
+    framebuffer: GLCatFramebuffer<TContext> | null,
+    callback?: ( framebuffer: GLCatFramebuffer<TContext> | null ) => T
+  ): T {
+    return this.__bindHelperFramebuffer.bind( framebuffer, callback );
+  }
+
+  /**
    * Create a new framebufer, in lazier way.
    */
-  public lazyFramebuffer( width: number, height: number, isFloat = false ): GLCatFramebuffer {
-    const framebuffer = this.createFramebuffer();
-    if ( framebuffer === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
+  public lazyFramebuffer(
+    width: number,
+    height: number,
+    {
+      isFloat = false,
+      depthFormat = this.preferredDepthFormat
+    } = {}
+  ): GLCatFramebuffer<TContext> {
+    const gl = this.__gl;
 
-    const renderbuffer = this.createRenderbuffer();
-    if ( renderbuffer === null ) {
-      framebuffer.dispose();
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
-    renderbuffer.init( width, height );
-    framebuffer.attachRenderbuffer( renderbuffer );
+    let texture: GLCatTexture<TContext> | undefined;
+    let renderbuffer: GLCatRenderbuffer<TContext> | undefined;
+    let framebuffer: GLCatFramebuffer<TContext> | undefined;
 
-    const texture = this.createTexture();
-    if ( texture === null ) {
-      framebuffer.dispose();
-      renderbuffer.dispose();
-      throw new Error( GLCat.unexpectedNullDetectedError );
+    try {
+      // == framebuffer ============================================================================
+      framebuffer = this.createFramebuffer();
+
+      // == renderbuffer ===========================================================================
+      renderbuffer = this.createRenderbuffer();
+      renderbuffer.init( width, height, { format: depthFormat } );
+      framebuffer.attachRenderbuffer( renderbuffer, { attachment: gl.DEPTH_ATTACHMENT } );
+
+      // == texture ================================================================================
+      texture = this.createTexture();
+      if ( isFloat ) {
+        texture.setTextureFromFloatArray( width, height, null );
+      } else {
+        texture.setTextureFromArray( width, height, null );
+      }
+      framebuffer.attachTexture( texture );
+
+      // == almost done ============================================================================
+      return framebuffer;
+    } catch ( e ) {
+      framebuffer?.dispose();
+      texture?.dispose();
+      renderbuffer?.dispose();
+      throw e;
     }
-    if ( isFloat ) {
-      texture.setTextureFromFloatArray( width, height, null );
+  }
+
+  /**
+   * Create a new multisample framebuffer, in lazier way.
+   */
+  public lazyMultisampleFramebuffer(
+    width: number,
+    height: number,
+    {
+      samples = 4,
+      isFloat = false,
+      depthFormat = this.preferredDepthFormat,
+      fallback = true
+    } = {}
+  ): GLCatFramebuffer<TContext> {
+    const gl = this.__gl;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      let texture: GLCatTexture<TContext> | undefined;
+      let renderbufferDepth: GLCatRenderbuffer<TContext> | undefined;
+      let renderbufferColor: GLCatRenderbuffer<TContext> | undefined;
+      let framebuffer: GLCatFramebuffer<TContext> | undefined;
+
+      try {
+        // == framebuffer ==========================================================================
+        framebuffer = this.createFramebuffer();
+
+        // == renderbuffer depth ===================================================================
+        renderbufferDepth = this.createRenderbuffer();
+        renderbufferDepth.initMultisample(
+          width,
+          height,
+          { samples, format: depthFormat }
+        );
+        framebuffer.attachRenderbuffer( renderbufferDepth, { attachment: gl.DEPTH_ATTACHMENT } );
+
+        // == renderbuffer color ===================================================================
+        const renderbufferColor = this.createRenderbuffer();
+        const colorFormat = isFloat ? gl.RGBA32F : gl.RGBA8;
+        renderbufferColor.initMultisample(
+          width,
+          height,
+          { samples, format: colorFormat }
+        );
+        framebuffer.attachRenderbuffer( renderbufferColor, { attachment: gl.COLOR_ATTACHMENT0 } );
+
+        // == almost done ==========================================================================
+        return framebuffer;
+      } catch ( e ) {
+        framebuffer?.dispose();
+        texture?.dispose();
+        renderbufferColor?.dispose();
+        renderbufferDepth?.dispose();
+        throw e;
+      }
+    } else if ( fallback ) {
+      return this.lazyFramebuffer( width, height, { isFloat } );
     } else {
-      texture.setTextureFromArray( width, height, null );
+      throw GLCat.WebGL2ExclusiveError;
     }
-    framebuffer.attachTexture( texture );
-
-    return framebuffer;
   }
 
   /**
@@ -334,61 +627,134 @@ export class GLCat {
     width: number,
     height: number,
     numBuffers: number,
-    isFloat = false
-  ): GLCatFramebuffer {
-    const ext = this.getExtension( 'WEBGL_draw_buffers', true );
-    if ( ext.MAX_DRAW_BUFFERS_WEBGL < numBuffers ) {
-      throw Error( 'GLCat: Maximum draw buffers count exceeded' );
+    {
+      isFloat = false,
+      depthFormat = this.preferredDepthFormat
+    } = {}
+  ): GLCatFramebuffer<TContext> {
+    const { gl } = this;
+
+    if ( this.MAX_DRAW_BUFFERS < numBuffers ) {
+      throw new Error( 'GLCat: Maximum draw buffers count exceeded' );
     }
 
-    const framebuffer = this.createFramebuffer();
-    if ( framebuffer === null ) {
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
+    const textures: GLCatTexture<TContext>[] = [];
+    let renderbuffer: GLCatRenderbuffer<TContext> | undefined;
+    let framebuffer: GLCatFramebuffer<TContext> | undefined;
 
-    const renderbuffer = this.createRenderbuffer();
-    if ( renderbuffer === null ) {
-      framebuffer.dispose();
-      throw new Error( GLCat.unexpectedNullDetectedError );
-    }
-    renderbuffer.init( width, height );
-    framebuffer.attachRenderbuffer( renderbuffer );
+    try {
+      // == framebuffer ============================================================================
+      framebuffer = this.createFramebuffer();
 
-    for ( let i = 0; i < numBuffers; i ++ ) {
-      const texture = this.createTexture();
+      // == renderbuffer ===========================================================================
+      const renderbuffer = this.createRenderbuffer();
+      renderbuffer.init( width, height, { format: depthFormat } );
+      framebuffer.attachRenderbuffer( renderbuffer, { attachment: GL.DEPTH_ATTACHMENT } );
 
-      if ( texture === null ) {
-        framebuffer.dispose();
-        renderbuffer.dispose();
-        throw new Error( GLCat.unexpectedNullDetectedError );
+      // == texture ================================================================================
+      for ( let i = 0; i < numBuffers; i ++ ) {
+        const texture = this.createTexture();
+        if ( isFloat ) {
+          texture.setTextureFromFloatArray( width, height, null );
+        } else {
+          texture.setTextureFromArray( width, height, null );
+        }
+        framebuffer.attachTexture( texture, { attachment: gl.COLOR_ATTACHMENT0 + i } );
       }
 
-      if ( isFloat ) {
-        texture.setTextureFromFloatArray( width, height, null );
-      } else {
-        texture.setTextureFromArray( width, height, null );
-      }
-      framebuffer.attachTexture( texture, ext.COLOR_ATTACHMENT0_WEBGL + i );
+      // == almost done ============================================================================
+      return framebuffer;
+    } catch ( e ) {
+      textures.forEach( ( texture ) => {
+        texture.dispose();
+      } );
+      renderbuffer?.dispose();
+      framebuffer?.dispose();
+      throw e;
     }
-
-    return framebuffer;
   }
 
   /**
+   * Wrapper of `gl.drawBuffers`.
+   *
+   * {@link drawBuffers} is better.
+   */
+  public rawDrawBuffers( buffers: GLenum[] ): void {
+    const gl = this.__gl;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      gl.drawBuffers( buffers );
+    } else {
+      const ext = this.getExtension( 'WEBGL_draw_buffers' );
+      ext?.drawBuffersWEBGL( buffers );
+    }
+  }
+
+  /**
+   * {@link rawDrawBuffers} but better.
+   *
    * Call this before you're gonna use draw buffers.
    * If you can't grab `WEBGL_draw_buffers` extension, you'll die instantly at this point.
+   * If callback is provided, it will execute the callback immediately, and undo the draw buffers after the callback.
    */
-  public drawBuffers( numBuffers: number[] | number ): void {
-    const ext = this.getExtension( 'WEBGL_draw_buffers', true );
+  public drawBuffers<T>(
+    buffersOrNumBuffers?: GLenum[] | number,
+    callback?: ( buffers: GLenum[] ) => T
+  ): T {
+    const gl = this.__gl;
 
-    if ( Array.isArray( numBuffers ) ) {
-      ext.drawBuffersWEBGL( numBuffers );
-    } else {
-      const array: number[] = [];
-      for ( let i = 0; i < numBuffers; i ++ ) {
-        array[ i ] = ext.COLOR_ATTACHMENT0_WEBGL + i;
+    let buffers: GLenum[];
+
+    if ( Array.isArray( buffersOrNumBuffers ) ) {
+      buffers = buffersOrNumBuffers;
+    } else if ( buffersOrNumBuffers ) {
+      buffers = [];
+      for ( let i = 0; i < buffersOrNumBuffers; i ++ ) {
+        buffers[ i ] = this.COLOR_ATTACHMENT0 + i;
       }
-      ext.drawBuffersWEBGL( array );
+    } else {
+      buffers = [ gl.COLOR_ATTACHMENT0 ];
+    }
+
+    return this.__bindHelperDrawBuffers.bind( buffers, callback );
+  }
+
+  /**
+   * a wrapper of drawElementsInstanced.
+   */
+  public drawArraysInstanced(
+    mode: GLenum,
+    first: GLint,
+    count: GLsizei,
+    primcount: GLsizei
+  ): void {
+    const { gl } = this;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      gl.drawArraysInstanced( mode, first, count, primcount );
+    } else {
+      const ext = this.getExtension( 'ANGLE_instanced_arrays', true );
+      ext.drawArraysInstancedANGLE( mode, first, count, primcount );
+    }
+  }
+
+  /**
+   * a wrapper of drawElementsInstanced.
+   */
+  public drawElementsInstanced(
+    mode: GLenum,
+    count: GLsizei,
+    type: GLenum,
+    offset: GLintptr,
+    instanceCount: GLsizei
+  ): void {
+    const { gl } = this;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      gl.drawElementsInstanced( mode, count, type, offset, instanceCount );
+    } else {
+      const ext = this.getExtension( 'ANGLE_instanced_arrays', true );
+      ext.drawElementsInstancedANGLE( mode, count, type, offset, instanceCount );
     }
   }
 
@@ -407,5 +773,42 @@ export class GLCat {
     gl.clearColor( red, green, blue, alpha );
     gl.clearDepth( depth );
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
+  }
+
+  /**
+   * Basically just a `gl.blitFramebuffer`.
+   */
+  public blitFramebuffer(
+    src: GLCatFramebuffer<TContext> | null,
+    dst: GLCatFramebuffer<TContext> | null,
+    {
+      srcViewport = [ 0, 0, src?.renderbuffer?.width ?? 0, src?.renderbuffer?.height ?? 0 ],
+      dstViewport = [ 0, 0, dst?.renderbuffer?.width ?? 0, dst?.renderbuffer?.height ?? 0 ],
+      mask = GL.COLOR_BUFFER_BIT,
+      filter = GL.NEAREST
+    } = {}
+  ): void {
+    const gl = this.__gl;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      gl.bindFramebuffer( gl.READ_FRAMEBUFFER, src?.raw ?? null );
+      gl.bindFramebuffer( gl.DRAW_FRAMEBUFFER, dst?.raw ?? null );
+      gl.blitFramebuffer(
+        srcViewport[ 0 ],
+        srcViewport[ 1 ],
+        srcViewport[ 2 ],
+        srcViewport[ 3 ],
+        dstViewport[ 0 ],
+        dstViewport[ 1 ],
+        dstViewport[ 2 ],
+        dstViewport[ 3 ],
+        mask,
+        filter
+      );
+      gl.bindFramebuffer( gl.READ_FRAMEBUFFER, null );
+      gl.bindFramebuffer( gl.DRAW_FRAMEBUFFER, null );
+    } else {
+      throw GLCat.WebGL2ExclusiveError;
+    }
   }
 }

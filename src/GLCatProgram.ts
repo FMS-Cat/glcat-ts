@@ -14,10 +14,10 @@ export type GLCatProgramUniformType =
 /**
  * It's a WebGLProgram, but has cache of variable locations.
  */
-export class GLCatProgram {
-  private __glCat: GLCat;
+export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+  private __glCat: GLCat<TContext>;
   private __program: WebGLProgram;
-  private __shaders: GLCatShader[] | null = null;
+  private __shaders: GLCatShader<TContext>[] | null = null;
   private __attribLocationCache: { [ name: string ]: number } = {};
   private __uniformLocationCache: { [ name: string ]: WebGLUniformLocation | null } = {};
   private __uniformTextureUnitMap: { [ name: string ]: number } = {};
@@ -41,7 +41,7 @@ export class GLCatProgram {
   /**
    * Its shaders.
    */
-  public get shaders(): GLCatShader[] | null {
+  public get shaders(): GLCatShader<TContext>[] | null {
     return this.__shaders ? this.__shaders.concat() : null;
   }
 
@@ -55,7 +55,7 @@ export class GLCatProgram {
   /**
    * Create a new GLCatProgram instance.
    */
-  public constructor( glCat: GLCat, program: WebGLProgram ) {
+  public constructor( glCat: GLCat<TContext>, program: WebGLProgram ) {
     this.__glCat = glCat;
     this.__program = program;
   }
@@ -81,7 +81,7 @@ export class GLCatProgram {
   /**
    * Attach shaders and link this program.
    */
-  public link( ...shaders: GLCatShader[] ): void {
+  public link( ...shaders: GLCatShader<TContext>[] ): void {
     const { gl } = this.__glCat;
 
     shaders.forEach( ( shader ) => gl.attachShader( this.__program, shader.raw ) );
@@ -99,7 +99,7 @@ export class GLCatProgram {
    * Attach shaders and link this program.
    * It's gonna be asynchronous if you have the KHR_parallel_shader_compile extension support.
    */
-  public linkAsync( ...shaders: GLCatShader[] ): Promise<void> {
+  public linkAsync( ...shaders: GLCatShader<TContext>[] ): Promise<void> {
     const glCat = this.__glCat;
     const { gl } = this.__glCat;
     const extParallel = glCat.getExtension( 'KHR_parallel_shader_compile' );
@@ -138,7 +138,7 @@ export class GLCatProgram {
    */
   public attribute(
     name: string,
-    buffer: GLCatBuffer | null,
+    buffer: GLCatBuffer<TContext> | null,
     size = 1,
     divisor = 0,
     type: number = GL.FLOAT,
@@ -155,16 +155,19 @@ export class GLCatProgram {
       return;
     }
 
-    gl.bindBuffer( gl.ARRAY_BUFFER, buffer.raw );
-    gl.enableVertexAttribArray( location );
-    gl.vertexAttribPointer( location, size, type, false, stride, offset );
+    this.__glCat.bindVertexBuffer( buffer, () => {
+      gl.enableVertexAttribArray( location );
+      gl.vertexAttribPointer( location, size, type, false, stride, offset );
 
-    const ext = this.__glCat.getExtension( 'ANGLE_instanced_arrays' );
-    if ( ext ) {
-      ext.vertexAttribDivisorANGLE( location, divisor );
-    }
-
-    gl.bindBuffer( gl.ARRAY_BUFFER, null );
+      if ( gl instanceof WebGL2RenderingContext ) {
+        gl.vertexAttribDivisor( location, divisor );
+      } else {
+        const ext = this.__glCat.getExtension( 'ANGLE_instanced_arrays' );
+        if ( ext ) {
+          ext.vertexAttribDivisorANGLE( location, divisor );
+        }
+      }
+    } );
   }
 
   /**
@@ -196,7 +199,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform1i( location, value );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1i( location, value );
+    } );
   }
 
   /**
@@ -206,7 +211,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform2i( location, x, y );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform2i( location, x, y );
+    } );
   }
 
   /**
@@ -216,7 +223,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform3i( location, x, y, z );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform3i( location, x, y, z );
+    } );
   }
 
   /**
@@ -226,7 +235,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform4i( location, x, y, z, w );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform4i( location, x, y, z, w );
+    } );
   }
 
   /**
@@ -236,7 +247,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform1iv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1iv( location, array );
+    } );
   }
 
   /**
@@ -246,7 +259,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform2iv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform2iv( location, array );
+    } );
   }
 
   /**
@@ -256,7 +271,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform3iv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform3iv( location, array );
+    } );
   }
 
   /**
@@ -266,7 +283,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform4iv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform4iv( location, array );
+    } );
   }
 
   /**
@@ -276,7 +295,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform1f( location, value );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1f( location, value );
+    } );
   }
 
   /**
@@ -286,7 +307,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform2f( location, x, y );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform2f( location, x, y );
+    } );
   }
 
   /**
@@ -296,7 +319,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform3f( location, x, y, z );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform3f( location, x, y, z );
+    } );
   }
 
   /**
@@ -306,7 +331,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform4f( location, x, y, z, w );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform4f( location, x, y, z, w );
+    } );
   }
 
   /**
@@ -316,7 +343,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform1fv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1fv( location, array );
+    } );
   }
 
   /**
@@ -326,7 +355,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform2fv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform2fv( location, array );
+    } );
   }
 
   /**
@@ -336,7 +367,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform3fv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform3fv( location, array );
+    } );
   }
 
   /**
@@ -346,7 +379,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform4fv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform4fv( location, array );
+    } );
   }
 
   /**
@@ -356,7 +391,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniformMatrix2fv( location, transpose, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniformMatrix2fv( location, transpose, array );
+    } );
   }
 
   /**
@@ -366,7 +403,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniformMatrix3fv( location, transpose, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniformMatrix3fv( location, transpose, array );
+    } );
   }
 
   /**
@@ -376,7 +415,9 @@ export class GLCatProgram {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniformMatrix4fv( location, transpose, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniformMatrix4fv( location, transpose, array );
+    } );
   }
 
   /**
@@ -384,14 +425,16 @@ export class GLCatProgram {
    * @param name Name of the uniform texture
    * @param texture Texture object
    */
-  public uniformTexture( name: string, texture: GLCatTexture | null ): void {
+  public uniformTexture( name: string, texture: GLCatTexture<TContext> | null ): void {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
     const unit = this.getUniformTextureUnit( name );
     gl.activeTexture( gl.TEXTURE0 + unit );
-    gl.bindTexture( gl.TEXTURE_2D, texture?.raw || null );
-    gl.uniform1i( location, unit );
+    this.__glCat.bindTexture2D( texture ?? null );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1i( location, unit );
+    } );
   }
 
   /**
@@ -399,14 +442,16 @@ export class GLCatProgram {
    * @param name Name of the uniform texture
    * @param texture Texture object
    */
-  public uniformCubemap( name: string, texture: GLCatTexture | null ): void {
+  public uniformCubemap( name: string, texture: GLCatTexture<TContext> | null ): void {
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
     const unit = this.getUniformTextureUnit( name );
     gl.activeTexture( gl.TEXTURE0 + unit );
-    gl.bindTexture( gl.TEXTURE_CUBE_MAP, texture?.raw || null );
-    gl.uniform1i( location, unit );
+    this.__glCat.bindTextureCubeMap( texture ?? null );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1i( location, unit );
+    } );
   }
 
   /**

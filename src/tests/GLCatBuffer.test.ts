@@ -4,8 +4,8 @@ import { GLCatBuffer } from '../GLCatBuffer';
 
 describe( 'GLCatProgram', () => {
   let gl: WebGLRenderingContext;
-  let glCat: GLCat;
-  let buffer: GLCatBuffer;
+  let glCat: GLCat<WebGLRenderingContext>;
+  let buffer: GLCatBuffer<WebGLRenderingContext>;
 
   beforeAll( () => {
     gl = WebGL( 300, 150 );

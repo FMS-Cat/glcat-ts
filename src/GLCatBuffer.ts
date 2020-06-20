@@ -4,8 +4,8 @@ import { GLCat } from './GLCat';
 /**
  * It's a WebGLBuffer.
  */
-export class GLCatBuffer {
-  private __glCat: GLCat;
+export class GLCatBuffer<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+  private __glCat: GLCat<TContext>;
   private __buffer: WebGLBuffer;
 
   /**
@@ -25,7 +25,7 @@ export class GLCatBuffer {
   /**
    * Create a new GLCatBuffer instance.
    */
-  public constructor( glCat: GLCat, buffer: WebGLBuffer ) {
+  public constructor( glCat: GLCat<TContext>, buffer: WebGLBuffer ) {
     this.__glCat = glCat;
     this.__buffer = buffer;
   }
@@ -46,9 +46,9 @@ export class GLCatBuffer {
   ): void {
     const { gl } = this.__glCat;
 
-    gl.bindBuffer( gl.ARRAY_BUFFER, this.__buffer );
-    gl.bufferData( gl.ARRAY_BUFFER, source, usage );
-    gl.bindBuffer( gl.ARRAY_BUFFER, null );
+    this.__glCat.bindVertexBuffer( this, () => {
+      gl.bufferData( gl.ARRAY_BUFFER, source, usage );
+    } );
   }
 
   /**
@@ -60,8 +60,8 @@ export class GLCatBuffer {
   ): void {
     const { gl } = this.__glCat;
 
-    gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.__buffer );
-    gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, source, usage );
-    gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, null );
+    this.__glCat.bindIndexBuffer( this, () => {
+      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, source, usage );
+    } );
   }
 }

@@ -301,3 +301,7 @@ export const GL = {
   VIEWPORT: 2978,
   ZERO: 0
 };
+
+export const GL2 = {
+  RGBA8: 32856
+};

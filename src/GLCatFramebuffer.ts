@@ -6,11 +6,11 @@ import { GLCatTexture } from './GLCatTexture';
 /**
  * It's a WebGLFramebuffer.
  */
-export class GLCatFramebuffer {
-  private __glCat: GLCat;
+export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+  private __glCat: GLCat<TContext>;
   private __framebuffer: WebGLFramebuffer;
-  private __renderbuffer: GLCatRenderbuffer | null = null;
-  private __textureMap: { [ attachment: number ]: GLCatTexture } = {};
+  private __renderbufferMap = new Map<GLenum, GLCatRenderbuffer<TContext>>();
+  private __textureMap = new Map<GLenum, GLCatTexture<TContext>>();
 
   /**
    * Its own framebuffer.
@@ -28,23 +28,24 @@ export class GLCatFramebuffer {
 
   /**
    * Its attached renderbuffer.
+   * If you want to grab other than `DEPTH_ATTACHMENT`, try [[GLCatFramebuffer.getRenderbuffer]] instead.
    */
-  public get renderbuffer(): GLCatRenderbuffer | null {
-    return this.__renderbuffer;
+  public get renderbuffer(): GLCatRenderbuffer<TContext> | null {
+    return this.__renderbufferMap.get( GL.DEPTH_ATTACHMENT ) ?? null;
   }
 
   /**
    * Its attached texture.
-   * If you want to retrieve other than `COLOR_ATTACHMENT0`, try [[GLCatFramebuffer.getTexture]] instead.
+   * If you want to grab other than `COLOR_ATTACHMENT0`, try [[GLCatFramebuffer.getTexture]] instead.
    */
-  public get texture(): GLCatTexture | null {
-    return this.__textureMap[ GL.COLOR_ATTACHMENT0 ];
+  public get texture(): GLCatTexture<TContext> | null {
+    return this.__textureMap.get( GL.COLOR_ATTACHMENT0 ) ?? null;
   }
 
   /**
    * Create a new GLCatFramebuffer instance.
    */
-  public constructor( glCat: GLCat, framebuffer: WebGLFramebuffer ) {
+  public constructor( glCat: GLCat<TContext>, framebuffer: WebGLFramebuffer ) {
     this.__glCat = glCat;
     this.__framebuffer = framebuffer;
   }
@@ -58,49 +59,64 @@ export class GLCatFramebuffer {
     gl.deleteFramebuffer( this.__framebuffer );
 
     if ( alsoAttached ) {
-      if ( this.__renderbuffer ) {
-        gl.deleteRenderbuffer( this.__renderbuffer.raw );
+      for ( const renderbuffer of this.__renderbufferMap.values() ) {
+        gl.deleteRenderbuffer( renderbuffer.raw );
       }
 
-      Object.values( this.__textureMap ).forEach( ( texture ) => {
+      for ( const texture of this.__textureMap.values() ) {
         gl.deleteTexture( texture.raw );
-      } );
+      }
     }
+  }
+
+  /**
+   * Retrieve its attached renderbuffer.
+   */
+  public getRenderbuffer( attachment = GL.DEPTH_ATTACHMENT ): GLCatRenderbuffer<TContext> | null {
+    return this.__renderbufferMap.get( attachment ) ?? null;
   }
 
   /**
    * Retrieve its attached texture.
    */
-  public getTexture( attachment: number = GL.COLOR_ATTACHMENT0 ): GLCatTexture | null {
-    return this.__textureMap[ attachment ];
+  public getTexture( attachment = GL.COLOR_ATTACHMENT0 ): GLCatTexture<TContext> | null {
+    return this.__textureMap.get( attachment ) ?? null;
   }
 
   /**
    * Attach a renderbuffer to this framebuffer.
    */
   public attachRenderbuffer(
-    renderbuffer: GLCatRenderbuffer,
-    attachment: number = GL.DEPTH_ATTACHMENT
+    renderbuffer: GLCatRenderbuffer<TContext>,
+    {
+      attachment = GL.DEPTH_ATTACHMENT
+    } = {}
   ): void {
     const { gl } = this.__glCat;
 
-    gl.bindFramebuffer( gl.FRAMEBUFFER, this.__framebuffer );
-    gl.framebufferRenderbuffer( gl.FRAMEBUFFER, attachment, gl.RENDERBUFFER, renderbuffer.raw );
-    gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+    this.__glCat.bindFramebuffer( this, () => {
+      gl.framebufferRenderbuffer( gl.FRAMEBUFFER, attachment, gl.RENDERBUFFER, renderbuffer.raw );
+    } );
 
-    this.__renderbuffer = renderbuffer;
+    this.__renderbufferMap.set( attachment, renderbuffer );
   }
 
   /**
    * Attach a texture to this framebuffer.
    */
-  public attachTexture( texture: GLCatTexture, attachment: number = GL.COLOR_ATTACHMENT0 ): void {
+  public attachTexture(
+    texture: GLCatTexture<TContext>,
+    {
+      level = 0,
+      attachment = GL.COLOR_ATTACHMENT0
+    } = {}
+  ): void {
     const { gl } = this.__glCat;
 
-    gl.bindFramebuffer( gl.FRAMEBUFFER, this.__framebuffer );
-    gl.framebufferTexture2D( gl.FRAMEBUFFER, attachment, gl.TEXTURE_2D, texture.raw, 0 );
-    gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+    this.__glCat.bindFramebuffer( this, () => {
+      gl.framebufferTexture2D( gl.FRAMEBUFFER, attachment, gl.TEXTURE_2D, texture.raw, level );
+    } );
 
-    this.__textureMap[ attachment ] = texture;
+    this.__textureMap.set( attachment, texture );
   }
 }

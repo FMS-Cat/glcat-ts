@@ -3,8 +3,8 @@ import { GLCat } from './GLCat';
 /**
  * It's a WebGLShader.
  */
-export class GLCatShader {
-  private __glCat: GLCat;
+export class GLCatShader<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+  private __glCat: GLCat<TContext>;
   private __shader: WebGLShader;
   private __compiled = false;
 
@@ -25,7 +25,7 @@ export class GLCatShader {
   /**
    * Create a new GLCatShader instance.
    */
-  public constructor( glCat: GLCat, shader: WebGLShader ) {
+  public constructor( glCat: GLCat<TContext>, shader: WebGLShader ) {
     this.__glCat = glCat;
     this.__shader = shader;
   }

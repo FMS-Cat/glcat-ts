@@ -5,7 +5,7 @@ import sUvFrag from './shaders/uv.frag';
 
 describe( 'GLCat', () => {
   let gl: WebGLRenderingContext;
-  let glCat: GLCat;
+  let glCat: GLCat<WebGLRenderingContext>;
 
   beforeAll( () => {
     gl = WebGL( 300, 150 );

@@ -1,4 +1,4 @@
-import { GL } from './GL';
+import { GL, GL2 } from './GL';
 import { GLCat } from './GLCat';
 
 const zeroTextureArray = new Uint8Array( [ 0, 0, 0, 0 ] );
@@ -6,8 +6,8 @@ const zeroTextureArray = new Uint8Array( [ 0, 0, 0, 0 ] );
 /**
  * It's a WebGLTexture.
  */
-export class GLCatTexture {
-  private __glCat: GLCat;
+export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+  private __glCat: GLCat<TContext>;
   private __texture: WebGLTexture;
   private __width = 0;
   private __height = 0;
@@ -43,7 +43,7 @@ export class GLCatTexture {
   /**
    * Create a new GLCatTexture instance.
    */
-  public constructor( glCat: GLCat, texture: WebGLTexture ) {
+  public constructor( glCat: GLCat<TContext>, texture: WebGLTexture ) {
     this.__glCat = glCat;
     this.__texture = texture;
     this.textureFilter( GL.LINEAR );
@@ -66,10 +66,10 @@ export class GLCatTexture {
   public textureFilter( filterMag: number = GL.NEAREST, filterMin: number = filterMag ): void {
     const { gl } = this.__glCat;
 
-    gl.bindTexture( gl.TEXTURE_2D, this.__texture );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filterMag );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filterMin );
-    gl.bindTexture( gl.TEXTURE_2D, null );
+    this.__glCat.bindTexture2D( this, () => {
+      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filterMag );
+      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filterMin );
+    } );
   }
 
   /**
@@ -81,22 +81,41 @@ export class GLCatTexture {
   public textureWrap( wrapS: number = GL.CLAMP_TO_EDGE, wrapT: number = wrapS ): void {
     const { gl } = this.__glCat;
 
-    gl.bindTexture( gl.TEXTURE_2D, this.__texture );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT );
-    gl.bindTexture( gl.TEXTURE_2D, null );
+    this.__glCat.bindTexture2D( this, () => {
+      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS );
+      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT );
+    } );
+  }
+
+  /**
+   * Initialize the texture.
+   */
+  public texStorage2D(
+    width: number,
+    height: number,
+    { target = GL.TEXTURE_2D, level = 1, format = GL2.RGBA8 } = {}
+  ): void {
+    const { gl } = this.__glCat;
+
+    if ( gl instanceof WebGL2RenderingContext ) {
+      this.__glCat.bindTexture2D( this, () => {
+        gl.texStorage2D( target, level, format, width, height );
+      } );
+    } else {
+      throw GLCat.WebGL2ExclusiveError;
+    }
   }
 
   /**
    * Return a value for the passed parameter name.
    * See: https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getParameter
    */
-  public getParameter( pname: GLenum ): void {
+  public getParameter( pname: GLenum ): any {
     const { gl } = this.__glCat;
 
-    gl.bindTexture( gl.TEXTURE_2D, this.__texture );
-    gl.getParameter( pname );
-    gl.bindTexture( gl.TEXTURE_2D, null );
+    return this.__glCat.bindTexture2D( this, () => {
+      return gl.getParameter( pname );
+    } );
   }
 
   /**
@@ -106,9 +125,9 @@ export class GLCatTexture {
   public pixelStorei( pname: GLenum, param: number | boolean ): void {
     const { gl } = this.__glCat;
 
-    gl.bindTexture( gl.TEXTURE_2D, this.__texture );
-    gl.pixelStorei( pname, param );
-    gl.bindTexture( gl.TEXTURE_2D, null );
+    this.__glCat.bindTexture2D( this, () => {
+      gl.pixelStorei( pname, param );
+    } );
   }
 
   /**
@@ -117,9 +136,9 @@ export class GLCatTexture {
   public setTexture( source: TexImageSource ): void {
     const { gl } = this.__glCat;
 
-    gl.bindTexture( gl.TEXTURE_2D, this.__texture );
-    gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source );
-    gl.bindTexture( gl.TEXTURE_2D, null );
+    this.__glCat.bindTexture2D( this, () => {
+      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source );
+    } );
 
     this.__width = source.width;
     this.__height = source.height;
@@ -138,9 +157,9 @@ export class GLCatTexture {
   ): void {
     const { gl } = this.__glCat;
 
-    gl.bindTexture( gl.TEXTURE_2D, this.__texture );
-    gl.texImage2D( gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, source );
-    gl.bindTexture( gl.TEXTURE_2D, null );
+    this.__glCat.bindTexture2D( this, () => {
+      gl.texImage2D( gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, source );
+    } );
 
     this.__width = width;
     this.__height = height;
@@ -161,12 +180,12 @@ export class GLCatTexture {
 
     this.__glCat.getExtension( 'OES_texture_float', true );
 
-    gl.bindTexture( gl.TEXTURE_2D, this.__texture );
-    gl.texImage2D( gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.FLOAT, source );
-    if ( this.__glCat.getExtension( 'OES_texture_float_linear' ) === null ) {
-      this.textureFilter( gl.NEAREST );
-    }
-    gl.bindTexture( gl.TEXTURE_2D, null );
+    this.__glCat.bindTexture2D( this, () => {
+      gl.texImage2D( gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.FLOAT, source );
+      if ( this.__glCat.getExtension( 'OES_texture_float_linear' ) === null ) {
+        this.textureFilter( gl.NEAREST );
+      }
+    } );
 
     this.__width = width;
     this.__height = height;
@@ -178,9 +197,9 @@ export class GLCatTexture {
   public copyTexture( width: number, height: number ): void {
     const { gl } = this.__glCat;
 
-    gl.bindTexture( gl.TEXTURE_2D, this.__texture );
-    gl.copyTexImage2D( gl.TEXTURE_2D, 0, gl.RGBA, 0, 0, width, height, 0 );
-    gl.bindTexture( gl.TEXTURE_2D, null );
+    this.__glCat.bindTexture2D( this, () => {
+      gl.copyTexImage2D( gl.TEXTURE_2D, 0, gl.RGBA, 0, 0, width, height, 0 );
+    } );
 
     this.__width = width;
     this.__height = height;
@@ -194,22 +213,22 @@ export class GLCatTexture {
   public setCubemap( textures: TexImageSource[] ): void {
     const { gl } = this.__glCat;
 
-    gl.bindTexture( gl.TEXTURE_CUBE_MAP, this.__texture );
-    for ( let i = 0; i < 6; i ++ ) {
-      gl.texImage2D(
-        gl.TEXTURE_CUBE_MAP_POSITIVE_X + i,
-        0,
-        gl.RGBA,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        textures[ i ]
-      );
-    }
-    gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
-    gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
-    gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
-    gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
-    gl.bindTexture( gl.TEXTURE_CUBE_MAP, null );
+    this.__glCat.bindTextureCubeMap( this, () => {
+      for ( let i = 0; i < 6; i ++ ) {
+        gl.texImage2D(
+          gl.TEXTURE_CUBE_MAP_POSITIVE_X + i,
+          0,
+          gl.RGBA,
+          gl.RGBA,
+          gl.UNSIGNED_BYTE,
+          textures[ i ]
+        );
+      }
+      gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
+      gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+      gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+      gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
+    } );
   }
 
   /**

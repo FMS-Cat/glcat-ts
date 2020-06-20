@@ -6,3 +6,4 @@ export * from './GLCatProgram';
 export * from './GLCatRenderbuffer';
 export * from './GLCatShader';
 export * from './GLCatTexture';
+export * from './GLCatVertexArray';
