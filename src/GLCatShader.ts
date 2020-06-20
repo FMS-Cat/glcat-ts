@@ -1,4 +1,5 @@
-import { GLCat } from './GLCat';
+import type { GLCat } from './GLCat';
+import { GL_COMPILE_STATUS } from './GLConstants';
 
 /**
  * It's a WebGLShader.
@@ -53,7 +54,7 @@ export class GLCatShader<TContext extends WebGLRenderingContext | WebGL2Renderin
     gl.shaderSource( this.__shader, code );
     gl.compileShader( this.__shader );
 
-    this.__compiled = gl.getShaderParameter( this.__shader, gl.COMPILE_STATUS );
+    this.__compiled = gl.getShaderParameter( this.__shader, GL_COMPILE_STATUS );
     if ( !this.__compiled ) {
       throw new Error( gl.getShaderInfoLog( this.__shader )! );
     }

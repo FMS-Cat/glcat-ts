@@ -1,7 +1,7 @@
-import { GL } from './GL';
-import { GLCat } from './GLCat';
-import { GLCatRenderbuffer } from './GLCatRenderbuffer';
-import { GLCatTexture } from './GLCatTexture';
+import { GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT, GL_FRAMEBUFFER, GL_RENDERBUFFER, GL_TEXTURE_2D } from './GLConstants';
+import type { GLCat } from './GLCat';
+import type { GLCatRenderbuffer } from './GLCatRenderbuffer';
+import type { GLCatTexture } from './GLCatTexture';
 
 /**
  * It's a WebGLFramebuffer.
@@ -31,7 +31,7 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
    * If you want to grab other than `DEPTH_ATTACHMENT`, try [[GLCatFramebuffer.getRenderbuffer]] instead.
    */
   public get renderbuffer(): GLCatRenderbuffer<TContext> | null {
-    return this.__renderbufferMap.get( GL.DEPTH_ATTACHMENT ) ?? null;
+    return this.__renderbufferMap.get( GL_DEPTH_ATTACHMENT ) ?? null;
   }
 
   /**
@@ -39,7 +39,7 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
    * If you want to grab other than `COLOR_ATTACHMENT0`, try [[GLCatFramebuffer.getTexture]] instead.
    */
   public get texture(): GLCatTexture<TContext> | null {
-    return this.__textureMap.get( GL.COLOR_ATTACHMENT0 ) ?? null;
+    return this.__textureMap.get( GL_COLOR_ATTACHMENT0 ) ?? null;
   }
 
   /**
@@ -72,14 +72,14 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
   /**
    * Retrieve its attached renderbuffer.
    */
-  public getRenderbuffer( attachment = GL.DEPTH_ATTACHMENT ): GLCatRenderbuffer<TContext> | null {
+  public getRenderbuffer( attachment = GL_DEPTH_ATTACHMENT ): GLCatRenderbuffer<TContext> | null {
     return this.__renderbufferMap.get( attachment ) ?? null;
   }
 
   /**
    * Retrieve its attached texture.
    */
-  public getTexture( attachment = GL.COLOR_ATTACHMENT0 ): GLCatTexture<TContext> | null {
+  public getTexture( attachment = GL_COLOR_ATTACHMENT0 ): GLCatTexture<TContext> | null {
     return this.__textureMap.get( attachment ) ?? null;
   }
 
@@ -89,13 +89,13 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
   public attachRenderbuffer(
     renderbuffer: GLCatRenderbuffer<TContext>,
     {
-      attachment = GL.DEPTH_ATTACHMENT
+      attachment = GL_DEPTH_ATTACHMENT
     } = {}
   ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.bindFramebuffer( this, () => {
-      gl.framebufferRenderbuffer( gl.FRAMEBUFFER, attachment, gl.RENDERBUFFER, renderbuffer.raw );
+      gl.framebufferRenderbuffer( GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, renderbuffer.raw );
     } );
 
     this.__renderbufferMap.set( attachment, renderbuffer );
@@ -108,13 +108,13 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
     texture: GLCatTexture<TContext>,
     {
       level = 0,
-      attachment = GL.COLOR_ATTACHMENT0
+      attachment = GL_COLOR_ATTACHMENT0
     } = {}
   ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.bindFramebuffer( this, () => {
-      gl.framebufferTexture2D( gl.FRAMEBUFFER, attachment, gl.TEXTURE_2D, texture.raw, level );
+      gl.framebufferTexture2D( GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture.raw, level );
     } );
 
     this.__textureMap.set( attachment, texture );

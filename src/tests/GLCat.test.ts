@@ -1,4 +1,4 @@
-import WebGL from 'gl';
+import WebGL = require( 'gl' );
 import { GLCat } from '../GLCat';
 import sQuadVert from './shaders/quad.vert';
 import sUvFrag from './shaders/uv.frag';

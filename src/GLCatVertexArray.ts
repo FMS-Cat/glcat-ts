@@ -1,6 +1,6 @@
-import { GLCat, GLCatVertexArrayRawType } from './GLCat';
-import { GL } from './GL';
-import { GLCatBuffer } from './GLCatBuffer';
+import type { GLCat, GLCatVertexArrayRawType } from './GLCat';
+import { GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_FLOAT } from './GLConstants';
+import type { GLCatBuffer } from './GLCatBuffer';
 
 /**
  * It's a WebGLVertexArrayObject.
@@ -53,14 +53,14 @@ export class GLCatVertexArray<TContext extends WebGLRenderingContext | WebGL2Ren
     location: number,
     size = 1,
     divisor = 0,
-    type: number = GL.FLOAT,
+    type: number = GL_FLOAT,
     stride = 0,
     offset = 0
   ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.bindVertexArray( this, () => {
-      gl.bindBuffer( gl.ARRAY_BUFFER, source.raw );
+      gl.bindBuffer( GL_ARRAY_BUFFER, source.raw );
       gl.enableVertexAttribArray( location );
       gl.vertexAttribPointer( location, size, type, false, stride, offset );
 
@@ -84,7 +84,7 @@ export class GLCatVertexArray<TContext extends WebGLRenderingContext | WebGL2Ren
     const { gl } = this.__glCat;
 
     this.__glCat.bindVertexArray( this, () => {
-      gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, source.raw );
+      gl.bindBuffer( GL_ELEMENT_ARRAY_BUFFER, source.raw );
     } );
   }
 }

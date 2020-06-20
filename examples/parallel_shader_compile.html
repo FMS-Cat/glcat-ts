@@ -2,8 +2,9 @@
   <canvas id="canvas" width=1280 height=720></canvas>
 </body>
 
-<script src="../dist/glcat.js"></script>
-<script>
+<script type="module">
+  import { GLCat } from '../dist/glcat.module.js';
+
   const canvas = document.getElementById( 'canvas' );
   const gl = canvas.getContext( 'webgl' );
   const glCat = new GLCat( gl );

@@ -1,6 +1,7 @@
-/coverage
-/dist
-/docs
+/coverage/
+/dist/
+/docs/
 /node_modules
-/types
+/ts*/
+/types/
 *.log

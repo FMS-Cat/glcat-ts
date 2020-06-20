@@ -1,6 +1,7 @@
+import { GL_ARRAY_BUFFER, GL_BLEND, GL_COLOR_ATTACHMENT0, GL_COLOR_BUFFER_BIT, GL_DEPTH24_STENCIL8, GL_DEPTH_ATTACHMENT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_COMPONENT16, GL_DEPTH_TEST, GL_DRAW_FRAMEBUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_FRAGMENT_SHADER, GL_FRAMEBUFFER, GL_LEQUAL, GL_MAX_DRAW_BUFFERS, GL_NEAREST, GL_ONE_MINUS_SRC_ALPHA, GL_READ_FRAMEBUFFER, GL_RENDERBUFFER, GL_RGBA32F, GL_RGBA8, GL_SRC_ALPHA, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_VERTEX_SHADER } from './GLConstants';
 import { BindHelper } from './utils/BindHelper';
-import { GL } from './GL';
 import { GLCatBuffer } from './GLCatBuffer';
+import { GLCatErrors } from './GLCatErrors';
 import { GLCatFramebuffer } from './GLCatFramebuffer';
 import { GLCatProgram } from './GLCatProgram';
 import { GLCatRenderbuffer } from './GLCatRenderbuffer';
@@ -21,18 +22,10 @@ export type GLCatVertexArrayRawType<TContext extends WebGLRenderingContext | Web
 export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
   public static throwIfNull<T>( v: T | null ): T {
     if ( v == null ) {
-      const error = new Error( 'GLCat: Unexpected null detected' );
-      error.name = 'UnexpectedNullDetectedError';
-      throw error;
+      throw GLCatErrors.UnexpectedNullError;
     } else {
       return v;
     }
-  }
-
-  public static get WebGL2ExclusiveError(): Error {
-    const error = new Error( 'GLCat: Attempted to use WebGL2 exclusive stuff' );
-    error.name = 'WebGL2ExclusiveError';
-    return error;
   }
 
   public preferredMultisampleSamples = 4;
@@ -42,9 +35,9 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     if ( this.__preferredDepthFormat !== null ) {
       return this.__preferredDepthFormat;
     } else if ( this.__gl instanceof WebGL2RenderingContext ) {
-      return this.__gl.DEPTH24_STENCIL8;
+      return GL_DEPTH24_STENCIL8;
     } else {
-      return this.__gl.DEPTH_COMPONENT16;
+      return GL_DEPTH_COMPONENT16;
     }
   }
   public set preferredDepthFormat( format: GLenum ) {
@@ -57,7 +50,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     null,
     ( buffer ) => {
       const gl = this.__gl;
-      gl.bindBuffer( gl.ARRAY_BUFFER, buffer?.raw ?? null );
+      gl.bindBuffer( GL_ARRAY_BUFFER, buffer?.raw ?? null );
     }
   );
 
@@ -65,7 +58,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     null,
     ( buffer ) => {
       const gl = this.__gl;
-      gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, buffer?.raw ?? null );
+      gl.bindBuffer( GL_ELEMENT_ARRAY_BUFFER, buffer?.raw ?? null );
     }
   );
 
@@ -80,7 +73,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     null,
     ( texture ) => {
       const gl = this.__gl;
-      gl.bindTexture( gl.TEXTURE_2D, texture?.raw ?? null );
+      gl.bindTexture( GL_TEXTURE_2D, texture?.raw ?? null );
     }
   );
 
@@ -88,7 +81,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     null,
     ( texture ) => {
       const gl = this.__gl;
-      gl.bindTexture( gl.TEXTURE_CUBE_MAP, texture?.raw ?? null );
+      gl.bindTexture( GL_TEXTURE_CUBE_MAP, texture?.raw ?? null );
     }
   );
 
@@ -96,7 +89,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     null,
     ( renderbuffer ) => {
       const gl = this.__gl;
-      gl.bindRenderbuffer( gl.RENDERBUFFER, renderbuffer?.raw ?? null );
+      gl.bindRenderbuffer( GL_RENDERBUFFER, renderbuffer?.raw ?? null );
     }
   );
 
@@ -104,7 +97,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     null,
     ( framebuffer ) => {
       const gl = this.__gl;
-      gl.bindFramebuffer( gl.FRAMEBUFFER, framebuffer?.raw ?? null );
+      gl.bindFramebuffer( GL_FRAMEBUFFER, framebuffer?.raw ?? null );
     }
   );
 
@@ -117,7 +110,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
   );
 
   private __bindHelperDrawBuffers = new BindHelper<GLenum[]>(
-    [ GL.COLOR_ATTACHMENT0 ],
+    [ GL_COLOR_ATTACHMENT0 ],
     ( buffers ) => {
       this.rawDrawBuffers( buffers );
     }
@@ -147,38 +140,10 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
   public constructor( gl: TContext ) {
     this.__gl = gl;
 
-    gl.enable( gl.DEPTH_TEST );
-    gl.depthFunc( gl.LEQUAL );
-    gl.enable( gl.BLEND );
-    gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
-  }
-
-  /**
-   * Wrapper of `gl.MAX_DRAW_BUFFERS`.
-   */
-  public get MAX_DRAW_BUFFERS(): number {
-    const gl = this.__gl;
-
-    if ( gl instanceof WebGL2RenderingContext ) {
-      return gl.MAX_DRAW_BUFFERS;
-    } else {
-      const ext = this.getExtension( 'WEBGL_draw_buffers', true );
-      return ext.MAX_DRAW_BUFFERS_WEBGL;
-    }
-  }
-
-  /**
-   * Wrapper of `gl.COLOR_ATTACHMENT0`.
-   */
-  public get COLOR_ATTACHMENT0(): number {
-    const gl = this.__gl;
-
-    if ( gl instanceof WebGL2RenderingContext ) {
-      return gl.COLOR_ATTACHMENT0;
-    } else {
-      const ext = this.getExtension( 'WEBGL_draw_buffers', true );
-      return ext.COLOR_ATTACHMENT0_WEBGL;
-    }
+    gl.enable( GL_DEPTH_TEST );
+    gl.depthFunc( GL_LEQUAL );
+    gl.enable( GL_BLEND );
+    gl.blendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
   }
 
   /**
@@ -277,19 +242,17 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
    * Create a new GLCat program object, in lazier way.
    */
   public lazyProgram( vert: string, frag: string ): GLCatProgram<TContext> {
-    const gl = this.__gl;
-
     let vertexShader: GLCatShader<TContext> | undefined;
     let fragmentShader: GLCatShader<TContext> | undefined;
     let program: GLCatShader<TContext> | undefined;
 
     try {
       // == vert ===================================================================================
-      vertexShader = this.createShader( gl.VERTEX_SHADER );
+      vertexShader = this.createShader( GL_VERTEX_SHADER );
       vertexShader.compile( vert );
 
       // == frag ===================================================================================
-      const fragmentShader = this.createShader( gl.FRAGMENT_SHADER );
+      const fragmentShader = this.createShader( GL_FRAGMENT_SHADER );
       fragmentShader.compile( frag );
 
       // == program ================================================================================
@@ -310,33 +273,30 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
    * Create a new GLCat program object, in lazier way.
    * It's gonna be asynchronous if you have the KHR_parallel_shader_compile extension support.
    */
-  public async lazyProgramAsync( vert: string, frag: string ): Promise<GLCatProgram<TContext>> {
-    const gl = this.__gl;
-
+  public lazyProgramAsync( vert: string, frag: string ): Promise<GLCatProgram<TContext>> {
     let vertexShader: GLCatShader<TContext> | undefined;
     let fragmentShader: GLCatShader<TContext> | undefined;
     let program: GLCatShader<TContext> | undefined;
 
     try {
       // == vert ===================================================================================
-      const vertexShader = this.createShader( gl.VERTEX_SHADER );
+      const vertexShader = this.createShader( GL_VERTEX_SHADER );
       vertexShader.compile( vert );
 
       // == frag ===================================================================================
-      const fragmentShader = this.createShader( gl.FRAGMENT_SHADER );
+      const fragmentShader = this.createShader( GL_FRAGMENT_SHADER );
       fragmentShader.compile( frag );
 
       // == program ================================================================================
       const program = this.createProgram();
-      await program.linkAsync( vertexShader, fragmentShader ).catch( ( e ) => {
+      return program.linkAsync( vertexShader, fragmentShader ).then( () => {
+        return program;
+      } ).catch( ( e ) => {
         program?.dispose();
         fragmentShader?.dispose();
         vertexShader?.dispose();
         return Promise.reject( e );
       } );
-
-      // == almost done ============================================================================
-      return program;
     } catch ( e ) {
       program?.dispose();
       fragmentShader?.dispose();
@@ -525,8 +485,6 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
       depthFormat = this.preferredDepthFormat
     } = {}
   ): GLCatFramebuffer<TContext> {
-    const gl = this.__gl;
-
     let texture: GLCatTexture<TContext> | undefined;
     let renderbuffer: GLCatRenderbuffer<TContext> | undefined;
     let framebuffer: GLCatFramebuffer<TContext> | undefined;
@@ -538,7 +496,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
       // == renderbuffer ===========================================================================
       renderbuffer = this.createRenderbuffer();
       renderbuffer.init( width, height, { format: depthFormat } );
-      framebuffer.attachRenderbuffer( renderbuffer, { attachment: gl.DEPTH_ATTACHMENT } );
+      framebuffer.attachRenderbuffer( renderbuffer, { attachment: GL_DEPTH_ATTACHMENT } );
 
       // == texture ================================================================================
       texture = this.createTexture();
@@ -591,17 +549,17 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
           height,
           { samples, format: depthFormat }
         );
-        framebuffer.attachRenderbuffer( renderbufferDepth, { attachment: gl.DEPTH_ATTACHMENT } );
+        framebuffer.attachRenderbuffer( renderbufferDepth, { attachment: GL_DEPTH_ATTACHMENT } );
 
         // == renderbuffer color ===================================================================
         const renderbufferColor = this.createRenderbuffer();
-        const colorFormat = isFloat ? gl.RGBA32F : gl.RGBA8;
+        const colorFormat = isFloat ? GL_RGBA32F : GL_RGBA8;
         renderbufferColor.initMultisample(
           width,
           height,
           { samples, format: colorFormat }
         );
-        framebuffer.attachRenderbuffer( renderbufferColor, { attachment: gl.COLOR_ATTACHMENT0 } );
+        framebuffer.attachRenderbuffer( renderbufferColor, { attachment: GL_COLOR_ATTACHMENT0 } );
 
         // == almost done ==========================================================================
         return framebuffer;
@@ -615,7 +573,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     } else if ( fallback ) {
       return this.lazyFramebuffer( width, height, { isFloat } );
     } else {
-      throw GLCat.WebGL2ExclusiveError;
+      throw GLCatErrors.WebGL2ExclusiveError;
     }
   }
 
@@ -632,9 +590,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
       depthFormat = this.preferredDepthFormat
     } = {}
   ): GLCatFramebuffer<TContext> {
-    const { gl } = this;
-
-    if ( this.MAX_DRAW_BUFFERS < numBuffers ) {
+    if ( GL_MAX_DRAW_BUFFERS < numBuffers ) {
       throw new Error( 'GLCat: Maximum draw buffers count exceeded' );
     }
 
@@ -649,7 +605,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
       // == renderbuffer ===========================================================================
       const renderbuffer = this.createRenderbuffer();
       renderbuffer.init( width, height, { format: depthFormat } );
-      framebuffer.attachRenderbuffer( renderbuffer, { attachment: GL.DEPTH_ATTACHMENT } );
+      framebuffer.attachRenderbuffer( renderbuffer, { attachment: GL_DEPTH_ATTACHMENT } );
 
       // == texture ================================================================================
       for ( let i = 0; i < numBuffers; i ++ ) {
@@ -659,7 +615,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
         } else {
           texture.setTextureFromArray( width, height, null );
         }
-        framebuffer.attachTexture( texture, { attachment: gl.COLOR_ATTACHMENT0 + i } );
+        framebuffer.attachTexture( texture, { attachment: GL_COLOR_ATTACHMENT0 + i } );
       }
 
       // == almost done ============================================================================
@@ -701,8 +657,6 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     buffersOrNumBuffers?: GLenum[] | number,
     callback?: ( buffers: GLenum[] ) => T
   ): T {
-    const gl = this.__gl;
-
     let buffers: GLenum[];
 
     if ( Array.isArray( buffersOrNumBuffers ) ) {
@@ -710,10 +664,10 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     } else if ( buffersOrNumBuffers ) {
       buffers = [];
       for ( let i = 0; i < buffersOrNumBuffers; i ++ ) {
-        buffers[ i ] = this.COLOR_ATTACHMENT0 + i;
+        buffers[ i ] = GL_COLOR_ATTACHMENT0 + i;
       }
     } else {
-      buffers = [ gl.COLOR_ATTACHMENT0 ];
+      buffers = [ GL_COLOR_ATTACHMENT0 ];
     }
 
     return this.__bindHelperDrawBuffers.bind( buffers, callback );
@@ -772,7 +726,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
 
     gl.clearColor( red, green, blue, alpha );
     gl.clearDepth( depth );
-    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
+    gl.clear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
   }
 
   /**
@@ -784,15 +738,15 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     {
       srcViewport = [ 0, 0, src?.renderbuffer?.width ?? 0, src?.renderbuffer?.height ?? 0 ],
       dstViewport = [ 0, 0, dst?.renderbuffer?.width ?? 0, dst?.renderbuffer?.height ?? 0 ],
-      mask = GL.COLOR_BUFFER_BIT,
-      filter = GL.NEAREST
+      mask = GL_COLOR_BUFFER_BIT,
+      filter = GL_NEAREST
     } = {}
   ): void {
     const gl = this.__gl;
 
     if ( gl instanceof WebGL2RenderingContext ) {
-      gl.bindFramebuffer( gl.READ_FRAMEBUFFER, src?.raw ?? null );
-      gl.bindFramebuffer( gl.DRAW_FRAMEBUFFER, dst?.raw ?? null );
+      gl.bindFramebuffer( GL_READ_FRAMEBUFFER, src?.raw ?? null );
+      gl.bindFramebuffer( GL_DRAW_FRAMEBUFFER, dst?.raw ?? null );
       gl.blitFramebuffer(
         srcViewport[ 0 ],
         srcViewport[ 1 ],
@@ -805,10 +759,10 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
         mask,
         filter
       );
-      gl.bindFramebuffer( gl.READ_FRAMEBUFFER, null );
-      gl.bindFramebuffer( gl.DRAW_FRAMEBUFFER, null );
+      gl.bindFramebuffer( GL_READ_FRAMEBUFFER, null );
+      gl.bindFramebuffer( GL_DRAW_FRAMEBUFFER, null );
     } else {
-      throw GLCat.WebGL2ExclusiveError;
+      throw GLCatErrors.WebGL2ExclusiveError;
     }
   }
 }
