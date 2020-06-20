@@ -1,0 +1,68 @@
+<body>
+  <canvas id="canvas" width=1280 height=720></canvas>
+</body>
+
+<script type="module">
+  import { GLCat } from '../dist/glcat.module.js';
+  import {
+    TRIANGLE_STRIP_QUAD,
+    TRIANGLE_STRIP_QUAD_UV,
+    Vector3,
+  } from 'https://unpkg.com/@fms-cat/experimental@0.4.1/dist/fms-cat-experimental.module.min.js';
+
+  const canvas = document.getElementById( 'canvas' );
+  const gl = canvas.getContext( 'webgl2' );
+  const glCat = new GLCat( gl );
+
+  const vboQuad = glCat.createBuffer();
+  vboQuad.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD ) );
+
+  const vboUv = glCat.createBuffer();
+  vboUv.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD_UV ) );
+
+  const shaderVert = `attribute vec2 aVertex;
+attribute vec2 aUv;
+varying vec2 vUv;
+
+void main() {
+  vUv = aUv;
+  gl_Position = vec4( aVertex, 0.0, 1.0 );
+}
+`;
+
+  const shaderFrag = `precision highp float;
+
+varying vec2 vUv;
+uniform sampler2D sampler0;
+
+void main() {
+  gl_FragColor = texture2D( sampler0, vUv );
+}
+`;
+
+  const program = glCat.lazyProgram( shaderVert, shaderFrag );
+
+  const dataTextureArray = new Float32Array( 256 * 256 * 4 );
+  for ( let i = 0; i < 256 * 256 * 4; i ++ ) {
+    dataTextureArray[ i ] = Math.random() * 2.0 - 1.0;
+  }
+  const dataTexture = glCat.createTexture();
+  dataTexture.setTextureFromArray(
+    256,
+    256,
+    dataTextureArray,
+    { internalformat: gl.RGBA32F, format: gl.RGBA, type: gl.FLOAT }
+  );
+
+  program.attribute( 'aVertex', vboQuad, 2 );
+  program.attribute( 'aUv', vboUv, 2 );
+  program.uniformTexture( 'sampler0', dataTexture );
+
+  glCat.useProgram( program, () => {
+    gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+  } );
+
+  program.dispose( true );
+  vboQuad.dispose();
+  vboUv.dispose();
+</script>

@@ -1,4 +1,4 @@
-import { GL_ARRAY_BUFFER, GL_BLEND, GL_COLOR_ATTACHMENT0, GL_COLOR_BUFFER_BIT, GL_DEPTH24_STENCIL8, GL_DEPTH_ATTACHMENT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_COMPONENT16, GL_DEPTH_TEST, GL_DRAW_FRAMEBUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_FRAGMENT_SHADER, GL_FRAMEBUFFER, GL_LEQUAL, GL_MAX_DRAW_BUFFERS, GL_NEAREST, GL_ONE_MINUS_SRC_ALPHA, GL_READ_FRAMEBUFFER, GL_RENDERBUFFER, GL_RGBA32F, GL_RGBA8, GL_SRC_ALPHA, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_VERTEX_SHADER } from './GLConstants';
+import { GL_ARRAY_BUFFER, GL_BLEND, GL_COLOR_ATTACHMENT0, GL_COLOR_BUFFER_BIT, GL_DEPTH24_STENCIL8, GL_DEPTH_ATTACHMENT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_COMPONENT16, GL_DEPTH_TEST, GL_DRAW_FRAMEBUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_FLOAT, GL_FRAGMENT_SHADER, GL_FRAMEBUFFER, GL_LEQUAL, GL_MAX_DRAW_BUFFERS, GL_NEAREST, GL_ONE_MINUS_SRC_ALPHA, GL_READ_FRAMEBUFFER, GL_RENDERBUFFER, GL_RGBA, GL_RGBA32F, GL_RGBA8, GL_SRC_ALPHA, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_VERTEX_SHADER } from './GLConstants';
 import { BindHelper } from './utils/BindHelper';
 import { GLCatBuffer } from './GLCatBuffer';
 import { GLCatErrors } from './GLCatErrors';
@@ -165,6 +165,38 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
    * Retrieve an extension.
    * If they is your precious one and you cannot live without him, turn on `throwIfNotFound`.
    */
+  public getExtension(
+    name: 'OES_texture_half_float',
+    throwIfNotFound?: false
+  ): OES_texture_half_float | null; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'OES_texture_half_float',
+    throwIfNotFound: true
+  ): OES_texture_half_float; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'OES_texture_half_float_linear',
+    throwIfNotFound?: false
+  ): OES_texture_half_float_linear | null; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'OES_texture_half_float_linear',
+    throwIfNotFound: true
+  ): OES_texture_half_float_linear; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'OES_texture_float',
+    throwIfNotFound?: false
+  ): OES_texture_float | null; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'OES_texture_float',
+    throwIfNotFound: true
+  ): OES_texture_float; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'OES_texture_float_linear',
+    throwIfNotFound?: false
+  ): OES_texture_float_linear | null; // eslint-disable-line @typescript-eslint/camelcase
+  public getExtension(
+    name: 'OES_texture_float_linear',
+    throwIfNotFound: true
+  ): OES_texture_float_linear; // eslint-disable-line @typescript-eslint/camelcase
   public getExtension(
     name: 'ANGLE_instanced_arrays',
     throwIfNotFound?: false
@@ -501,7 +533,12 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
       // == texture ================================================================================
       texture = this.createTexture();
       if ( isFloat ) {
-        texture.setTextureFromFloatArray( width, height, null );
+        texture.setTextureFromArray(
+          width,
+          height,
+          null,
+          { internalformat: GL_RGBA32F, format: GL_RGBA, type: GL_FLOAT }
+        );
       } else {
         texture.setTextureFromArray( width, height, null );
       }
@@ -611,7 +648,12 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
       for ( let i = 0; i < numBuffers; i ++ ) {
         const texture = this.createTexture();
         if ( isFloat ) {
-          texture.setTextureFromFloatArray( width, height, null );
+          texture.setTextureFromArray(
+            width,
+            height,
+            null,
+            { internalformat: GL_RGBA32F, format: GL_RGBA, type: GL_FLOAT }
+          );
         } else {
           texture.setTextureFromArray( width, height, null );
         }

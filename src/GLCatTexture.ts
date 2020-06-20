@@ -1,4 +1,4 @@
-import { GL_CLAMP_TO_EDGE, GL_FLOAT, GL_LINEAR, GL_NEAREST, GL_RGBA, GL_RGBA8, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE } from './GLConstants';
+import { GL_CLAMP_TO_EDGE, GL_FLOAT, GL_HALF_FLOAT, GL_LINEAR, GL_NEAREST, GL_RGBA, GL_RGBA8, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE } from './GLConstants';
 import type { GLCat } from './GLCat';
 import { GLCatErrors } from './GLCatErrors';
 
@@ -154,38 +154,39 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
     width: number,
     height: number,
     source: Uint8Array | null,
-    format: number = GL_RGBA
+    {
+      internalformat = GL_RGBA8,
+      format = GL_RGBA,
+      type = GL_UNSIGNED_BYTE
+    } = {}
   ): void {
     const { gl } = this.__glCat;
 
-    this.__glCat.bindTexture2D( this, () => {
-      gl.texImage2D( GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, source );
-    } );
-
-    this.__width = width;
-    this.__height = height;
-  }
-
-  /**
-   * Set new data into this texture.
-   * This function uses `Float32Array`.
-   * If you can't grab `OES_texture_float` extension here, you will die at this point.
-   */
-  public setTextureFromFloatArray(
-    width: number,
-    height: number,
-    source: Float32Array | null,
-    format: number = GL_RGBA
-  ): void {
-    const { gl } = this.__glCat;
-
-    this.__glCat.getExtension( 'OES_texture_float', true );
-
-    this.__glCat.bindTexture2D( this, () => {
-      gl.texImage2D( GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_FLOAT, source );
-      if ( this.__glCat.getExtension( 'OES_texture_float_linear' ) === null ) {
-        this.textureFilter( GL_NEAREST );
+    let iformat = internalformat;
+    if ( !( gl instanceof WebGL2RenderingContext ) ) {
+      if ( type === GL_HALF_FLOAT ) {
+        this.__glCat.getExtension( 'OES_texture_half_float', true );
+        this.__glCat.getExtension( 'OES_texture_half_float_linear' );
+      } else if ( type === GL_FLOAT ) {
+        this.__glCat.getExtension( 'OES_texture_float', true );
+        this.__glCat.getExtension( 'OES_texture_float_linear' );
       }
+
+      iformat = format;
+    }
+
+    this.__glCat.bindTexture2D( this, () => {
+      gl.texImage2D(
+        GL_TEXTURE_2D,
+        0,
+        iformat,
+        width,
+        height,
+        0,
+        format,
+        type,
+        source
+      );
     } );
 
     this.__width = width;
