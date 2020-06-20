@@ -7,10 +7,10 @@ import sUvFrag from './shaders/uv.frag';
 
 describe( 'GLCatProgram', () => {
   let gl: WebGLRenderingContext;
-  let glCat: GLCat;
-  let quadVert: GLCatShader;
-  let uvFrag: GLCatShader;
-  let program: GLCatProgram;
+  let glCat: GLCat<WebGLRenderingContext>;
+  let quadVert: GLCatShader<WebGLRenderingContext>;
+  let uvFrag: GLCatShader<WebGLRenderingContext>;
+  let program: GLCatProgram<WebGLRenderingContext>;
 
   beforeAll( () => {
     gl = WebGL( 300, 150 );
