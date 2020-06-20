@@ -1,4 +1,4 @@
-import { GL } from './GL';
+import { GL_COMPLETION_STATUS_KHR, GL_FLOAT, GL_LINK_STATUS, GL_TEXTURE0 } from './GLConstants';
 import type { GLCat } from './GLCat';
 import type { GLCatBuffer } from './GLCatBuffer';
 import type { GLCatShader } from './GLCatShader';
@@ -87,7 +87,7 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     shaders.forEach( ( shader ) => gl.attachShader( this.__program, shader.raw ) );
     gl.linkProgram( this.__program );
 
-    this.__linked = gl.getProgramParameter( this.__program, gl.LINK_STATUS );
+    this.__linked = gl.getProgramParameter( this.__program, GL_LINK_STATUS );
     if ( !this.__linked ) {
       throw new Error( gl.getProgramInfoLog( this.__program )! );
     }
@@ -111,9 +111,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
       const update = (): void => {
         if (
           !extParallel ||
-          gl.getProgramParameter( this.__program, extParallel.COMPLETION_STATUS_KHR ) === true
+          gl.getProgramParameter( this.__program, GL_COMPLETION_STATUS_KHR ) === true
         ) {
-          this.__linked = gl.getProgramParameter( this.__program, gl.LINK_STATUS );
+          this.__linked = gl.getProgramParameter( this.__program, GL_LINK_STATUS );
           if ( !this.__linked ) {
             reject( gl.getProgramInfoLog( this.__program ) );
             return;
@@ -141,7 +141,7 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     buffer: GLCatBuffer<TContext> | null,
     size = 1,
     divisor = 0,
-    type: number = GL.FLOAT,
+    type: number = GL_FLOAT,
     stride = 0,
     offset = 0
   ): void {
@@ -430,7 +430,7 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
 
     const location = this.getUniformLocation( name );
     const unit = this.getUniformTextureUnit( name );
-    gl.activeTexture( gl.TEXTURE0 + unit );
+    gl.activeTexture( GL_TEXTURE0 + unit );
     this.__glCat.bindTexture2D( texture ?? null );
     this.__glCat.useProgram( this, () => {
       gl.uniform1i( location, unit );
@@ -447,7 +447,7 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
 
     const location = this.getUniformLocation( name );
     const unit = this.getUniformTextureUnit( name );
-    gl.activeTexture( gl.TEXTURE0 + unit );
+    gl.activeTexture( GL_TEXTURE0 + unit );
     this.__glCat.bindTextureCubeMap( texture ?? null );
     this.__glCat.useProgram( this, () => {
       gl.uniform1i( location, unit );

@@ -1,4 +1,4 @@
-import { GL } from './GL';
+import { GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW } from './GLConstants';
 import type { GLCat } from './GLCat';
 
 /**
@@ -42,12 +42,12 @@ export class GLCatBuffer<TContext extends WebGLRenderingContext | WebGL2Renderin
    */
   public setVertexbuffer(
     source: ArrayBuffer | ArrayBufferView | null,
-    usage: number = GL.STATIC_DRAW
+    usage: number = GL_STATIC_DRAW
   ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.bindVertexBuffer( this, () => {
-      gl.bufferData( gl.ARRAY_BUFFER, source, usage );
+      gl.bufferData( GL_ARRAY_BUFFER, source, usage );
     } );
   }
 
@@ -56,12 +56,12 @@ export class GLCatBuffer<TContext extends WebGLRenderingContext | WebGL2Renderin
    */
   public setIndexbuffer(
     source: ArrayBuffer | ArrayBufferView | null,
-    usage: number = GL.STATIC_DRAW
+    usage: number = GL_STATIC_DRAW
   ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.bindIndexBuffer( this, () => {
-      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, source, usage );
+      gl.bufferData( GL_ELEMENT_ARRAY_BUFFER, source, usage );
     } );
   }
 }

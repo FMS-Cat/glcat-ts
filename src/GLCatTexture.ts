@@ -1,4 +1,4 @@
-import { GL, GL2 } from './GL';
+import { GL_CLAMP_TO_EDGE, GL_FLOAT, GL_LINEAR, GL_NEAREST, GL_RGBA, GL_RGBA8, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE } from './GLConstants';
 import type { GLCat } from './GLCat';
 import { GLCatErrors } from './GLCatErrors';
 
@@ -47,8 +47,8 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
   public constructor( glCat: GLCat<TContext>, texture: WebGLTexture ) {
     this.__glCat = glCat;
     this.__texture = texture;
-    this.textureFilter( GL.LINEAR );
-    this.textureWrap( GL.CLAMP_TO_EDGE );
+    this.textureFilter( GL_LINEAR );
+    this.textureWrap( GL_CLAMP_TO_EDGE );
   }
 
   /**
@@ -64,12 +64,12 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
   public textureFilter(): void;
   public textureFilter( filter: number ): void;
   public textureFilter( filterMag: number, filterMin: number ): void;
-  public textureFilter( filterMag: number = GL.NEAREST, filterMin: number = filterMag ): void {
+  public textureFilter( filterMag: number = GL_NEAREST, filterMin: number = filterMag ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.bindTexture2D( this, () => {
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filterMag );
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filterMin );
+      gl.texParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMag );
+      gl.texParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMin );
     } );
   }
 
@@ -79,12 +79,12 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
   public textureWrap(): void;
   public textureWrap( wrap: number ): void;
   public textureWrap( wrapS: number, wrapT: number ): void;
-  public textureWrap( wrapS: number = GL.CLAMP_TO_EDGE, wrapT: number = wrapS ): void {
+  public textureWrap( wrapS: number = GL_CLAMP_TO_EDGE, wrapT: number = wrapS ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.bindTexture2D( this, () => {
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS );
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT );
+      gl.texParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS );
+      gl.texParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapT );
     } );
   }
 
@@ -94,7 +94,7 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
   public texStorage2D(
     width: number,
     height: number,
-    { target = GL.TEXTURE_2D, level = 1, format = GL2.RGBA8 } = {}
+    { target = GL_TEXTURE_2D, level = 1, format = GL_RGBA8 } = {}
   ): void {
     const { gl } = this.__glCat;
 
@@ -138,7 +138,7 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     this.__glCat.bindTexture2D( this, () => {
-      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source );
+      gl.texImage2D( GL_TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source );
     } );
 
     this.__width = source.width;
@@ -154,12 +154,12 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
     width: number,
     height: number,
     source: Uint8Array | null,
-    format: number = GL.RGBA
+    format: number = GL_RGBA
   ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.bindTexture2D( this, () => {
-      gl.texImage2D( gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, source );
+      gl.texImage2D( GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, source );
     } );
 
     this.__width = width;
@@ -175,16 +175,16 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
     width: number,
     height: number,
     source: Float32Array | null,
-    format: number = GL.RGBA
+    format: number = GL_RGBA
   ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.getExtension( 'OES_texture_float', true );
 
     this.__glCat.bindTexture2D( this, () => {
-      gl.texImage2D( gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.FLOAT, source );
+      gl.texImage2D( GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_FLOAT, source );
       if ( this.__glCat.getExtension( 'OES_texture_float_linear' ) === null ) {
-        this.textureFilter( gl.NEAREST );
+        this.textureFilter( GL_NEAREST );
       }
     } );
 
@@ -199,7 +199,7 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     this.__glCat.bindTexture2D( this, () => {
-      gl.copyTexImage2D( gl.TEXTURE_2D, 0, gl.RGBA, 0, 0, width, height, 0 );
+      gl.copyTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, width, height, 0 );
     } );
 
     this.__width = width;
@@ -217,18 +217,18 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
     this.__glCat.bindTextureCubeMap( this, () => {
       for ( let i = 0; i < 6; i ++ ) {
         gl.texImage2D(
-          gl.TEXTURE_CUBE_MAP_POSITIVE_X + i,
+          GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
           0,
-          gl.RGBA,
-          gl.RGBA,
-          gl.UNSIGNED_BYTE,
+          GL_RGBA,
+          GL_RGBA,
+          GL_UNSIGNED_BYTE,
           textures[ i ]
         );
       }
-      gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
-      gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
-      gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
-      gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
+      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     } );
   }
 
