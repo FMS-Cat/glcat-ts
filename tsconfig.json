@@ -1,22 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "es5", // will be overwritten in rollup config
+    "module": "es6",
     "strict": true,
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "removeComments": false,
-    "noUnusedLocals": true,
     "downlevelIteration": true,
-    "lib": [ "dom", "es2020" ],
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "declaration": true,
-    "declarationDir": "./types",
+    "lib": [ "es2020", "dom" ],
+    "rootDir": "./src"
   },
   "include": [ "src" ],
-  "exclude": [ "node_modules", "**/tests/**/*.ts" ]
+  "exclude": [ "node_modules", "**/tests/**" ]
 }

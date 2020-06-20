@@ -1,8 +1,8 @@
 import { GL } from './GL';
-import { GLCat } from './GLCat';
-import { GLCatBuffer } from './GLCatBuffer';
-import { GLCatShader } from './GLCatShader';
-import { GLCatTexture } from './GLCatTexture';
+import type { GLCat } from './GLCat';
+import type { GLCatBuffer } from './GLCatBuffer';
+import type { GLCatShader } from './GLCatShader';
+import type { GLCatTexture } from './GLCatTexture';
 
 export type GLCatProgramUniformType =
   '1f' | '2f' | '3f' | '4f' |

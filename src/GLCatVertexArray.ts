@@ -1,6 +1,6 @@
-import { GLCat, GLCatVertexArrayRawType } from './GLCat';
+import type { GLCat, GLCatVertexArrayRawType } from './GLCat';
 import { GL } from './GL';
-import { GLCatBuffer } from './GLCatBuffer';
+import type { GLCatBuffer } from './GLCatBuffer';
 
 /**
  * It's a WebGLVertexArrayObject.

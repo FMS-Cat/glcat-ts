@@ -1,6 +1,7 @@
 import { BindHelper } from './utils/BindHelper';
 import { GL } from './GL';
 import { GLCatBuffer } from './GLCatBuffer';
+import { GLCatErrors } from './GLCatErrors';
 import { GLCatFramebuffer } from './GLCatFramebuffer';
 import { GLCatProgram } from './GLCatProgram';
 import { GLCatRenderbuffer } from './GLCatRenderbuffer';
@@ -21,18 +22,10 @@ export type GLCatVertexArrayRawType<TContext extends WebGLRenderingContext | Web
 export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
   public static throwIfNull<T>( v: T | null ): T {
     if ( v == null ) {
-      const error = new Error( 'GLCat: Unexpected null detected' );
-      error.name = 'UnexpectedNullDetectedError';
-      throw error;
+      throw GLCatErrors.UnexpectedNullError;
     } else {
       return v;
     }
-  }
-
-  public static get WebGL2ExclusiveError(): Error {
-    const error = new Error( 'GLCat: Attempted to use WebGL2 exclusive stuff' );
-    error.name = 'WebGL2ExclusiveError';
-    return error;
   }
 
   public preferredMultisampleSamples = 4;
@@ -310,7 +303,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
    * Create a new GLCat program object, in lazier way.
    * It's gonna be asynchronous if you have the KHR_parallel_shader_compile extension support.
    */
-  public async lazyProgramAsync( vert: string, frag: string ): Promise<GLCatProgram<TContext>> {
+  public lazyProgramAsync( vert: string, frag: string ): Promise<GLCatProgram<TContext>> {
     const gl = this.__gl;
 
     let vertexShader: GLCatShader<TContext> | undefined;
@@ -328,15 +321,14 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
 
       // == program ================================================================================
       const program = this.createProgram();
-      await program.linkAsync( vertexShader, fragmentShader ).catch( ( e ) => {
+      return program.linkAsync( vertexShader, fragmentShader ).then( () => {
+        return program;
+      } ).catch( ( e ) => {
         program?.dispose();
         fragmentShader?.dispose();
         vertexShader?.dispose();
         return Promise.reject( e );
       } );
-
-      // == almost done ============================================================================
-      return program;
     } catch ( e ) {
       program?.dispose();
       fragmentShader?.dispose();
@@ -615,7 +607,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     } else if ( fallback ) {
       return this.lazyFramebuffer( width, height, { isFloat } );
     } else {
-      throw GLCat.WebGL2ExclusiveError;
+      throw GLCatErrors.WebGL2ExclusiveError;
     }
   }
 
@@ -808,7 +800,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
       gl.bindFramebuffer( gl.READ_FRAMEBUFFER, null );
       gl.bindFramebuffer( gl.DRAW_FRAMEBUFFER, null );
     } else {
-      throw GLCat.WebGL2ExclusiveError;
+      throw GLCatErrors.WebGL2ExclusiveError;
     }
   }
 }

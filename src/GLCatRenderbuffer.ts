@@ -1,5 +1,5 @@
 import { GL } from './GL';
-import { GLCat } from './GLCat';
+import type { GLCat } from './GLCat';
 
 /**
  * It's a WebGLRenderbuffer.

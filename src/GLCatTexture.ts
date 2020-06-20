@@ -1,5 +1,6 @@
 import { GL, GL2 } from './GL';
-import { GLCat } from './GLCat';
+import type { GLCat } from './GLCat';
+import { GLCatErrors } from './GLCatErrors';
 
 const zeroTextureArray = new Uint8Array( [ 0, 0, 0, 0 ] );
 
@@ -102,7 +103,7 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
         gl.texStorage2D( target, level, format, width, height );
       } );
     } else {
-      throw GLCat.WebGL2ExclusiveError;
+      throw GLCatErrors.WebGL2ExclusiveError;
     }
   }
 

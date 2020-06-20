@@ -1,4 +1,4 @@
-import WebGL from 'gl';
+import WebGL = require( 'gl' );
 import { GLCat } from '../GLCat';
 import { GLCatProgram } from '../GLCatProgram';
 import { GLCatShader } from '../GLCatShader';

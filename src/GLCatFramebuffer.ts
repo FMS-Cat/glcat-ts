@@ -1,7 +1,7 @@
 import { GL } from './GL';
-import { GLCat } from './GLCat';
-import { GLCatRenderbuffer } from './GLCatRenderbuffer';
-import { GLCatTexture } from './GLCatTexture';
+import type { GLCat } from './GLCat';
+import type { GLCatRenderbuffer } from './GLCatRenderbuffer';
+import type { GLCatTexture } from './GLCatTexture';
 
 /**
  * It's a WebGLFramebuffer.

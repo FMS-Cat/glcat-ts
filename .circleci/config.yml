@@ -8,7 +8,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: fmscat/glcat-ts-circleci
+    - image: fmscat/glcat-ts-circleci:14.4.0
   environment:
     GIT_AUTHOR_EMAIL: email@example.com
     GIT_AUTHOR_NAME: CircleCI
