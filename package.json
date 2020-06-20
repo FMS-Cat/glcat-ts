@@ -18,7 +18,7 @@
     "/LICENSE"
   ],
   "scripts": {
-    "dev": "cross-env DEV=1 SERVE=1 rollup -w -c -o dist/glcat.js",
+    "dev": "cross-env DEV=1 ESM=1 SERVE=1 rollup -w -c -o dist/glcat.module.js",
     "all": "yarn lint && yarn test && yarn clean && yarn build && yarn docs",
     "clean": "rimraf dist/ docs/ ts*/ types/",
     "test": "jest",
