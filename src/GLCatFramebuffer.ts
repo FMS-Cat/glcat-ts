@@ -50,17 +50,6 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
   }
 
   /**
-   * Bind this framebuffer and execute given callback.
-   */
-  public bindFramebuffer( callback: () => void ): void {
-    const { gl } = this.__glCat;
-
-    gl.bindFramebuffer( gl.FRAMEBUFFER, this.__framebuffer );
-    callback();
-    gl.bindFramebuffer( gl.FRAMEBUFFER, null );
-  }
-
-  /**
    * Dispose the framebuffer.
    */
   public dispose( alsoAttached = false ): void {
@@ -82,7 +71,7 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
   /**
    * Retrieve its attached texture.
    */
-  public getTexture( attachment: number = GL.COLOR_ATTACHMENT0 ): GLCatTexture<TContext> | null {
+  public getTexture( attachment = GL.COLOR_ATTACHMENT0 ): GLCatTexture<TContext> | null {
     return this.__textureMap[ attachment ];
   }
 
@@ -91,11 +80,13 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
    */
   public attachRenderbuffer(
     renderbuffer: GLCatRenderbuffer<TContext>,
-    attachment: number = GL.DEPTH_ATTACHMENT
+    {
+      attachment = GL.DEPTH_ATTACHMENT
+    } = {}
   ): void {
     const { gl } = this.__glCat;
 
-    this.bindFramebuffer( () => {
+    this.__glCat.bindFramebuffer( this, () => {
       gl.framebufferRenderbuffer( gl.FRAMEBUFFER, attachment, gl.RENDERBUFFER, renderbuffer.raw );
     } );
 
@@ -107,12 +98,15 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
    */
   public attachTexture(
     texture: GLCatTexture<TContext>,
-    attachment: number = GL.COLOR_ATTACHMENT0
+    {
+      level = 0,
+      attachment = GL.COLOR_ATTACHMENT0
+    } = {}
   ): void {
     const { gl } = this.__glCat;
 
-    this.bindFramebuffer( () => {
-      gl.framebufferTexture2D( gl.FRAMEBUFFER, attachment, gl.TEXTURE_2D, texture.raw, 0 );
+    this.__glCat.bindFramebuffer( this, () => {
+      gl.framebufferTexture2D( gl.FRAMEBUFFER, attachment, gl.TEXTURE_2D, texture.raw, level );
     } );
 
     this.__textureMap[ attachment ] = texture;

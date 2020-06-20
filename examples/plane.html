@@ -63,8 +63,6 @@ void main() {
 
   const program = glCat.lazyProgram( shaderVert, shaderFrag );
 
-  glCat.useProgram( program );
-
   program.attribute( 'aPosition', vboQuad, 3 );
   program.attribute( 'aNormal', vboNormal, 3 );
   program.attribute( 'aUv', vboUv, 2 );
@@ -80,7 +78,10 @@ void main() {
 
     program.uniformVector( 'modelMatrix', 'Matrix4fv', modelMatrix.elements );
     program.uniformVector( 'normalMatrix', 'Matrix4fv', modelMatrix.transpose.elements );
-    gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+
+    glCat.useProgram( program, () => {
+      gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+    } );
 
     requestAnimationFrame( update );
   }

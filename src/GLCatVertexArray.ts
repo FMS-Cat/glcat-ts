@@ -1,11 +1,6 @@
+import { GLCat, GLCatVertexArrayRawType } from './GLCat';
 import { GL } from './GL';
-import { GLCat } from './GLCat';
 import { GLCatBuffer } from './GLCatBuffer';
-
-export type GLCatVertexArrayRawType<TContext extends WebGLRenderingContext | WebGL2RenderingContext>
-  = TContext extends WebGL2RenderingContext
-    ? WebGLVertexArrayObject
-    : WebGLVertexArrayObjectOES;
 
 /**
  * It's a WebGLVertexArrayObject.
@@ -46,26 +41,7 @@ export class GLCatVertexArray<TContext extends WebGLRenderingContext | WebGL2Ren
       gl.deleteVertexArray( this.__vertexArray );
     } else {
       const ext = this.__glCat.getExtension( 'OES_vertex_array_object', true );
-      ext.deleteVertexArrayOES( this.__vertexArray );
-    }
-  }
-
-  /**
-   * Bind the vertex array and execute given callback.
-   */
-  public bindVertexArray( callback: () => void ): void {
-    const { gl } = this.__glCat;
-
-    if ( gl instanceof WebGL2RenderingContext ) {
-      gl.bindVertexArray( this.__vertexArray );
-      callback();
-      gl.bindVertexArray( null );
-    } else {
-      const ext = this.__glCat.getExtension( 'OES_vertex_array_object', true );
-
-      ext.bindVertexArrayOES( this.__vertexArray );
-      callback();
-      ext.bindVertexArrayOES( null );
+      ext.deleteVertexArrayOES( this.__vertexArray as any );
     }
   }
 
@@ -83,7 +59,7 @@ export class GLCatVertexArray<TContext extends WebGLRenderingContext | WebGL2Ren
   ): void {
     const { gl } = this.__glCat;
 
-    this.bindVertexArray( () => {
+    this.__glCat.bindVertexArray( this, () => {
       gl.bindBuffer( gl.ARRAY_BUFFER, source.raw );
       gl.enableVertexAttribArray( location );
       gl.vertexAttribPointer( location, size, type, false, stride, offset );
@@ -107,7 +83,7 @@ export class GLCatVertexArray<TContext extends WebGLRenderingContext | WebGL2Ren
   ): void {
     const { gl } = this.__glCat;
 
-    this.bindVertexArray( () => {
+    this.__glCat.bindVertexArray( this, () => {
       gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, source.raw );
     } );
   }

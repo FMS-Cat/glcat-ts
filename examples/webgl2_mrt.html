@@ -47,8 +47,6 @@ layout (location = 2) out vec4 fragColor2;
 layout (location = 3) out vec4 fragColor3;
 
 void main() {
-
-
   fragColor0 = vec4( 0.0, 0.5, 1.0, 1.0 );
   fragColor1 = vec4( vUv, 0.5, 1.0 );
   fragColor2 = vec4( sin( 100.0 * vUv.x ), 0.0, 0.0, 1.0 );
@@ -91,23 +89,27 @@ void main() {
   const programPost = glCat.lazyProgram( shaderVert, shaderPostFrag );
 
   function update() {
-    glCat.useProgram( programMRT );
     programMRT.attribute( 'aVertex', vboQuad, 2 );
     programMRT.attribute( 'aUv', vboUv, 2 );
-    drawbuffers.bindFramebuffer( () => {
-      glCat.drawBuffers( 4, () => {
-        gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+
+    glCat.useProgram( programMRT, () => {
+      glCat.bindFramebuffer( drawbuffers, () => {
+        glCat.drawBuffers( 4, () => {
+          gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+        } );
       } );
     } );
 
-    glCat.useProgram( programPost );
     programPost.attribute( 'aVertex', vboQuad, 2 );
     programPost.attribute( 'aUv', vboUv, 2 );
     programPost.uniformTexture( 'sampler0', drawbuffers.getTexture( gl.COLOR_ATTACHMENT0 ) );
     programPost.uniformTexture( 'sampler1', drawbuffers.getTexture( gl.COLOR_ATTACHMENT1 ) );
     programPost.uniformTexture( 'sampler2', drawbuffers.getTexture( gl.COLOR_ATTACHMENT2 ) );
     programPost.uniformTexture( 'sampler3', drawbuffers.getTexture( gl.COLOR_ATTACHMENT3 ) );
-    gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+
+    glCat.useProgram( programPost, () => {
+      gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+    } );
 
     requestAnimationFrame( update );
   }

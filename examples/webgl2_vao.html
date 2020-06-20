@@ -84,8 +84,6 @@ void main() {
 
   const program = glCat.lazyProgram( shaderVert, shaderFrag );
 
-  glCat.useProgram( program );
-
   program.uniformVector( 'viewMatrix', 'Matrix4fv', viewMatrix.elements );
   program.uniformVector( 'projectionMatrix', 'Matrix4fv', projectionMatrix.elements );
 
@@ -98,8 +96,10 @@ void main() {
     program.uniformVector( 'modelMatrix', 'Matrix4fv', modelMatrix.elements );
     program.uniformVector( 'normalMatrix', 'Matrix4fv', modelMatrix.transpose.elements );
 
-    vao.bindVertexArray( () => {
-      gl.drawElements( gl.TRIANGLE_STRIP, iboLength, gl.UNSIGNED_SHORT, 0 );
+    glCat.useProgram( program, () => {
+      glCat.bindVertexArray( vao, () => {
+        gl.drawElements( gl.TRIANGLE_STRIP, iboLength, gl.UNSIGNED_SHORT, 0 );
+      } );
     } );
 
     requestAnimationFrame( update );

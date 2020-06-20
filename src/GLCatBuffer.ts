@@ -38,28 +38,6 @@ export class GLCatBuffer<TContext extends WebGLRenderingContext | WebGL2Renderin
   }
 
   /**
-   * Bind itself as an array buffer and execute given callback.
-   */
-  public bindVertexbuffer( callback: () => void ): void {
-    const { gl } = this.__glCat;
-
-    gl.bindBuffer( gl.ARRAY_BUFFER, this.__buffer );
-    callback();
-    gl.bindBuffer( gl.ARRAY_BUFFER, null );
-  }
-
-  /**
-   * Bind itself as an element array buffer and execute given callback.
-   */
-  public bindIndexbuffer( callback: () => void ): void {
-    const { gl } = this.__glCat;
-
-    gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.__buffer );
-    callback();
-    gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, null );
-  }
-
-  /**
    * Set new data into this buffer.
    */
   public setVertexbuffer(
@@ -68,7 +46,7 @@ export class GLCatBuffer<TContext extends WebGLRenderingContext | WebGL2Renderin
   ): void {
     const { gl } = this.__glCat;
 
-    this.bindVertexbuffer( () => {
+    this.__glCat.bindVertexBuffer( this, () => {
       gl.bufferData( gl.ARRAY_BUFFER, source, usage );
     } );
   }
@@ -82,7 +60,7 @@ export class GLCatBuffer<TContext extends WebGLRenderingContext | WebGL2Renderin
   ): void {
     const { gl } = this.__glCat;
 
-    this.bindIndexbuffer( () => {
+    this.__glCat.bindIndexBuffer( this, () => {
       gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, source, usage );
     } );
   }

@@ -55,14 +55,43 @@ export class GLCatRenderbuffer<TContext extends WebGLRenderingContext | WebGL2Re
 
   /**
    * Initialize this renderbuffer.
-   * If `format` is not given, it will be initialized as `DEPTH_COMPONENT16` .
    */
-  public init( width: number, height: number, format: number = GL.DEPTH_COMPONENT16 ): void {
+  public init(
+    width: number,
+    height: number,
+    { format = this.__glCat.preferredDepthFormat } = {}
+  ): void {
     const { gl } = this.__glCat;
 
-    gl.bindRenderbuffer( gl.RENDERBUFFER, this.__renderbuffer );
-    gl.renderbufferStorage( gl.RENDERBUFFER, format, width, height );
-    gl.bindRenderbuffer( gl.RENDERBUFFER, null );
+    this.__glCat.bindRenderbuffer( this, () => {
+      gl.renderbufferStorage( gl.RENDERBUFFER, format, width, height );
+    } );
+
+    this.__width = width;
+    this.__height = height;
+  }
+
+  /**
+   * Initialize this renderbuffer with multisample enabled.
+   * If you are using WebGL1, it will fallback to non multisample one instead.
+   */
+  public initMultisample(
+    width: number,
+    height: number,
+    {
+      samples = this.__glCat.preferredMultisampleSamples,
+      format = GL.DEPTH_ATTACHMENT
+    } = {}
+  ): void {
+    const { gl } = this.__glCat;
+
+    this.__glCat.bindRenderbuffer( this, () => {
+      if ( gl instanceof WebGL2RenderingContext ) {
+        gl.renderbufferStorageMultisample( gl.RENDERBUFFER, samples, format, width, height );
+      } else {
+        gl.renderbufferStorage( gl.RENDERBUFFER, format, width, height );
+      }
+    } );
 
     this.__width = width;
     this.__height = height;

@@ -155,20 +155,19 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
       return;
     }
 
-    gl.bindBuffer( gl.ARRAY_BUFFER, buffer.raw );
-    gl.enableVertexAttribArray( location );
-    gl.vertexAttribPointer( location, size, type, false, stride, offset );
+    this.__glCat.bindVertexBuffer( buffer, () => {
+      gl.enableVertexAttribArray( location );
+      gl.vertexAttribPointer( location, size, type, false, stride, offset );
 
-    if ( gl instanceof WebGL2RenderingContext ) {
-      gl.vertexAttribDivisor( location, divisor );
-    } else {
-      const ext = this.__glCat.getExtension( 'ANGLE_instanced_arrays' );
-      if ( ext ) {
-        ext.vertexAttribDivisorANGLE( location, divisor );
+      if ( gl instanceof WebGL2RenderingContext ) {
+        gl.vertexAttribDivisor( location, divisor );
+      } else {
+        const ext = this.__glCat.getExtension( 'ANGLE_instanced_arrays' );
+        if ( ext ) {
+          ext.vertexAttribDivisorANGLE( location, divisor );
+        }
       }
-    }
-
-    gl.bindBuffer( gl.ARRAY_BUFFER, null );
+    } );
   }
 
   /**
@@ -200,7 +199,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform1i( location, value );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1i( location, value );
+    } );
   }
 
   /**
@@ -210,7 +211,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform2i( location, x, y );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform2i( location, x, y );
+    } );
   }
 
   /**
@@ -220,7 +223,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform3i( location, x, y, z );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform3i( location, x, y, z );
+    } );
   }
 
   /**
@@ -230,7 +235,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform4i( location, x, y, z, w );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform4i( location, x, y, z, w );
+    } );
   }
 
   /**
@@ -240,7 +247,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform1iv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1iv( location, array );
+    } );
   }
 
   /**
@@ -250,7 +259,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform2iv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform2iv( location, array );
+    } );
   }
 
   /**
@@ -260,7 +271,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform3iv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform3iv( location, array );
+    } );
   }
 
   /**
@@ -270,7 +283,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform4iv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform4iv( location, array );
+    } );
   }
 
   /**
@@ -280,7 +295,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform1f( location, value );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1f( location, value );
+    } );
   }
 
   /**
@@ -290,7 +307,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform2f( location, x, y );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform2f( location, x, y );
+    } );
   }
 
   /**
@@ -300,7 +319,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform3f( location, x, y, z );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform3f( location, x, y, z );
+    } );
   }
 
   /**
@@ -310,7 +331,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform4f( location, x, y, z, w );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform4f( location, x, y, z, w );
+    } );
   }
 
   /**
@@ -320,7 +343,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform1fv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1fv( location, array );
+    } );
   }
 
   /**
@@ -330,7 +355,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform2fv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform2fv( location, array );
+    } );
   }
 
   /**
@@ -340,7 +367,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform3fv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform3fv( location, array );
+    } );
   }
 
   /**
@@ -350,7 +379,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniform4fv( location, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform4fv( location, array );
+    } );
   }
 
   /**
@@ -360,7 +391,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniformMatrix2fv( location, transpose, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniformMatrix2fv( location, transpose, array );
+    } );
   }
 
   /**
@@ -370,7 +403,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniformMatrix3fv( location, transpose, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniformMatrix3fv( location, transpose, array );
+    } );
   }
 
   /**
@@ -380,7 +415,9 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     const location = this.getUniformLocation( name );
-    gl.uniformMatrix4fv( location, transpose, array );
+    this.__glCat.useProgram( this, () => {
+      gl.uniformMatrix4fv( location, transpose, array );
+    } );
   }
 
   /**
@@ -394,8 +431,10 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const location = this.getUniformLocation( name );
     const unit = this.getUniformTextureUnit( name );
     gl.activeTexture( gl.TEXTURE0 + unit );
-    gl.bindTexture( gl.TEXTURE_2D, texture?.raw || null );
-    gl.uniform1i( location, unit );
+    this.__glCat.bindTexture2D( texture ?? null );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1i( location, unit );
+    } );
   }
 
   /**
@@ -409,8 +448,10 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
     const location = this.getUniformLocation( name );
     const unit = this.getUniformTextureUnit( name );
     gl.activeTexture( gl.TEXTURE0 + unit );
-    gl.bindTexture( gl.TEXTURE_CUBE_MAP, texture?.raw || null );
-    gl.uniform1i( location, unit );
+    this.__glCat.bindTextureCubeMap( texture ?? null );
+    this.__glCat.useProgram( this, () => {
+      gl.uniform1i( location, unit );
+    } );
   }
 
   /**

@@ -16,12 +16,12 @@
     '#version 300 es\nprecision highp float; uniform vec3 color; out vec4 fragColor; void main() { fragColor = vec4( color, 1.0 ); }'
   );
 
-  glCat.useProgram( program );
-
   program.attribute( 'p', vboQuad, 2 );
   program.uniform( 'color', '3f', 0.0, 0.5, 1.0 );
 
-  gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+  glCat.useProgram( program, () => {
+    gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+  } );
 
   vboQuad.dispose();
   program.dispose( true );
