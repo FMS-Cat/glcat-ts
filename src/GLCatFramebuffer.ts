@@ -9,8 +9,8 @@ import { GLCatTexture } from './GLCatTexture';
 export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
   private __glCat: GLCat<TContext>;
   private __framebuffer: WebGLFramebuffer;
-  private __renderbuffer: GLCatRenderbuffer<TContext> | null = null;
-  private __textureMap: { [ attachment: number ]: GLCatTexture<TContext> } = {};
+  private __renderbufferMap = new Map<GLenum, GLCatRenderbuffer<TContext>>();
+  private __textureMap = new Map<GLenum, GLCatTexture<TContext>>();
 
   /**
    * Its own framebuffer.
@@ -28,17 +28,18 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
 
   /**
    * Its attached renderbuffer.
+   * If you want to grab other than `DEPTH_ATTACHMENT`, try [[GLCatFramebuffer.getRenderbuffer]] instead.
    */
   public get renderbuffer(): GLCatRenderbuffer<TContext> | null {
-    return this.__renderbuffer;
+    return this.__renderbufferMap.get( GL.DEPTH_ATTACHMENT ) ?? null;
   }
 
   /**
    * Its attached texture.
-   * If you want to retrieve other than `COLOR_ATTACHMENT0`, try [[GLCatFramebuffer.getTexture]] instead.
+   * If you want to grab other than `COLOR_ATTACHMENT0`, try [[GLCatFramebuffer.getTexture]] instead.
    */
   public get texture(): GLCatTexture<TContext> | null {
-    return this.__textureMap[ GL.COLOR_ATTACHMENT0 ];
+    return this.__textureMap.get( GL.COLOR_ATTACHMENT0 ) ?? null;
   }
 
   /**
@@ -58,21 +59,28 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
     gl.deleteFramebuffer( this.__framebuffer );
 
     if ( alsoAttached ) {
-      if ( this.__renderbuffer ) {
-        gl.deleteRenderbuffer( this.__renderbuffer.raw );
+      for ( const renderbuffer of this.__renderbufferMap.values() ) {
+        gl.deleteRenderbuffer( renderbuffer.raw );
       }
 
-      Object.values( this.__textureMap ).forEach( ( texture ) => {
+      for ( const texture of this.__textureMap.values() ) {
         gl.deleteTexture( texture.raw );
-      } );
+      }
     }
+  }
+
+  /**
+   * Retrieve its attached renderbuffer.
+   */
+  public getRenderbuffer( attachment = GL.DEPTH_ATTACHMENT ): GLCatRenderbuffer<TContext> | null {
+    return this.__renderbufferMap.get( attachment ) ?? null;
   }
 
   /**
    * Retrieve its attached texture.
    */
   public getTexture( attachment = GL.COLOR_ATTACHMENT0 ): GLCatTexture<TContext> | null {
-    return this.__textureMap[ attachment ];
+    return this.__textureMap.get( attachment ) ?? null;
   }
 
   /**
@@ -90,7 +98,7 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
       gl.framebufferRenderbuffer( gl.FRAMEBUFFER, attachment, gl.RENDERBUFFER, renderbuffer.raw );
     } );
 
-    this.__renderbuffer = renderbuffer;
+    this.__renderbufferMap.set( attachment, renderbuffer );
   }
 
   /**
@@ -109,6 +117,6 @@ export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2Ren
       gl.framebufferTexture2D( gl.FRAMEBUFFER, attachment, gl.TEXTURE_2D, texture.raw, level );
     } );
 
-    this.__textureMap[ attachment ] = texture;
+    this.__textureMap.set( attachment, texture );
   }
 }
