@@ -159,7 +159,7 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
       gl.enableVertexAttribArray( location );
       gl.vertexAttribPointer( location, size, type, false, stride, offset );
 
-      if ( gl instanceof WebGL2RenderingContext ) {
+      if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
         gl.vertexAttribDivisor( location, divisor );
       } else {
         const ext = this.__glCat.getExtension( 'ANGLE_instanced_arrays' );

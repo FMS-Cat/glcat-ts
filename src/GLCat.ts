@@ -1,4 +1,4 @@
-import { GL_ARRAY_BUFFER, GL_BLEND, GL_COLOR_ATTACHMENT0, GL_COLOR_BUFFER_BIT, GL_DEPTH24_STENCIL8, GL_DEPTH_ATTACHMENT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_COMPONENT16, GL_DEPTH_TEST, GL_DRAW_FRAMEBUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_FLOAT, GL_FRAGMENT_SHADER, GL_FRAMEBUFFER, GL_LEQUAL, GL_MAX_DRAW_BUFFERS, GL_NEAREST, GL_ONE_MINUS_SRC_ALPHA, GL_READ_FRAMEBUFFER, GL_RENDERBUFFER, GL_RGBA, GL_RGBA32F, GL_RGBA8, GL_SRC_ALPHA, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_VERTEX_SHADER } from './GLConstants';
+import { GL_ARRAY_BUFFER, GL_BLEND, GL_COLOR_ATTACHMENT0, GL_COLOR_BUFFER_BIT, GL_DEPTH_ATTACHMENT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, GL_DEPTH_TEST, GL_DRAW_FRAMEBUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_FLOAT, GL_FRAGMENT_SHADER, GL_FRAMEBUFFER, GL_LEQUAL, GL_MAX_DRAW_BUFFERS, GL_NEAREST, GL_ONE_MINUS_SRC_ALPHA, GL_READ_FRAMEBUFFER, GL_RENDERBUFFER, GL_RGBA, GL_RGBA32F, GL_RGBA8, GL_SRC_ALPHA, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_VERTEX_SHADER } from './GLConstants';
 import { BindHelper } from './utils/BindHelper';
 import { GLCatBuffer } from './GLCatBuffer';
 import { GLCatErrors } from './GLCatErrors';
@@ -30,19 +30,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
 
   public preferredMultisampleSamples = 4;
 
-  private __preferredDepthFormat: GLenum | null = null;
-  public get preferredDepthFormat(): GLenum {
-    if ( this.__preferredDepthFormat !== null ) {
-      return this.__preferredDepthFormat;
-    } else if ( this.__gl instanceof WebGL2RenderingContext ) {
-      return GL_DEPTH24_STENCIL8;
-    } else {
-      return GL_DEPTH_COMPONENT16;
-    }
-  }
-  public set preferredDepthFormat( format: GLenum ) {
-    this.__preferredDepthFormat = format;
-  }
+  public preferredDepthFormat: GLenum; // will be set in constructor
 
   private __gl: TContext;
 
@@ -144,6 +132,12 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     gl.depthFunc( GL_LEQUAL );
     gl.enable( GL_BLEND );
     gl.blendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+      this.preferredDepthFormat = GL_DEPTH_COMPONENT24;
+    } else {
+      this.preferredDepthFormat = GL_DEPTH_COMPONENT16;
+    }
   }
 
   /**
@@ -387,7 +381,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
   public createVertexArray(): GLCatVertexArray<TContext> {
     const gl = this.__gl;
 
-    if ( gl instanceof WebGL2RenderingContext ) {
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
       const vertexArray = GLCat.throwIfNull( gl.createVertexArray() );
 
       return new GLCatVertexArray( this, vertexArray as any );
@@ -408,7 +402,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
   public rawBindVertexArray( array: GLCatVertexArrayRawType<TContext> | null ): void {
     const gl = this.__gl;
 
-    if ( gl instanceof WebGL2RenderingContext ) {
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
       gl.bindVertexArray( array );
     } else {
       const ext = this.getExtension( 'OES_vertex_array_object', true );
@@ -569,7 +563,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
   ): GLCatFramebuffer<TContext> {
     const gl = this.__gl;
 
-    if ( gl instanceof WebGL2RenderingContext ) {
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
       let texture: GLCatTexture<TContext> | undefined;
       let renderbufferDepth: GLCatRenderbuffer<TContext> | undefined;
       let renderbufferColor: GLCatRenderbuffer<TContext> | undefined;
@@ -680,7 +674,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
   public rawDrawBuffers( buffers: GLenum[] ): void {
     const gl = this.__gl;
 
-    if ( gl instanceof WebGL2RenderingContext ) {
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
       gl.drawBuffers( buffers );
     } else {
       const ext = this.getExtension( 'WEBGL_draw_buffers' );
@@ -726,7 +720,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
   ): void {
     const { gl } = this;
 
-    if ( gl instanceof WebGL2RenderingContext ) {
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
       gl.drawArraysInstanced( mode, first, count, primcount );
     } else {
       const ext = this.getExtension( 'ANGLE_instanced_arrays', true );
@@ -746,7 +740,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
   ): void {
     const { gl } = this;
 
-    if ( gl instanceof WebGL2RenderingContext ) {
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
       gl.drawElementsInstanced( mode, count, type, offset, instanceCount );
     } else {
       const ext = this.getExtension( 'ANGLE_instanced_arrays', true );
@@ -786,7 +780,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
   ): void {
     const gl = this.__gl;
 
-    if ( gl instanceof WebGL2RenderingContext ) {
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
       gl.bindFramebuffer( GL_READ_FRAMEBUFFER, src?.raw ?? null );
       gl.bindFramebuffer( GL_DRAW_FRAMEBUFFER, dst?.raw ?? null );
       gl.blitFramebuffer(

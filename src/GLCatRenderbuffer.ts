@@ -1,6 +1,6 @@
-import { GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER } from './GLConstants';
 import type { GLCat } from './GLCat';
 import { GLCatErrors } from './GLCatErrors';
+import { GL_RENDERBUFFER } from './GLConstants';
 
 /**
  * It's a WebGLRenderbuffer.
@@ -81,14 +81,14 @@ export class GLCatRenderbuffer<TContext extends WebGLRenderingContext | WebGL2Re
     height: number,
     {
       samples = this.__glCat.preferredMultisampleSamples,
-      format = GL_DEPTH_ATTACHMENT,
+      format = this.__glCat.preferredDepthFormat,
       fallbackWebGL1 = true
     } = {}
   ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.bindRenderbuffer( this, () => {
-      if ( gl instanceof WebGL2RenderingContext ) {
+      if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
         gl.renderbufferStorageMultisample( GL_RENDERBUFFER, samples, format, width, height );
       } else {
         if ( fallbackWebGL1 ) {
