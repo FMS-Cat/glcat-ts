@@ -1,5 +1,6 @@
 import { GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER } from './GLConstants';
 import type { GLCat } from './GLCat';
+import { GLCatErrors } from './GLCatErrors';
 
 /**
  * It's a WebGLRenderbuffer.
@@ -56,7 +57,7 @@ export class GLCatRenderbuffer<TContext extends WebGLRenderingContext | WebGL2Re
   /**
    * Initialize this renderbuffer.
    */
-  public init(
+  public renderbufferStorage(
     width: number,
     height: number,
     { format = this.__glCat.preferredDepthFormat } = {}
@@ -75,12 +76,13 @@ export class GLCatRenderbuffer<TContext extends WebGLRenderingContext | WebGL2Re
    * Initialize this renderbuffer with multisample enabled.
    * If you are using WebGL1, it will fallback to non multisample one instead.
    */
-  public initMultisample(
+  public renderbufferStorageMultisample(
     width: number,
     height: number,
     {
       samples = this.__glCat.preferredMultisampleSamples,
-      format = GL_DEPTH_ATTACHMENT
+      format = GL_DEPTH_ATTACHMENT,
+      fallbackWebGL1 = true
     } = {}
   ): void {
     const { gl } = this.__glCat;
@@ -89,7 +91,11 @@ export class GLCatRenderbuffer<TContext extends WebGLRenderingContext | WebGL2Re
       if ( gl instanceof WebGL2RenderingContext ) {
         gl.renderbufferStorageMultisample( GL_RENDERBUFFER, samples, format, width, height );
       } else {
-        gl.renderbufferStorage( GL_RENDERBUFFER, format, width, height );
+        if ( fallbackWebGL1 ) {
+          gl.renderbufferStorage( GL_RENDERBUFFER, format, width, height );
+        } else {
+          throw GLCatErrors.WebGL2ExclusiveError;
+        }
       }
     } );
 
