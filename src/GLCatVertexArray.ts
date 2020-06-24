@@ -37,7 +37,7 @@ export class GLCatVertexArray<TContext extends WebGLRenderingContext | WebGL2Ren
   public dispose(): void {
     const { gl } = this.__glCat;
 
-    if ( gl instanceof WebGL2RenderingContext ) {
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
       gl.deleteVertexArray( this.__vertexArray );
     } else {
       const ext = this.__glCat.getExtension( 'OES_vertex_array_object', true );
@@ -64,7 +64,7 @@ export class GLCatVertexArray<TContext extends WebGLRenderingContext | WebGL2Ren
       gl.enableVertexAttribArray( location );
       gl.vertexAttribPointer( location, size, type, false, stride, offset );
 
-      if ( gl instanceof WebGL2RenderingContext ) {
+      if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
         gl.vertexAttribDivisor( location, divisor );
       } else {
         const ext = this.__glCat.getExtension( 'ANGLE_instanced_arrays' );

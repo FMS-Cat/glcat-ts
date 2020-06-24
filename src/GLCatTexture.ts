@@ -98,7 +98,7 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
   ): void {
     const { gl } = this.__glCat;
 
-    if ( gl instanceof WebGL2RenderingContext ) {
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
       this.__glCat.bindTexture2D( this, () => {
         gl.texStorage2D( target, level, format, width, height );
       } );
@@ -162,7 +162,7 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     let iformat = internalformat;
-    if ( !( gl instanceof WebGL2RenderingContext ) ) {
+    if ( !( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) ) {
       if ( type === GL_HALF_FLOAT ) {
         this.__glCat.getExtension( 'OES_texture_half_float', true );
         this.__glCat.getExtension( 'OES_texture_half_float_linear' );
