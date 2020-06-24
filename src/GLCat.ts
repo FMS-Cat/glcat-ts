@@ -527,7 +527,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
 
       // == renderbuffer ===========================================================================
       renderbuffer = this.createRenderbuffer();
-      renderbuffer.init( width, height, { format: depthFormat } );
+      renderbuffer.renderbufferStorage( width, height, { format: depthFormat } );
       framebuffer.attachRenderbuffer( renderbuffer, { attachment: GL_DEPTH_ATTACHMENT } );
 
       // == texture ================================================================================
@@ -581,7 +581,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
 
         // == renderbuffer depth ===================================================================
         renderbufferDepth = this.createRenderbuffer();
-        renderbufferDepth.initMultisample(
+        renderbufferDepth.renderbufferStorageMultisample(
           width,
           height,
           { samples, format: depthFormat }
@@ -591,7 +591,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
         // == renderbuffer color ===================================================================
         const renderbufferColor = this.createRenderbuffer();
         const colorFormat = isFloat ? GL_RGBA32F : GL_RGBA8;
-        renderbufferColor.initMultisample(
+        renderbufferColor.renderbufferStorageMultisample(
           width,
           height,
           { samples, format: colorFormat }
@@ -641,7 +641,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
 
       // == renderbuffer ===========================================================================
       const renderbuffer = this.createRenderbuffer();
-      renderbuffer.init( width, height, { format: depthFormat } );
+      renderbuffer.renderbufferStorage( width, height, { format: depthFormat } );
       framebuffer.attachRenderbuffer( renderbuffer, { attachment: GL_DEPTH_ATTACHMENT } );
 
       // == texture ================================================================================
