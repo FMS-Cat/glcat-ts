@@ -115,7 +115,7 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
         ) {
           this.__linked = gl.getProgramParameter( this.__program, GL_LINK_STATUS );
           if ( !this.__linked ) {
-            reject( gl.getProgramInfoLog( this.__program ) );
+            reject( new Error( gl.getProgramInfoLog( this.__program ) ?? 'null' ) );
             return;
           }
 
