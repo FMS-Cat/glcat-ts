@@ -162,59 +162,59 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
   public getExtension(
     name: 'OES_texture_half_float',
     throwIfNotFound?: false
-  ): OES_texture_half_float | null; // eslint-disable-line @typescript-eslint/camelcase
+  ): OES_texture_half_float | null;
   public getExtension(
     name: 'OES_texture_half_float',
     throwIfNotFound: true
-  ): OES_texture_half_float; // eslint-disable-line @typescript-eslint/camelcase
+  ): OES_texture_half_float;
   public getExtension(
     name: 'OES_texture_half_float_linear',
     throwIfNotFound?: false
-  ): OES_texture_half_float_linear | null; // eslint-disable-line @typescript-eslint/camelcase
+  ): OES_texture_half_float_linear | null;
   public getExtension(
     name: 'OES_texture_half_float_linear',
     throwIfNotFound: true
-  ): OES_texture_half_float_linear; // eslint-disable-line @typescript-eslint/camelcase
+  ): OES_texture_half_float_linear;
   public getExtension(
     name: 'OES_texture_float',
     throwIfNotFound?: false
-  ): OES_texture_float | null; // eslint-disable-line @typescript-eslint/camelcase
+  ): OES_texture_float | null;
   public getExtension(
     name: 'OES_texture_float',
     throwIfNotFound: true
-  ): OES_texture_float; // eslint-disable-line @typescript-eslint/camelcase
+  ): OES_texture_float;
   public getExtension(
     name: 'OES_texture_float_linear',
     throwIfNotFound?: false
-  ): OES_texture_float_linear | null; // eslint-disable-line @typescript-eslint/camelcase
+  ): OES_texture_float_linear | null;
   public getExtension(
     name: 'OES_texture_float_linear',
     throwIfNotFound: true
-  ): OES_texture_float_linear; // eslint-disable-line @typescript-eslint/camelcase
+  ): OES_texture_float_linear;
   public getExtension(
     name: 'ANGLE_instanced_arrays',
     throwIfNotFound?: false
-  ): ANGLE_instanced_arrays | null; // eslint-disable-line @typescript-eslint/camelcase
+  ): ANGLE_instanced_arrays | null;
   public getExtension(
     name: 'ANGLE_instanced_arrays',
     throwIfNotFound: true
-  ): ANGLE_instanced_arrays; // eslint-disable-line @typescript-eslint/camelcase
+  ): ANGLE_instanced_arrays;
   public getExtension(
     name: 'OES_vertex_array_object',
     throwIfNotFound?: false
-  ): OES_vertex_array_object | null; // eslint-disable-line @typescript-eslint/camelcase
+  ): OES_vertex_array_object | null;
   public getExtension(
     name: 'OES_vertex_array_object',
     throwIfNotFound: true
-  ): OES_vertex_array_object; // eslint-disable-line @typescript-eslint/camelcase
+  ): OES_vertex_array_object;
   public getExtension(
     name: 'WEBGL_draw_buffers',
     throwIfNotFound?: false
-  ): WEBGL_draw_buffers | null; // eslint-disable-line @typescript-eslint/camelcase
+  ): WEBGL_draw_buffers | null;
   public getExtension(
     name: 'WEBGL_draw_buffers',
     throwIfNotFound: true
-  ): WEBGL_draw_buffers; // eslint-disable-line @typescript-eslint/camelcase
+  ): WEBGL_draw_buffers;
   public getExtension( name: string, throwIfNotFound?: boolean ): WebGLExtension | null;
   public getExtension( name: string, throwIfNotFound?: boolean ): WebGLExtension | null {
     const gl = this.__gl;
