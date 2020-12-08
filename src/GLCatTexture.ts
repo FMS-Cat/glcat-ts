@@ -1,4 +1,4 @@
-import { GL_CLAMP_TO_EDGE, GL_FLOAT, GL_HALF_FLOAT, GL_LINEAR, GL_NEAREST, GL_RGBA, GL_RGBA8, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE } from './GLConstants';
+import { GL_CLAMP_TO_EDGE, GL_FLOAT, GL_HALF_FLOAT, GL_LINEAR, GL_NEAREST, GL_R16F, GL_R32F, GL_RGBA, GL_RGBA16F, GL_RGBA32F, GL_RGBA8, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE } from './GLConstants';
 import type { GLCat } from './GLCat';
 import { GLCatErrors } from './GLCatErrors';
 
@@ -162,7 +162,19 @@ export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2Renderi
     const { gl } = this.__glCat;
 
     let iformat = internalformat;
-    if ( !( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) ) {
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+      // Ref: https://github.com/mrdoob/three.js/pull/15502/files
+      if (
+        internalformat === GL_R16F
+        || internalformat === GL_R32F
+        || internalformat === GL_RGBA16F
+        || internalformat === GL_RGBA32F
+      ) {
+        this.__glCat.getExtension( 'EXT_color_buffer_float', true );
+        this.__glCat.getExtension( 'EXT_float_blend' );
+        this.__glCat.getExtension( 'OES_texture_float_linear' );
+      }
+    } else {
       if ( type === GL_HALF_FLOAT ) {
         this.__glCat.getExtension( 'OES_texture_half_float', true );
         this.__glCat.getExtension( 'OES_texture_half_float_linear' );

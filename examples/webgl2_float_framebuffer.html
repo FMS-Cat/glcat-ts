@@ -1,0 +1,89 @@
+<body>
+  <canvas id="canvas" width=1280 height=720></canvas>
+</body>
+
+<script type="module">
+  import { GLCat } from '../dist/glcat.module.js';
+  import {
+    TRIANGLE_STRIP_QUAD,
+    TRIANGLE_STRIP_QUAD_UV,
+  } from 'https://unpkg.com/@fms-cat/experimental@0.4.1/dist/fms-cat-experimental.module.min.js';
+
+  const canvas = document.getElementById( 'canvas' );
+  const gl = canvas.getContext( 'webgl2' );
+  const glCat = new GLCat( gl );
+
+  const vboQuad = glCat.createBuffer();
+  vboQuad.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD ) );
+
+  const vboUv = glCat.createBuffer();
+  vboUv.setVertexbuffer( new Float32Array( TRIANGLE_STRIP_QUAD_UV ) );
+
+  const framebuffer = glCat.lazyFramebuffer( 1280, 720, { isFloat: true } );
+
+  const shaderVert = `#version 300 es
+
+in vec2 aVertex;
+in vec2 aUv;
+out vec2 vUv;
+
+void main() {
+  vUv = aUv;
+  gl_Position = vec4( aVertex, 0.0, 1.0 );
+}
+`;
+
+  const shaderOffscreenFrag = `#version 300 es
+
+precision highp float;
+
+uniform vec3 color;
+
+in vec2 vUv;
+out vec4 fragColor;
+
+void main() {
+  fragColor = vec4( vUv * 10.0, 0.0, 1.0 );
+}
+`;
+
+  const shaderScreenFrag = `#version 300 es
+
+precision highp float;
+
+uniform sampler2D sampler0;
+
+in vec2 vUv;
+out vec4 fragColor;
+
+void main() {
+  fragColor = texture( sampler0, vUv );
+  fragColor.xy /= 10.0;
+}
+`;
+
+  const programOffscreen = glCat.lazyProgram( shaderVert, shaderOffscreenFrag );
+  const programScreen = glCat.lazyProgram( shaderVert, shaderScreenFrag );
+
+  function update() {
+    programOffscreen.attribute( 'aVertex', vboQuad, 2 );
+    programOffscreen.attribute( 'aUv', vboUv, 2 );
+
+    glCat.useProgram( programOffscreen, () => {
+      glCat.bindFramebuffer( framebuffer, () => {
+        gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+      } );
+    } );
+
+    programScreen.attribute( 'aVertex', vboQuad, 2 );
+    programScreen.attribute( 'aUv', vboUv, 2 );
+    programScreen.uniformTexture( 'sampler0', framebuffer.texture );
+
+    glCat.useProgram( programScreen, () => {
+      gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+    } );
+
+    requestAnimationFrame( update );
+  }
+  update();
+</script>
