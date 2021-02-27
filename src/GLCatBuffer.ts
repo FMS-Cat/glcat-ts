@@ -40,28 +40,32 @@ export class GLCatBuffer<TContext extends WebGLRenderingContext | WebGL2Renderin
   /**
    * Set new data into this buffer.
    */
+  public setVertexbuffer( size: GLsizeiptr, usage?: number ): void;
+  public setVertexbuffer( source: BufferSource | null, usage?: number ): void;
   public setVertexbuffer(
-    source: ArrayBuffer | ArrayBufferView | null,
+    source: GLsizeiptr | BufferSource | null,
     usage: number = GL_STATIC_DRAW
   ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.bindVertexBuffer( this, () => {
-      gl.bufferData( GL_ARRAY_BUFFER, source, usage );
+      gl.bufferData( GL_ARRAY_BUFFER, source as any, usage ); // this sucks
     } );
   }
 
   /**
    * Set new index data into this buffer.
    */
+  public setIndexbuffer( size: GLsizeiptr, usage?: number ): void;
+  public setIndexbuffer( source: BufferSource | null, usage?: number ): void;
   public setIndexbuffer(
-    source: ArrayBuffer | ArrayBufferView | null,
+    source: GLsizeiptr | BufferSource | null,
     usage: number = GL_STATIC_DRAW
   ): void {
     const { gl } = this.__glCat;
 
     this.__glCat.bindIndexBuffer( this, () => {
-      gl.bufferData( GL_ELEMENT_ARRAY_BUFFER, source, usage );
+      gl.bufferData( GL_ELEMENT_ARRAY_BUFFER, source as any, usage ); // this sucks
     } );
   }
 }
