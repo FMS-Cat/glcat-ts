@@ -42,7 +42,7 @@ describe( 'GLCatProgram', () => {
 
   describe( 'link', () => {
     it ( 'should link the WebGLProgram successfully', () => {
-      program.link( quadVert, uvFrag );
+      program.link( [ quadVert, uvFrag ] );
       expect( program.isLinked ).toBe( true );
     } );
   } );

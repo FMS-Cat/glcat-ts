@@ -1,12 +1,13 @@
-import { GL_ARRAY_BUFFER, GL_BLEND, GL_COLOR_ATTACHMENT0, GL_COLOR_BUFFER_BIT, GL_DEPTH_ATTACHMENT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, GL_DEPTH_TEST, GL_DRAW_FRAMEBUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_FLOAT, GL_FRAGMENT_SHADER, GL_FRAMEBUFFER, GL_LEQUAL, GL_MAX_DRAW_BUFFERS, GL_NEAREST, GL_ONE_MINUS_SRC_ALPHA, GL_READ_FRAMEBUFFER, GL_RENDERBUFFER, GL_RGBA, GL_RGBA32F, GL_RGBA8, GL_SRC_ALPHA, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_VERTEX_SHADER } from './GLConstants';
+import { GLCatProgram, GLCatProgramLinkOptions } from './GLCatProgram';
+import { GL_ARRAY_BUFFER, GL_BLEND, GL_COLOR_ATTACHMENT0, GL_COLOR_BUFFER_BIT, GL_DEPTH_ATTACHMENT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, GL_DEPTH_TEST, GL_DRAW_FRAMEBUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_FLOAT, GL_FRAGMENT_SHADER, GL_FRAMEBUFFER, GL_LEQUAL, GL_MAX_DRAW_BUFFERS, GL_NEAREST, GL_ONE_MINUS_SRC_ALPHA, GL_READ_FRAMEBUFFER, GL_RENDERBUFFER, GL_RGBA, GL_RGBA32F, GL_RGBA8, GL_SRC_ALPHA, GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP, GL_TRANSFORM_FEEDBACK, GL_VERTEX_SHADER } from './GLConstants';
 import { BindHelper } from './utils/BindHelper';
 import { GLCatBuffer } from './GLCatBuffer';
 import { GLCatErrors } from './GLCatErrors';
 import { GLCatFramebuffer } from './GLCatFramebuffer';
-import { GLCatProgram } from './GLCatProgram';
 import { GLCatRenderbuffer } from './GLCatRenderbuffer';
 import { GLCatShader } from './GLCatShader';
 import { GLCatTexture } from './GLCatTexture';
+import { GLCatTransformFeedback } from './GLCatTransformFeedback';
 import { GLCatVertexArray } from './GLCatVertexArray';
 
 export type WebGLExtension = any;
@@ -47,6 +48,19 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     ( buffer ) => {
       const gl = this.__gl;
       gl.bindBuffer( GL_ELEMENT_ARRAY_BUFFER, buffer?.raw ?? null );
+    }
+  );
+
+  private __bindHelperTransformFeedback = new BindHelper<GLCatTransformFeedback<TContext> | null>(
+    null,
+    ( buffer ) => {
+      const gl = this.__gl;
+
+      if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+        gl.bindTransformFeedback( GL_TRANSFORM_FEEDBACK, buffer?.raw ?? null );
+      } else {
+        throw GLCatErrors.WebGL2ExclusiveError;
+      }
     }
   );
 
@@ -267,7 +281,11 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
   /**
    * Create a new GLCat program object, in lazier way.
    */
-  public lazyProgram( vert: string, frag: string ): GLCatProgram<TContext> {
+  public lazyProgram(
+    vert: string,
+    frag: string,
+    options: GLCatProgramLinkOptions = {},
+  ): GLCatProgram<TContext> {
     let vertexShader: GLCatShader<TContext> | undefined;
     let fragmentShader: GLCatShader<TContext> | undefined;
     let program: GLCatShader<TContext> | undefined;
@@ -283,7 +301,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
 
       // == program ================================================================================
       const program = this.createProgram();
-      program.link( vertexShader, fragmentShader );
+      program.link( [ vertexShader, fragmentShader ], options );
 
       // == almost done ============================================================================
       return program;
@@ -299,7 +317,11 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
    * Create a new GLCat program object, in lazier way.
    * It's gonna be asynchronous if you have the KHR_parallel_shader_compile extension support.
    */
-  public lazyProgramAsync( vert: string, frag: string ): Promise<GLCatProgram<TContext>> {
+  public lazyProgramAsync(
+    vert: string,
+    frag: string,
+    options: GLCatProgramLinkOptions = {},
+  ): Promise<GLCatProgram<TContext>> {
     let vertexShader: GLCatShader<TContext> | undefined;
     let fragmentShader: GLCatShader<TContext> | undefined;
     let program: GLCatShader<TContext> | undefined;
@@ -315,7 +337,7 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
 
       // == program ================================================================================
       const program = this.createProgram();
-      return program.linkAsync( vertexShader, fragmentShader ).then( () => {
+      return program.linkAsync( [ vertexShader, fragmentShader ], options ).then( () => {
         return program;
       } ).catch( ( e ) => {
         program?.dispose();
@@ -373,6 +395,32 @@ export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingConte
     callback?: ( buffer: GLCatBuffer<TContext> | null ) => T
   ): T {
     return this.__bindHelperIndexBuffer.bind( buffer, callback );
+  }
+
+  /**
+   * Create a new transform feedback.
+   */
+  public createTransformFeedback(): GLCatTransformFeedback<TContext> {
+    const gl = this.__gl;
+
+    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+      const transformFeedback = GLCat.throwIfNull( gl.createTransformFeedback() );
+
+      return new GLCatTransformFeedback( this, transformFeedback );
+    } else {
+      throw GLCatErrors.WebGL2ExclusiveError;
+    }
+  }
+
+  /**
+   * Bind a transform feedback.
+   * If callback is provided, it will execute the callback immediately, and undo the bind after the callback.
+   */
+  public bindTransformFeedback<T>(
+    transformFeedback: GLCatTransformFeedback<TContext> | null,
+    callback?: ( transformFeedback: GLCatTransformFeedback<TContext> | null ) => T,
+  ): T {
+    return this.__bindHelperTransformFeedback.bind( transformFeedback, callback );
   }
 
   /**
