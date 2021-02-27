@@ -1,0 +1,76 @@
+<body>
+  <canvas id="canvas" width=1280 height=720></canvas>
+</body>
+
+<script type="module">
+  import { GLCat } from '../dist/glcat.module.js';
+  import {
+    TRIANGLE_STRIP_QUAD,
+    TRIANGLE_STRIP_QUAD_UV,
+  } from 'https://unpkg.com/@fms-cat/experimental@0.4.1/dist/fms-cat-experimental.module.min.js';
+
+  const canvas = document.getElementById( 'canvas' );
+  const gl = canvas.getContext( 'webgl2' );
+  const glCat = new GLCat( gl );
+
+  const vboIn = glCat.createBuffer();
+  vboIn.setVertexbuffer( new Float32Array( [ 1, 2, 3, 4, 5, 6 ] ) );
+
+  const vboFeedbackA = glCat.createBuffer();
+  vboFeedbackA.setVertexbuffer( 6 * Float32Array.BYTES_PER_ELEMENT, gl.DYNAMIC_COPY );
+
+  const vboFeedbackB = glCat.createBuffer();
+  vboFeedbackB.setVertexbuffer( 6 * Float32Array.BYTES_PER_ELEMENT, gl.DYNAMIC_COPY );
+
+  const transformFeedback = glCat.createTransformFeedback();
+  transformFeedback.bindBuffer( 0, vboFeedbackA );
+  transformFeedback.bindBuffer( 1, vboFeedbackB );
+
+  const shaderVert = `#version 300 es
+
+in float aIn;
+out float vOutA;
+out float vOutB;
+
+void main() {
+  vOutA = aIn * 2.0;
+  vOutB = aIn * 3.0;
+}
+`;
+
+  const shaderFrag = `#version 300 es
+
+  void main() {
+    discard;
+  }
+  `;
+
+  const program = glCat.lazyProgram(
+    shaderVert,
+    shaderFrag,
+    { transformFeedbackVaryings: [ 'vOutA', 'vOutB' ] }
+  );
+
+  program.attribute( 'aIn', vboIn, 1 );
+
+  gl.enable( gl.RASTERIZER_DISCARD );
+  glCat.useProgram( program, () => {
+    glCat.bindTransformFeedback( transformFeedback, () => {
+      gl.beginTransformFeedback( gl.POINTS );
+      gl.drawArrays( gl.POINTS, 0, 6 );
+      gl.endTransformFeedback();
+    } );
+  } );
+
+  const arrayFeedbackA = new Float32Array( 6 );
+  glCat.bindVertexBuffer( vboFeedbackA, () => {
+    gl.getBufferSubData( gl.ARRAY_BUFFER, 0, arrayFeedbackA );
+  } );
+  console.log( arrayFeedbackA );
+
+  const arrayFeedbackB = new Float32Array( 6 );
+  glCat.bindVertexBuffer( vboFeedbackB, () => {
+    gl.getBufferSubData( gl.ARRAY_BUFFER, 0, arrayFeedbackB );
+  } );
+  console.log( arrayFeedbackB );
+</script>
