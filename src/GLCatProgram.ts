@@ -1,6 +1,7 @@
 import { GL_COMPLETION_STATUS_KHR, GL_FLOAT, GL_LINK_STATUS, GL_TEXTURE0 } from './GLConstants';
 import type { GLCat } from './GLCat';
 import type { GLCatBuffer } from './GLCatBuffer';
+import { GLCatErrors } from './GLCatErrors';
 import type { GLCatShader } from './GLCatShader';
 import type { GLCatTexture } from './GLCatTexture';
 
@@ -10,6 +11,15 @@ export type GLCatProgramUniformType =
   '1fv' | '2fv' | '3fv' | '4fv' |
   '1iv' | '2iv' | '3iv' | '4iv' |
   'Matrix2fv' | 'Matrix3fv' | 'Matrix4fv';
+
+export interface GLCatProgramLinkOptions {
+  transformFeedbackVaryings?: string[],
+
+  /**
+   * `gl.SEPARATE_ATTRIBS` by default
+   */
+  transformFeedbackBufferMode?: number,
+}
 
 /**
  * It's a WebGLProgram, but has cache of variable locations.
@@ -81,10 +91,26 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
   /**
    * Attach shaders and link this program.
    */
-  public link( ...shaders: GLCatShader<TContext>[] ): void {
+  public link(
+    shaders: GLCatShader<TContext>[],
+    options: GLCatProgramLinkOptions = {},
+  ): void {
     const { gl } = this.__glCat;
 
     shaders.forEach( ( shader ) => gl.attachShader( this.__program, shader.raw ) );
+
+    if ( options.transformFeedbackVaryings ) {
+      if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+        gl.transformFeedbackVaryings(
+          this.__program,
+          options.transformFeedbackVaryings,
+          options.transformFeedbackBufferMode ?? gl.SEPARATE_ATTRIBS
+        );
+      } else {
+        throw GLCatErrors.WebGL2ExclusiveError;
+      }
+    }
+
     gl.linkProgram( this.__program );
 
     this.__linked = gl.getProgramParameter( this.__program, GL_LINK_STATUS );
@@ -99,12 +125,28 @@ export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2Renderi
    * Attach shaders and link this program.
    * It's gonna be asynchronous if you have the KHR_parallel_shader_compile extension support.
    */
-  public linkAsync( ...shaders: GLCatShader<TContext>[] ): Promise<void> {
+  public linkAsync(
+    shaders: GLCatShader<TContext>[],
+    options: GLCatProgramLinkOptions = {},
+  ): Promise<void> {
     const glCat = this.__glCat;
     const { gl } = this.__glCat;
     const extParallel = glCat.getExtension( 'KHR_parallel_shader_compile' );
 
     shaders.forEach( ( shader ) => gl.attachShader( this.__program, shader.raw ) );
+
+    if ( options.transformFeedbackVaryings ) {
+      if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+        gl.transformFeedbackVaryings(
+          this.__program,
+          options.transformFeedbackVaryings,
+          options.transformFeedbackBufferMode ?? gl.SEPARATE_ATTRIBS
+        );
+      } else {
+        throw GLCatErrors.WebGL2ExclusiveError;
+      }
+    }
+
     gl.linkProgram( this.__program );
 
     return new Promise( ( resolve, reject ) => {
