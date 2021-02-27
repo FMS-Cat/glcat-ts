@@ -7,7 +7,7 @@ import { terser } from 'rollup-plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 
 // == constants ====================================================================================
-const copyright = '(c) 2018-2020 FMS_Cat';
+const copyright = '(c) 2018-2021 FMS_Cat';
 const licenseName = 'MIT License';
 const licenseUri = 'https://github.com/FMS-Cat/glcat-ts/blob/master/LICENSE';
 
