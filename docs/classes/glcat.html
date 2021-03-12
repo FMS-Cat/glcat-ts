@@ -75,7 +75,7 @@
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
-						<h4>TContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebGLRenderingContext</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">WebGL2RenderingContext</span></h4>
+						<h4>TContext<span class="tsd-signature-symbol">: </span><a href="../globals.html#webgl1" class="tsd-signature-type">WebGL1</a><span class="tsd-signature-symbol"> | </span><a href="../globals.html#webgl2" class="tsd-signature-type">WebGL2</a> = <span class="tsd-signature-type">WebGL1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">WebGL2</span></h4>
 					</li>
 				</ul>
 			</section>
@@ -177,7 +177,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L136">GLCat.ts:136</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L142">GLCat.ts:142</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -205,7 +205,7 @@
 					<div class="tsd-signature tsd-kind-icon">__bind<wbr>Helper<wbr>Draw<wbr>Buffers<span class="tsd-signature-symbol">:</span> <a href="bindhelper.html" class="tsd-signature-type">BindHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new BindHelper&lt;GLenum[]&gt;([ GL_COLOR_ATTACHMENT0 ],( buffers ) &#x3D;&gt; {this.rawDrawBuffers( buffers );})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L114">GLCat.ts:114</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L120">GLCat.ts:120</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -215,7 +215,7 @@
 					<div class="tsd-signature tsd-kind-icon">__bind<wbr>Helper<wbr>Framebuffer<span class="tsd-signature-symbol">:</span> <a href="bindhelper.html" class="tsd-signature-type">BindHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="glcatframebuffer.html" class="tsd-signature-type">GLCatFramebuffer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new BindHelper&lt;GLCatFramebuffer&lt;TContext&gt; | null&gt;(null,( framebuffer ) &#x3D;&gt; {const gl &#x3D; this.__gl;gl.bindFramebuffer( GL_FRAMEBUFFER, framebuffer?.raw ?? null );})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L98">GLCat.ts:98</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L104">GLCat.ts:104</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -225,7 +225,7 @@
 					<div class="tsd-signature tsd-kind-icon">__bind<wbr>Helper<wbr>Index<wbr>Buffer<span class="tsd-signature-symbol">:</span> <a href="bindhelper.html" class="tsd-signature-type">BindHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="glcatbuffer.html" class="tsd-signature-type">GLCatBuffer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new BindHelper&lt;GLCatBuffer&lt;TContext&gt; | null&gt;(null,( buffer ) &#x3D;&gt; {const gl &#x3D; this.__gl;gl.bindBuffer( GL_ELEMENT_ARRAY_BUFFER, buffer?.raw ?? null );})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L46">GLCat.ts:46</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L49">GLCat.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -235,7 +235,7 @@
 					<div class="tsd-signature tsd-kind-icon">__bind<wbr>Helper<wbr>Program<span class="tsd-signature-symbol">:</span> <a href="bindhelper.html" class="tsd-signature-type">BindHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="glcatprogram.html" class="tsd-signature-type">GLCatProgram</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new BindHelper&lt;GLCatProgram&lt;TContext&gt; | null&gt;(null,( program ) &#x3D;&gt; {const gl &#x3D; this.__gl;gl.useProgram( program?.raw ?? null );})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L106">GLCat.ts:106</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L112">GLCat.ts:112</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -245,7 +245,7 @@
 					<div class="tsd-signature tsd-kind-icon">__bind<wbr>Helper<wbr>Renderbuffer<span class="tsd-signature-symbol">:</span> <a href="bindhelper.html" class="tsd-signature-type">BindHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="glcatrenderbuffer.html" class="tsd-signature-type">GLCatRenderbuffer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new BindHelper&lt;GLCatRenderbuffer&lt;TContext&gt; | null&gt;(null,( renderbuffer ) &#x3D;&gt; {const gl &#x3D; this.__gl;gl.bindRenderbuffer( GL_RENDERBUFFER, renderbuffer?.raw ?? null );})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L90">GLCat.ts:90</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L96">GLCat.ts:96</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -255,7 +255,7 @@
 					<div class="tsd-signature tsd-kind-icon">__bind<wbr>Helper<wbr>Texture2D<span class="tsd-signature-symbol">:</span> <a href="bindhelper.html" class="tsd-signature-type">BindHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="glcattexture.html" class="tsd-signature-type">GLCatTexture</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new BindHelper&lt;GLCatTexture&lt;TContext&gt; | null&gt;(null,( texture ) &#x3D;&gt; {const gl &#x3D; this.__gl;gl.bindTexture( GL_TEXTURE_2D, texture?.raw ?? null );})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L74">GLCat.ts:74</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L80">GLCat.ts:80</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -265,17 +265,17 @@
 					<div class="tsd-signature tsd-kind-icon">__bind<wbr>Helper<wbr>Texture<wbr>Cube<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="bindhelper.html" class="tsd-signature-type">BindHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="glcattexture.html" class="tsd-signature-type">GLCatTexture</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new BindHelper&lt;GLCatTexture&lt;TContext&gt; | null&gt;(null,( texture ) &#x3D;&gt; {const gl &#x3D; this.__gl;gl.bindTexture( GL_TEXTURE_CUBE_MAP, texture?.raw ?? null );})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L82">GLCat.ts:82</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L88">GLCat.ts:88</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="__bindhelpertransformfeedback" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> __bind<wbr>Helper<wbr>Transform<wbr>Feedback</h3>
-					<div class="tsd-signature tsd-kind-icon">__bind<wbr>Helper<wbr>Transform<wbr>Feedback<span class="tsd-signature-symbol">:</span> <a href="bindhelper.html" class="tsd-signature-type">BindHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="glcattransformfeedback.html" class="tsd-signature-type">GLCatTransformFeedback</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new BindHelper&lt;GLCatTransformFeedback&lt;TContext&gt; | null&gt;(null,( buffer ) &#x3D;&gt; {const gl &#x3D; this.__gl;if ( WebGL2RenderingContext &amp;&amp; gl instanceof WebGL2RenderingContext ) {gl.bindTransformFeedback( GL_TRANSFORM_FEEDBACK, buffer?.raw ?? null );} else {throw GLCatErrors.WebGL2ExclusiveError;}})</span></div>
+					<div class="tsd-signature tsd-kind-icon">__bind<wbr>Helper<wbr>Transform<wbr>Feedback<span class="tsd-signature-symbol">:</span> <a href="bindhelper.html" class="tsd-signature-type">BindHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="glcattransformfeedback.html" class="tsd-signature-type">GLCatTransformFeedback</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new BindHelper&lt;GLCatTransformFeedback&lt;TContext&gt; | null&gt;(null,( buffer ) &#x3D;&gt; {const gl &#x3D; this.__gl;if (typeof WebGL2RenderingContext &#x3D;&#x3D;&#x3D; &#x27;function&#x27; &amp;&amp;gl instanceof WebGL2RenderingContext) {gl.bindTransformFeedback( GL_TRANSFORM_FEEDBACK, buffer?.raw ?? null );} else {throw GLCatErrors.WebGL2ExclusiveError;}})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L54">GLCat.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L57">GLCat.ts:57</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -285,7 +285,7 @@
 					<div class="tsd-signature tsd-kind-icon">__bind<wbr>Helper<wbr>Vertex<wbr>Array<span class="tsd-signature-symbol">:</span> <a href="bindhelper.html" class="tsd-signature-type">BindHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="glcatvertexarray.html" class="tsd-signature-type">GLCatVertexArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new BindHelper&lt;GLCatVertexArray&lt;TContext&gt; | null&gt;(null,( vertexArray ) &#x3D;&gt; {this.rawBindVertexArray( vertexArray?.raw ?? null );})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L67">GLCat.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L73">GLCat.ts:73</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -295,7 +295,7 @@
 					<div class="tsd-signature tsd-kind-icon">__bind<wbr>Helper<wbr>Vertex<wbr>Buffer<span class="tsd-signature-symbol">:</span> <a href="bindhelper.html" class="tsd-signature-type">BindHelper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="glcatbuffer.html" class="tsd-signature-type">GLCatBuffer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new BindHelper&lt;GLCatBuffer&lt;TContext&gt; | null&gt;(null,( buffer ) &#x3D;&gt; {const gl &#x3D; this.__gl;gl.bindBuffer( GL_ARRAY_BUFFER, buffer?.raw ?? null );})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L38">GLCat.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L41">GLCat.ts:41</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -305,7 +305,7 @@
 					<div class="tsd-signature tsd-kind-icon">__dummy<wbr>Texture<wbr>Cache<span class="tsd-signature-symbol">:</span> <a href="glcattexture.html" class="tsd-signature-type">GLCatTexture</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L122">GLCat.ts:122</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L128">GLCat.ts:128</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -315,7 +315,7 @@
 					<div class="tsd-signature tsd-kind-icon">__extension<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L121">GLCat.ts:121</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L127">GLCat.ts:127</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -333,7 +333,7 @@
 					<div class="tsd-signature tsd-kind-icon">__gl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TContext</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L36">GLCat.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L39">GLCat.ts:39</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -343,7 +343,7 @@
 					<div class="tsd-signature tsd-kind-icon">preferred<wbr>Depth<wbr>Format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">GLenum</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L34">GLCat.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L37">GLCat.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -353,7 +353,7 @@
 					<div class="tsd-signature tsd-kind-icon">preferred<wbr>Multisample<wbr>Samples<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 4</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L32">GLCat.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L35">GLCat.ts:35</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -370,7 +370,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L160">GLCat.ts:160</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L169">GLCat.ts:169</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -392,7 +392,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L134">GLCat.ts:134</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L140">GLCat.ts:140</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -414,7 +414,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L127">GLCat.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L133">GLCat.ts:133</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -439,7 +439,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L544">GLCat.ts:544</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L562">GLCat.ts:562</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -477,7 +477,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L393">GLCat.ts:393</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L402">GLCat.ts:402</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -515,7 +515,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L522">GLCat.ts:522</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L540">GLCat.ts:540</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -553,7 +553,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L489">GLCat.ts:489</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L507">GLCat.ts:507</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -591,7 +591,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L500">GLCat.ts:500</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L518">GLCat.ts:518</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -629,7 +629,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L419">GLCat.ts:419</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L431">GLCat.ts:431</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -667,7 +667,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L467">GLCat.ts:467</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L485">GLCat.ts:485</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -706,7 +706,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L382">GLCat.ts:382</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L391">GLCat.ts:391</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -744,7 +744,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L819">GLCat.ts:819</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L849">GLCat.ts:849</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -792,7 +792,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L802">GLCat.ts:802</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L832">GLCat.ts:832</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -832,7 +832,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L370">GLCat.ts:370</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L379">GLCat.ts:379</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -854,7 +854,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L532">GLCat.ts:532</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L550">GLCat.ts:550</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -876,7 +876,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L273">GLCat.ts:273</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L282">GLCat.ts:282</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -898,7 +898,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L510">GLCat.ts:510</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L528">GLCat.ts:528</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -920,7 +920,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L262">GLCat.ts:262</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L271">GLCat.ts:271</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -948,7 +948,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L477">GLCat.ts:477</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L495">GLCat.ts:495</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -970,7 +970,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L403">GLCat.ts:403</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L412">GLCat.ts:412</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -992,7 +992,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L429">GLCat.ts:429</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L441">GLCat.ts:441</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1014,7 +1014,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L763">GLCat.ts:763</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L787">GLCat.ts:787</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1051,7 +1051,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L740">GLCat.ts:740</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L764">GLCat.ts:764</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1091,7 +1091,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L782">GLCat.ts:782</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L809">GLCat.ts:809</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1145,7 +1145,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L176">GLCat.ts:176</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L185">GLCat.ts:185</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1168,7 +1168,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L180">GLCat.ts:180</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L189">GLCat.ts:189</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1185,7 +1185,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L184">GLCat.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L193">GLCat.ts:193</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1202,7 +1202,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L188">GLCat.ts:188</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L197">GLCat.ts:197</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1219,7 +1219,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L192">GLCat.ts:192</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L201">GLCat.ts:201</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1236,7 +1236,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L196">GLCat.ts:196</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L205">GLCat.ts:205</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1253,7 +1253,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L200">GLCat.ts:200</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L209">GLCat.ts:209</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1270,7 +1270,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L204">GLCat.ts:204</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L213">GLCat.ts:213</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1287,7 +1287,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L208">GLCat.ts:208</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L217">GLCat.ts:217</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1304,7 +1304,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L212">GLCat.ts:212</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L221">GLCat.ts:221</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1321,7 +1321,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L216">GLCat.ts:216</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L225">GLCat.ts:225</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1338,7 +1338,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L220">GLCat.ts:220</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L229">GLCat.ts:229</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1355,7 +1355,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L224">GLCat.ts:224</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L233">GLCat.ts:233</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1372,7 +1372,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L228">GLCat.ts:228</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L237">GLCat.ts:237</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1389,7 +1389,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L232">GLCat.ts:232</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L241">GLCat.ts:241</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1415,7 +1415,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L255">GLCat.ts:255</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L264">GLCat.ts:264</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1447,7 +1447,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L663">GLCat.ts:663</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L684">GLCat.ts:684</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1493,7 +1493,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L554">GLCat.ts:554</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L572">GLCat.ts:572</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1535,7 +1535,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L602">GLCat.ts:602</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L620">GLCat.ts:620</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1583,7 +1583,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L284">GLCat.ts:284</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L293">GLCat.ts:293</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1617,7 +1617,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L320">GLCat.ts:320</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L329">GLCat.ts:329</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1652,7 +1652,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L450">GLCat.ts:450</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L465">GLCat.ts:465</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1681,7 +1681,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L722">GLCat.ts:722</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L743">GLCat.ts:743</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1710,7 +1710,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L360">GLCat.ts:360</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L369">GLCat.ts:369</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1748,7 +1748,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/123f8c2/src/GLCat.ts#L24">GLCat.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/FMS-Cat/glcat-ts/blob/4f0a0a6/src/GLCat.ts#L27">GLCat.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
