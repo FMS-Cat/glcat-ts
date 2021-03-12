@@ -3,10 +3,13 @@ import type { GLCat } from './GLCat';
 import type { GLCatRenderbuffer } from './GLCatRenderbuffer';
 import type { GLCatTexture } from './GLCatTexture';
 
+type WebGL1 = WebGLRenderingContext;
+type WebGL2 = WebGL2RenderingContext;
+
 /**
  * It's a WebGLFramebuffer.
  */
-export class GLCatFramebuffer<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+export class GLCatFramebuffer<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
   private __glCat: GLCat<TContext>;
   private __framebuffer: WebGLFramebuffer;
   private __renderbufferMap = new Map<GLenum, GLCatRenderbuffer<TContext>>();

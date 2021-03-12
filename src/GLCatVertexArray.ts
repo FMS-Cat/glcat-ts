@@ -2,10 +2,13 @@ import type { GLCat, GLCatVertexArrayRawType } from './GLCat';
 import { GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_FLOAT } from './GLConstants';
 import type { GLCatBuffer } from './GLCatBuffer';
 
+type WebGL1 = WebGLRenderingContext;
+type WebGL2 = WebGL2RenderingContext;
+
 /**
  * It's a WebGLVertexArrayObject.
  */
-export class GLCatVertexArray<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+export class GLCatVertexArray<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
   private __glCat: GLCat<TContext>;
   private __vertexArray: GLCatVertexArrayRawType<TContext>;
 

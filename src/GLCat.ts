@@ -10,17 +10,20 @@ import { GLCatTexture } from './GLCatTexture';
 import { GLCatTransformFeedback } from './GLCatTransformFeedback';
 import { GLCatVertexArray } from './GLCatVertexArray';
 
+type WebGL1 = WebGLRenderingContext;
+type WebGL2 = WebGL2RenderingContext;
+
 export type WebGLExtension = any;
 
-export type GLCatVertexArrayRawType<TContext extends WebGLRenderingContext | WebGL2RenderingContext>
-  = TContext extends WebGL2RenderingContext
+export type GLCatVertexArrayRawType<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2>
+  = TContext extends WebGL2
     ? WebGLVertexArrayObject
     : WebGLVertexArrayObjectOES;
 
 /**
  * WebGL wrapper with plenty of hackability.
  */
-export class GLCat<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+export class GLCat<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
   public static throwIfNull<T>( v: T | null ): T {
     if ( v == null ) {
       throw GLCatErrors.UnexpectedNullError;

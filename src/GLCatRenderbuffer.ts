@@ -2,10 +2,13 @@ import type { GLCat } from './GLCat';
 import { GLCatErrors } from './GLCatErrors';
 import { GL_RENDERBUFFER } from './GLConstants';
 
+type WebGL1 = WebGLRenderingContext;
+type WebGL2 = WebGL2RenderingContext;
+
 /**
  * It's a WebGLRenderbuffer.
  */
-export class GLCatRenderbuffer<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+export class GLCatRenderbuffer<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
   private __glCat: GLCat<TContext>;
   private __renderbuffer: WebGLRenderbuffer;
   private __width = 0;

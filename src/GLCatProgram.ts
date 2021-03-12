@@ -5,6 +5,9 @@ import { GLCatErrors } from './GLCatErrors';
 import type { GLCatShader } from './GLCatShader';
 import type { GLCatTexture } from './GLCatTexture';
 
+type WebGL1 = WebGLRenderingContext;
+type WebGL2 = WebGL2RenderingContext;
+
 export type GLCatProgramUniformType =
   '1f' | '2f' | '3f' | '4f' |
   '1i' | '2i' | '3i' | '4i' |
@@ -24,7 +27,7 @@ export interface GLCatProgramLinkOptions {
 /**
  * It's a WebGLProgram, but has cache of variable locations.
  */
-export class GLCatProgram<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+export class GLCatProgram<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
   private __glCat: GLCat<TContext>;
   private __program: WebGLProgram;
   private __shaders: GLCatShader<TContext>[] | null = null;

@@ -1,10 +1,13 @@
 import type { GLCat } from './GLCat';
 import { GL_COMPILE_STATUS } from './GLConstants';
 
+type WebGL1 = WebGLRenderingContext;
+type WebGL2 = WebGL2RenderingContext;
+
 /**
  * It's a WebGLShader.
  */
-export class GLCatShader<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+export class GLCatShader<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
   private __glCat: GLCat<TContext>;
   private __shader: WebGLShader;
   private __compiled = false;
