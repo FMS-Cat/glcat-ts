@@ -4,10 +4,13 @@ import { GLCatErrors } from './GLCatErrors';
 
 const zeroTextureArray = new Uint8Array( [ 0, 0, 0, 0 ] );
 
+type WebGL1 = WebGLRenderingContext;
+type WebGL2 = WebGL2RenderingContext;
+
 /**
  * It's a WebGLTexture.
  */
-export class GLCatTexture<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+export class GLCatTexture<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
   private __glCat: GLCat<TContext>;
   private __texture: WebGLTexture;
   private __width = 0;

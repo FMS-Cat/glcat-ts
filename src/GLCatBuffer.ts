@@ -1,10 +1,13 @@
 import { GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW } from './GLConstants';
 import type { GLCat } from './GLCat';
 
+type WebGL1 = WebGLRenderingContext;
+type WebGL2 = WebGL2RenderingContext;
+
 /**
  * It's a WebGLBuffer.
  */
-export class GLCatBuffer<TContext extends WebGLRenderingContext | WebGL2RenderingContext> {
+export class GLCatBuffer<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
   private __glCat: GLCat<TContext>;
   private __buffer: WebGLBuffer;
 
