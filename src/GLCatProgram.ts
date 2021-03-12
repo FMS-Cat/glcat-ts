@@ -103,7 +103,10 @@ export class GLCatProgram<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
     shaders.forEach( ( shader ) => gl.attachShader( this.__program, shader.raw ) );
 
     if ( options.transformFeedbackVaryings ) {
-      if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+      if (
+        typeof WebGL2RenderingContext === 'function' &&
+        gl instanceof WebGL2RenderingContext
+      ) {
         gl.transformFeedbackVaryings(
           this.__program,
           options.transformFeedbackVaryings,
@@ -139,7 +142,10 @@ export class GLCatProgram<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
     shaders.forEach( ( shader ) => gl.attachShader( this.__program, shader.raw ) );
 
     if ( options.transformFeedbackVaryings ) {
-      if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+      if (
+        typeof WebGL2RenderingContext === 'function' &&
+        gl instanceof WebGL2RenderingContext
+      ) {
         gl.transformFeedbackVaryings(
           this.__program,
           options.transformFeedbackVaryings,
@@ -204,7 +210,10 @@ export class GLCatProgram<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
       gl.enableVertexAttribArray( location );
       gl.vertexAttribPointer( location, size, type, false, stride, offset );
 
-      if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+      if (
+        typeof WebGL2RenderingContext === 'function' &&
+        gl instanceof WebGL2RenderingContext
+      ) {
         gl.vertexAttribDivisor( location, divisor );
       } else {
         const ext = this.__glCat.getExtension( 'ANGLE_instanced_arrays' );
