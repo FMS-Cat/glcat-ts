@@ -101,7 +101,10 @@ export class GLCatTexture<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
   ): void {
     const { gl } = this.__glCat;
 
-    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+    if (
+      typeof WebGL2RenderingContext === 'function' &&
+      gl instanceof WebGL2RenderingContext
+    ) {
       this.__glCat.bindTexture2D( this, () => {
         gl.texStorage2D( target, level, format, width, height );
       } );
@@ -165,7 +168,10 @@ export class GLCatTexture<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
     const { gl } = this.__glCat;
 
     let iformat = internalformat;
-    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+    if (
+      typeof WebGL2RenderingContext === 'function' &&
+      gl instanceof WebGL2RenderingContext
+    ) {
       // Ref: https://github.com/mrdoob/three.js/pull/15502/files
       if (
         internalformat === GL_R16F

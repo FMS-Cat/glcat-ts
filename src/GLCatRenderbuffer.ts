@@ -91,7 +91,10 @@ export class GLCatRenderbuffer<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL
     const { gl } = this.__glCat;
 
     this.__glCat.bindRenderbuffer( this, () => {
-      if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+      if (
+        typeof WebGL2RenderingContext === 'function' &&
+        gl instanceof WebGL2RenderingContext
+      ) {
         gl.renderbufferStorageMultisample( GL_RENDERBUFFER, samples, format, width, height );
       } else {
         if ( fallbackWebGL1 ) {

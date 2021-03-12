@@ -39,7 +39,10 @@ export class GLCatTransformFeedback<TContext extends WebGL1 | WebGL2 = WebGL1 | 
   public dispose(): void {
     const { gl } = this.__glCat;
 
-    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+    if (
+      typeof WebGL2RenderingContext === 'function' &&
+      gl instanceof WebGL2RenderingContext
+    ) {
       gl.deleteTransformFeedback( this.__transformFeedback );
     }
   }
@@ -50,7 +53,10 @@ export class GLCatTransformFeedback<TContext extends WebGL1 | WebGL2 = WebGL1 | 
   public bindBuffer( index: GLuint, buffer: GLCatBuffer<TContext> | null ): void {
     const { gl } = this.__glCat;
 
-    if ( WebGL2RenderingContext && gl instanceof WebGL2RenderingContext ) {
+    if (
+      typeof WebGL2RenderingContext === 'function' &&
+      gl instanceof WebGL2RenderingContext
+    ) {
       this.__glCat.bindTransformFeedback( this, () => {
         gl.bindBufferBase( gl.TRANSFORM_FEEDBACK_BUFFER, index, buffer?.buffer ?? null );
       } );
