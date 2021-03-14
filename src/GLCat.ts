@@ -615,6 +615,54 @@ export class GLCat<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
   }
 
   /**
+   * Create a new cubemap framebufer, in lazier way.
+   */
+  public lazyCubemapFramebuffer(
+    width: number,
+    height: number,
+    {
+      isFloat = false,
+      depthFormat = this.preferredDepthFormat
+    } = {}
+  ): GLCatFramebuffer<TContext> {
+    let texture: GLCatTexture<TContext> | undefined;
+    let renderbuffer: GLCatRenderbuffer<TContext> | undefined;
+    let framebuffer: GLCatFramebuffer<TContext> | undefined;
+
+    try {
+      // == framebuffer ============================================================================
+      framebuffer = this.createFramebuffer();
+
+      // == renderbuffer ===========================================================================
+      renderbuffer = this.createRenderbuffer();
+      renderbuffer.renderbufferStorage( width, height, { format: depthFormat } );
+      framebuffer.attachRenderbuffer( renderbuffer, { attachment: GL_DEPTH_ATTACHMENT } );
+
+      // == texture ================================================================================
+      texture = this.createTexture();
+      if ( isFloat ) {
+        texture.setCubemapFromArray(
+          width,
+          height,
+          null,
+          { internalformat: GL_RGBA32F, format: GL_RGBA, type: GL_FLOAT }
+        );
+      } else {
+        texture.setCubemapFromArray( width, height, null );
+      }
+      framebuffer.attachTexture( texture );
+
+      // == almost done ============================================================================
+      return framebuffer;
+    } catch ( e ) {
+      framebuffer?.dispose();
+      texture?.dispose();
+      renderbuffer?.dispose();
+      throw e;
+    }
+  }
+
+  /**
    * Create a new multisample framebuffer, in lazier way.
    */
   public lazyMultisampleFramebuffer(

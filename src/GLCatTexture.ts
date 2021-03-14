@@ -92,6 +92,38 @@ export class GLCatTexture<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
   }
 
   /**
+   * Specify how to filter the cubemap.
+   * @TODO this sucks
+   */
+  public cubemapFilter(): void;
+  public cubemapFilter( filter: number ): void;
+  public cubemapFilter( filterMag: number, filterMin: number ): void;
+  public cubemapFilter( filterMag: number = GL_NEAREST, filterMin: number = filterMag ): void {
+    const { gl } = this.__glCat;
+
+    this.__glCat.bindTexture2D( this, () => {
+      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, filterMag );
+      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, filterMin );
+    } );
+  }
+
+  /**
+   * Specify how to wrap the cubemap.
+   * @TODO this sucks
+   */
+  public cubemapWrap(): void;
+  public cubemapWrap( wrap: number ): void;
+  public cubemapWrap( wrapS: number, wrapT: number ): void;
+  public cubemapWrap( wrapS: number = GL_CLAMP_TO_EDGE, wrapT: number = wrapS ): void {
+    const { gl } = this.__glCat;
+
+    this.__glCat.bindTexture2D( this, () => {
+      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, wrapS );
+      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, wrapT );
+    } );
+  }
+
+  /**
    * Initialize the texture.
    */
   public texStorage2D(
@@ -246,10 +278,67 @@ export class GLCatTexture<TContext extends WebGL1 | WebGL2 = WebGL1 | WebGL2> {
           textures[ i ]
         );
       }
-      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-      gl.texParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+    } );
+  }
+
+  /**
+   * Set new data into this cubemap.
+   * This function uses TypedArray. If you want to source image data, use `GLCat.setCubemap()` instead.
+   */
+  public setCubemapFromArray(
+    width: number,
+    height: number,
+    sources: ( ArrayBufferView | null )[] | null,
+    {
+      internalformat = GL_RGBA8,
+      format = GL_RGBA,
+      type = GL_UNSIGNED_BYTE
+    } = {}
+  ): void {
+    const { gl } = this.__glCat;
+
+    let iformat = internalformat;
+    if (
+      typeof WebGL2RenderingContext === 'function' &&
+      gl instanceof WebGL2RenderingContext
+    ) {
+      // Ref: https://github.com/mrdoob/three.js/pull/15502/files
+      if (
+        internalformat === GL_R16F
+        || internalformat === GL_R32F
+        || internalformat === GL_RGBA16F
+        || internalformat === GL_RGBA32F
+      ) {
+        this.__glCat.getExtension( 'EXT_color_buffer_float', true );
+        this.__glCat.getExtension( 'EXT_float_blend' );
+        this.__glCat.getExtension( 'OES_texture_float_linear' );
+      }
+    } else {
+      if ( type === GL_HALF_FLOAT ) {
+        this.__glCat.getExtension( 'OES_texture_half_float', true );
+        this.__glCat.getExtension( 'OES_texture_half_float_linear' );
+      } else if ( type === GL_FLOAT ) {
+        this.__glCat.getExtension( 'OES_texture_float', true );
+        this.__glCat.getExtension( 'OES_texture_float_linear' );
+      }
+
+      iformat = format;
+    }
+
+    this.__glCat.bindTextureCubeMap( this, () => {
+      for ( let i = 0; i < 6; i ++ ) {
+        gl.texImage2D(
+          GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+          0,
+          iformat,
+          width,
+          height,
+          0,
+          format,
+          type,
+          sources?.[ i ] ?? null
+        );
+      }
     } );
   }
 
